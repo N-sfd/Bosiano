@@ -5,8 +5,8 @@
  * Banana Republic / J.Crew lifestyle campaigns.
  */
 
-const u = (id: string, w = 1400) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=85`;
+const u = (id: string, w = 1400, extra = "") =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=85${extra}`;
 
 /** Editorial / campaign / lifestyle heroes */
 export const editorial = {
@@ -23,11 +23,12 @@ export const editorial = {
   "journal-sustainability": u("photo-1556905055-8f358a7a47b2", 1600),
   "journal-capsule": u("photo-1487222477894-8943e31ef7b2", 1600),
   "journal-signet": u("photo-1515562141207-7a88fb7ce338", 1600),
-  "cat-women": u("photo-1487412720507-e7ab37603c6f", 1000),
-  "cat-men": u("photo-1507679799987-c73779587ccf", 1000),
-  "cat-bags": u("photo-1584917865442-de89df76afd3", 1000),
-  "cat-shoes": u("photo-1543163521-1bf539c55dd2", 1000),
-  "nav-new-1": u("photo-1469334031218-e382a71b716b", 900),
+  // Category tiles — matched editorial lifestyle / soft palette / tall crop
+  "cat-women": u("photo-1496747611176-843222e1e57c", 1000, "&h=1500"),
+  "cat-men": u("photo-1617137968427-85924c800a22", 1000, "&h=1500"),
+  "cat-bags": u("photo-1590874103328-eac38a683ce7", 1000, "&h=1500"),
+  "cat-shoes": u("photo-1549298916-b41d501d3772", 1000, "&h=1500"),
+  "nav-new-1": u("photo-1496747611176-843222e1e57c", 900),
   "nav-women-1": u("photo-1594938298603-c8148c4dae35", 900),
   "nav-men-1": u("photo-1617137968427-85924c800a22", 900),
   "nav-bags-1": u("photo-1590874103328-eac38a683ce7", 900),

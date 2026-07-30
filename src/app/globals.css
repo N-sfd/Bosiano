@@ -32,7 +32,7 @@
 
 @layer components {
   .shell {
-    @apply mx-auto w-full max-w-shell px-5 sm:px-8 lg:px-12;
+    @apply mx-auto w-full max-w-shell px-6 sm:px-10 lg:px-14;
   }
   .eyebrow {
     @apply text-[0.68rem] font-medium uppercase tracking-luxe text-ink-muted;

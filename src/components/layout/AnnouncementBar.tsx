@@ -17,10 +17,10 @@ export function AnnouncementBar() {
   }, []);
   return (
     <div className="bg-ink text-canvas">
-      <div className="shell flex h-9 items-center justify-center overflow-hidden">
+      <div className="shell flex items-center justify-center overflow-hidden px-4 py-2.5 sm:py-3">
         <p
           key={i}
-          className="animate-fade-in text-center text-[0.68rem] font-medium uppercase tracking-luxe"
+          className="animate-fade-in text-center text-[0.65rem] font-medium uppercase tracking-luxe sm:text-[0.68rem]"
         >
           {messages[i]}
         </p>

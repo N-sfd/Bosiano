@@ -40,6 +40,12 @@ const config: Config = {
       transitionTimingFunction: {
         silk: "cubic-bezier(0.22, 1, 0.36, 1)",
       },
+      animation: {
+        "fade-up": "fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both",
+        "fade-in": "fade-in 0.6s ease both",
+        marquee: "marquee 32s linear infinite",
+        "hotspot-ring": "hotspot-ring 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite",
+      },
       keyframes: {
         "fade-up": {
           "0%": { opacity: "0", transform: "translateY(16px)" },
@@ -56,11 +62,11 @@ const config: Config = {
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
-      },
-      animation: {
-        "fade-up": "fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both",
-        "fade-in": "fade-in 0.6s ease both",
-        marquee: "marquee 32s linear infinite",
+        "hotspot-ring": {
+          "0%": { boxShadow: "0 0 0 0 rgba(247, 244, 239, 0.55)" },
+          "70%": { boxShadow: "0 0 0 12px rgba(247, 244, 239, 0)" },
+          "100%": { boxShadow: "0 0 0 0 rgba(247, 244, 239, 0)" },
+        },
       },
     },
   },

@@ -227,27 +227,20 @@ export const megaNav: NavItem[] = [
     ],
   },
   {
-    label: "Live",
-    href: "/live",
-  },
-  {
-    label: "Community",
-    href: "/community",
-  },
-  {
-    label: "Stores",
-    href: "/stores",
-  },
-  {
-    label: "Lookbook",
-    href: "/lookbook",
-  },
-  {
-    label: "Stylist",
-    href: "/stylist",
-  },
-  {
     label: "Sale",
     href: "/shop?sale=true",
   },
 ];
+
+/** Secondary destinations — shown under Explore in the header */
+export const exploreNav: { label: string; href: string }[] = [
+  { label: "Live Shopping", href: "/live" },
+  { label: "Community", href: "/community" },
+  { label: "Stores", href: "/stores" },
+  { label: "Lookbook", href: "/lookbook" },
+  { label: "AI Stylist", href: "/stylist" },
+  { label: "Outfit Boards", href: "/boards" },
+];
+
+/** Top-level shop / brand navigation (excludes explore destinations) */
+export const primaryNav = megaNav;

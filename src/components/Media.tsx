@@ -26,6 +26,8 @@ interface MediaProps {
   monogram?: boolean;
   priority?: boolean;
   sizes?: string;
+  /** CSS object-position for crop framing */
+  objectPosition?: string;
 }
 
 export function Media({
@@ -40,6 +42,7 @@ export function Media({
   monogram = false,
   priority = false,
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+  objectPosition = "center",
 }: MediaProps) {
   const src = resolveImage(seed);
   const wash = swatches?.[0];
@@ -64,6 +67,7 @@ export function Media({
         sizes={sizes}
         quality={priority ? 85 : 75}
         className="object-cover transition-transform duration-700 ease-silk"
+        style={{ objectPosition }}
       />
 
       {/* subtle colour wash for brand / variant tinting */}

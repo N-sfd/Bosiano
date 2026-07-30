@@ -64,7 +64,7 @@ export default function ConciergePage() {
     <div className="shell py-12 lg:py-16">
       <div className="mx-auto max-w-2xl text-center">
         <p className="eyebrow">Concierge support</p>
-        <h1 className="mt-3 font-serif text-5xl">We're here — every channel</h1>
+        <h1 className="mt-3 font-serif text-5xl">We&apos;re here — every channel</h1>
         <p className="mt-4 text-ink-soft">
           Live chat, WhatsApp, email, phone, video, AI assistant with human handoff
           {isPC ? ", plus your Private Client priority queue." : "."}

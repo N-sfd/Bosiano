@@ -12,10 +12,34 @@ import { brands } from "@/lib/brands";
 import { journal } from "@/lib/journal";
 
 const categories = [
-  { label: "Womenswear", href: "/shop?category=women", seed: "cat-women", swatches: ["#d9b9b1", "#a87d7d", "#efe1dc"] },
-  { label: "Menswear", href: "/shop?category=men", seed: "cat-men", swatches: ["#2f3033", "#6b6156", "#c2a367"] },
-  { label: "Bags", href: "/shop?category=bags", seed: "cat-bags", swatches: ["#7a5236", "#a4562f", "#e0c39a"] },
-  { label: "Shoes", href: "/shop?category=shoes", seed: "cat-shoes", swatches: ["#57606a", "#9b9a95", "#e4e0d8"] },
+  {
+    label: "Womenswear",
+    href: "/shop?category=women",
+    seed: "cat-women",
+    swatches: ["#c8b8a8", "#8a7a6a", "#efe8e0"],
+    objectPosition: "center 18%",
+  },
+  {
+    label: "Menswear",
+    href: "/shop?category=men",
+    seed: "cat-men",
+    swatches: ["#3a3a3c", "#6b6156", "#c2a367"],
+    objectPosition: "center 15%",
+  },
+  {
+    label: "Bags",
+    href: "/shop?category=bags",
+    seed: "cat-bags",
+    swatches: ["#7a5236", "#a4562f", "#e0c39a"],
+    objectPosition: "center center",
+  },
+  {
+    label: "Shoes",
+    href: "/shop?category=shoes",
+    seed: "cat-shoes",
+    swatches: ["#57606a", "#9b9a95", "#e4e0d8"],
+    objectPosition: "center 40%",
+  },
 ];
 
 const trust = [
@@ -35,15 +59,15 @@ export default function HomePage() {
     <>
       <Hero />
 
-      {/* trust marquee */}
-      <div className="border-b border-line bg-canvas-raised">
+      {/* trust strip — full height so it isn’t clipped under the hero fold */}
+      <div className="relative z-[1] border-b border-line bg-canvas-raised">
         <div className="shell grid grid-cols-2 divide-line lg:grid-cols-4 lg:divide-x">
           {trust.map((t) => (
-            <div key={t.title} className="flex items-center gap-3 py-5 lg:justify-center">
-              <t.icon className="h-5 w-5 text-gold" strokeWidth={1.5} />
-              <div>
-                <p className="text-xs font-medium uppercase tracking-[0.1em]">{t.title}</p>
-                <p className="text-[0.7rem] text-ink-muted">{t.copy}</p>
+            <div key={t.title} className="flex items-center gap-3 py-6 sm:py-7 lg:justify-center lg:px-4">
+              <t.icon className="h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} />
+              <div className="min-w-0">
+                <p className="text-[0.7rem] font-medium uppercase tracking-[0.1em] sm:text-xs">{t.title}</p>
+                <p className="mt-0.5 text-[0.7rem] leading-snug text-ink-muted">{t.copy}</p>
               </div>
             </div>
           ))}
@@ -59,20 +83,30 @@ export default function HomePage() {
           href="/shop?sort=new"
         />
         <div className="mt-8">
-          <ProductRail products={newArrivals} />
+          <ProductRail products={newArrivals} label="new arrivals" />
         </div>
       </section>
 
       {/* category tiles */}
       <section className="shell pb-16 lg:pb-24">
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {categories.map((c, i) => (
             <Reveal key={c.label} delay={i * 0.08}>
               <Link href={c.href} className="group block overflow-hidden rounded-2xl">
-                <Media seed={c.seed} swatches={c.swatches} ratio="tall" className="[&_img]:duration-700 group-hover:[&_img]:scale-105" monogram={false} sizes="(max-width: 1024px) 50vw, 25vw">
-                  <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-ink/70 via-ink/20 to-transparent p-6">
-                    <p className="font-serif text-2xl text-canvas">{c.label}</p>
-                    <span className="mt-1 inline-flex items-center gap-1 text-[0.7rem] uppercase tracking-luxe text-canvas/85">
+                <Media
+                  seed={c.seed}
+                  swatches={c.swatches}
+                  ratio="tall"
+                  objectPosition={c.objectPosition}
+                  className="[&_img]:duration-700 group-hover:[&_img]:scale-105"
+                  monogram={false}
+                  sizes="(max-width: 1024px) 50vw, 25vw"
+                >
+                  <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-ink/85 via-ink/35 to-ink/10 p-5 sm:p-6">
+                    <p className="font-serif text-xl leading-tight text-canvas drop-shadow-sm sm:text-2xl lg:text-[1.65rem]">
+                      {c.label}
+                    </p>
+                    <span className="mt-1.5 inline-flex items-center gap-1 text-[0.68rem] font-medium uppercase tracking-luxe text-canvas/90">
                       Shop now <ArrowRight className="h-3.5 w-3.5" />
                     </span>
                   </div>
@@ -135,7 +169,7 @@ export default function HomePage() {
       <section className="shell pb-16 lg:pb-24">
         <SectionHeader eyebrow="Most Loved" title="Bestsellers" href="/shop?sort=popular" />
         <div className="mt-8">
-          <ProductRail products={bestSellers} />
+          <ProductRail products={bestSellers} label="bestsellers" />
         </div>
       </section>
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Heart, GitCompareArrows, Bell, ScanSearch } from "lucide-react";
+import { Heart, GitCompareArrows, Bell, ScanSearch, Pin } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { getBrand } from "@/lib/brands";
 import { estimatedRestock } from "@/lib/products";
@@ -11,26 +11,24 @@ import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import { cn, formatPrice } from "@/lib/utils";
 
-/** Consistent badge priority: Sale → New → Exclusive → Conscious (+ merch overlays) */
-function productBadges(
+/** Single primary badge — Sale → New → Exclusive → Conscious → merch overlays */
+function primaryBadge(
   product: Product,
   custom?: string[]
-): { key: string; label: string; className?: string }[] {
-  const badges: { key: string; label: string; className?: string }[] = [];
+): { key: string; label: string; className?: string } | null {
   const customSet = new Set(custom ?? []);
-
   if (product.compareAtPrice || customSet.has("sale"))
-    badges.push({ key: "sale", label: "Sale", className: "bg-gold text-canvas" });
-  if (product.isNew || customSet.has("new")) badges.push({ key: "new", label: "New" });
-  if (product.isExclusive || customSet.has("exclusive"))
-    badges.push({ key: "exclusive", label: "Exclusive" });
-  if (product.isSustainable || customSet.has("conscious"))
-    badges.push({ key: "conscious", label: "Conscious", className: "bg-[#3a4a3b] text-canvas" });
-  if (customSet.has("limited")) badges.push({ key: "limited", label: "Limited" });
-  if (customSet.has("trending")) badges.push({ key: "trending", label: "Trending" });
+    return { key: "sale", label: "Sale", className: "bg-gold text-canvas" };
   if (customSet.has("editors-pick"))
-    badges.push({ key: "editors-pick", label: "Editor's Pick", className: "bg-ink text-canvas" });
-  return badges.slice(0, 3);
+    return { key: "editors-pick", label: "Editor's Pick", className: "bg-ink text-canvas" };
+  if (customSet.has("limited")) return { key: "limited", label: "Limited" };
+  if (product.isNew || customSet.has("new")) return { key: "new", label: "New" };
+  if (product.isExclusive || customSet.has("exclusive"))
+    return { key: "exclusive", label: "Exclusive" };
+  if (customSet.has("trending")) return { key: "trending", label: "Trending" };
+  if (product.isSustainable || customSet.has("conscious"))
+    return { key: "conscious", label: "Conscious", className: "bg-[#3a4a3b] text-canvas" };
+  return null;
 }
 
 export function ProductCard({ product, priority }: { product: Product; priority?: boolean }) {
@@ -59,7 +57,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
       ? restockDates[product.id]
       : estimatedRestock(product.id)
     : null;
-  const badges = productBadges(product, hydrated ? productBadgesMap[product.id] : undefined);
+  const badge = primaryBadge(product, hydrated ? productBadgesMap[product.id] : undefined);
 
   return (
     <div className="group relative flex flex-col">
@@ -78,16 +76,20 @@ export function ProductCard({ product, priority }: { product: Product; priority?
           />
         </Link>
 
-        {/* Dynamic badges — fixed order for scannability */}
-        <div className="pointer-events-none absolute left-3 top-3 flex flex-col gap-1.5">
+        {/* One status pill top-left; pin as quiet icon only */}
+        <div className="pointer-events-none absolute left-3 top-3 flex items-center gap-1.5">
           {isPinned && (
-            <Tag className="bg-ink text-canvas">Pinned</Tag>
+            <span
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-ink/90 text-canvas shadow-sm"
+              title="Pinned"
+              aria-label="Pinned"
+            >
+              <Pin className="h-3.5 w-3.5" strokeWidth={1.75} />
+            </span>
           )}
-          {badges.map((b) => (
-            <Tag key={b.key} className={b.className}>
-              {b.label}
-            </Tag>
-          ))}
+          {badge && (
+            <Tag className={badge.className}>{badge.label}</Tag>
+          )}
         </div>
 
         <div className="absolute right-3 top-3 flex flex-col gap-2">

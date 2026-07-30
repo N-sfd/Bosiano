@@ -7,7 +7,7 @@ import { Home, Search, Heart, ShoppingBag, User, X, ChevronRight } from "lucide-
 import { useUI } from "@/store/useUI";
 import { useStore, cartCount } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
-import { megaNav } from "@/lib/nav";
+import { megaNav, exploreNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import { BosianosLogo } from "@/components/brand/BosianosLogo";
 
@@ -99,6 +99,18 @@ export function MobileNav() {
                   >
                     {item.label}
                     <ChevronRight className="h-5 w-5 text-ink-muted" />
+                  </Link>
+                ))}
+                <p className="eyebrow mb-2 mt-8">Explore</p>
+                {exploreNav.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMenu(false)}
+                    className="flex items-center justify-between border-b border-line py-3.5 text-base text-ink-soft"
+                  >
+                    {item.label}
+                    <ChevronRight className="h-4 w-4 text-ink-muted" />
                   </Link>
                 ))}
               </nav>

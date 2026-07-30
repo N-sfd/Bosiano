@@ -100,7 +100,7 @@ export default function CarePage() {
         </div>
         {done && (
           <p className="mt-3 inline-flex items-center gap-2 text-sm text-gold-deep">
-            <Check className="h-4 w-4" /> {done} booked — we'll confirm pickup shortly.
+            <Check className="h-4 w-4" /> {done} booked — we&apos;ll confirm pickup shortly.
           </p>
         )}
       </section>

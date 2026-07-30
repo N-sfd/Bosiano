@@ -88,7 +88,7 @@ export function Hero() {
   const slide = slides[index];
 
   return (
-    <section className="relative h-[82vh] min-h-[560px] w-full overflow-hidden bg-ink">
+    <section className="relative h-[68vh] min-h-[480px] max-h-[720px] w-full overflow-hidden bg-ink sm:h-[72vh] sm:min-h-[520px]">
       <AnimatePresence mode="sync">
         <motion.div
           key={index}
@@ -107,7 +107,15 @@ export function Hero() {
             priority
             sizes="100vw"
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/25 to-ink/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/30 to-ink/25" />
+            {/* Scrim for left/center copy legibility across crops */}
+            <div
+              className={cn(
+                "pointer-events-none absolute inset-y-0 w-full max-w-3xl bg-gradient-to-r from-ink/55 via-ink/25 to-transparent",
+                slide.align === "center" && "left-1/2 max-w-none -translate-x-1/2 bg-gradient-to-t from-ink/60 via-ink/20 to-transparent"
+              )}
+              aria-hidden
+            />
             {/* Interactive lookbook hotspots */}
             {slide.hotspots?.map((h) => {
               const product = products.find((p) => p.slug === h.productSlug);
@@ -120,11 +128,12 @@ export function Hero() {
                       setPlaying(false);
                       setActivePin(open ? null : h.productSlug);
                     }}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-canvas/40 bg-canvas/90 text-ink shadow-lg transition-transform hover:scale-110"
+                    className="relative flex h-9 w-9 animate-hotspot-ring items-center justify-center rounded-full border border-canvas/50 bg-canvas text-ink shadow-[0_4px_18px_rgba(0,0,0,0.35)] transition-transform hover:scale-110"
                     aria-label={`Shop ${product.name}`}
                     aria-expanded={open}
                   >
-                    <Plus className={cn("h-4 w-4 transition-transform", open && "rotate-45")} />
+                    <span className="pointer-events-none absolute inset-0 rounded-full ring-2 ring-canvas/40" aria-hidden />
+                    <Plus className={cn("relative z-[1] h-4 w-4 transition-transform", open && "rotate-45")} />
                   </button>
                   {open && (
                     <Link
@@ -143,7 +152,7 @@ export function Hero() {
         </motion.div>
       </AnimatePresence>
 
-      <div className="shell relative flex h-full items-end pb-20 sm:pb-24">
+      <div className="shell relative flex h-full items-end pb-16 sm:pb-20">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
@@ -151,34 +160,48 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className={cn("max-w-2xl text-canvas", slide.align === "center" && "mx-auto text-center")}
+            className={cn(
+              "relative max-w-xl rounded-sm text-canvas sm:max-w-2xl",
+              slide.align === "center" && "mx-auto text-center"
+            )}
           >
-            <p className="eyebrow !text-canvas/80">{slide.eyebrow}</p>
-            <h1 className="mt-4 font-serif text-5xl leading-[0.98] text-balance sm:text-6xl lg:text-7xl">
-              {slide.title}
-            </h1>
-            <p className="mt-4 max-w-lg text-base text-canvas/85 sm:text-lg">{slide.copy}</p>
-            <div className={cn("mt-8 flex flex-wrap gap-3", slide.align === "center" && "justify-center")}>
-              <Link
-                href={slide.cta.href}
-                className="bg-canvas px-8 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink transition-colors hover:bg-gold hover:text-canvas"
-              >
-                {slide.cta.label}
-              </Link>
-              {slide.secondary && (
+            <div
+              className={cn(
+                "pointer-events-none absolute -inset-x-4 -inset-y-3 rounded-2xl bg-ink/35 blur-xl sm:-inset-x-6 sm:-inset-y-4",
+                slide.align === "center" && "left-1/2 w-[min(100%,36rem)] -translate-x-1/2"
+              )}
+              aria-hidden
+            />
+            <div className="relative">
+              <p className="eyebrow !text-canvas/85">{slide.eyebrow}</p>
+              <h1 className="mt-4 font-serif text-5xl leading-[0.98] text-balance sm:text-6xl lg:text-7xl">
+                {slide.title}
+              </h1>
+              <p className="mt-4 max-w-lg text-sm leading-relaxed text-canvas/90 sm:text-base lg:text-lg">
+                {slide.copy}
+              </p>
+              <div className={cn("mt-8 flex flex-wrap gap-3", slide.align === "center" && "justify-center")}>
                 <Link
-                  href={slide.secondary.href}
-                  className="inline-flex items-center gap-2 border border-canvas/60 px-8 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-canvas transition-colors hover:bg-canvas hover:text-ink"
+                  href={slide.cta.href}
+                  className="bg-canvas px-10 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink transition-colors hover:bg-gold hover:text-canvas"
                 >
-                  <Play className="h-3.5 w-3.5 fill-current" /> {slide.secondary.label}
+                  {slide.cta.label}
                 </Link>
+                {slide.secondary && (
+                  <Link
+                    href={slide.secondary.href}
+                    className="inline-flex items-center justify-center gap-2 border border-canvas/70 bg-ink/20 px-10 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-canvas backdrop-blur-sm transition-colors hover:bg-canvas hover:text-ink"
+                  >
+                    <Play className="h-3.5 w-3.5 fill-current" /> {slide.secondary.label}
+                  </Link>
+                )}
+              </div>
+              {slide.hotspots && (
+                <p className="mt-4 text-[0.65rem] uppercase tracking-luxe text-canvas/70">
+                  Tap + to shop pieces from this lookbook
+                </p>
               )}
             </div>
-            {slide.hotspots && (
-              <p className="mt-4 text-[0.65rem] uppercase tracking-luxe text-canvas/60">
-                Tap + to shop pieces from this lookbook
-              </p>
-            )}
           </motion.div>
         </AnimatePresence>
       </div>
