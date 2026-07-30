@@ -10,24 +10,27 @@ import { Media } from "@/components/Media";
 import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import { cn, formatPrice } from "@/lib/utils";
+import { Badge } from "@/components/ui/Badge";
+import { IconToggle } from "@/components/ui/IconToggle";
+import { SwatchButton } from "@/components/ui/SwatchButton";
 
 /** Single primary badge — Sale → New → Exclusive → Conscious → merch overlays */
 function primaryBadge(
   product: Product,
   custom?: string[]
-): { key: string; label: string; className?: string } | null {
+): { key: string; label: string; tone?: "gold" | "ink" | "eco" } | null {
   const customSet = new Set(custom ?? []);
   if (product.compareAtPrice || customSet.has("sale"))
-    return { key: "sale", label: "Sale", className: "bg-gold text-canvas" };
+    return { key: "sale", label: "Sale", tone: "gold" };
   if (customSet.has("editors-pick"))
-    return { key: "editors-pick", label: "Editor's Pick", className: "bg-ink text-canvas" };
+    return { key: "editors-pick", label: "Editor's Pick", tone: "ink" };
   if (customSet.has("limited")) return { key: "limited", label: "Limited" };
   if (product.isNew || customSet.has("new")) return { key: "new", label: "New" };
   if (product.isExclusive || customSet.has("exclusive"))
     return { key: "exclusive", label: "Exclusive" };
   if (customSet.has("trending")) return { key: "trending", label: "Trending" };
   if (product.isSustainable || customSet.has("conscious"))
-    return { key: "conscious", label: "Conscious", className: "bg-[#3a4a3b] text-canvas" };
+    return { key: "conscious", label: "Conscious", tone: "eco" };
   return null;
 }
 
@@ -87,9 +90,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
               <Pin className="h-3.5 w-3.5" strokeWidth={1.75} />
             </span>
           )}
-          {badge && (
-            <Tag className={badge.className}>{badge.label}</Tag>
-          )}
+          {badge && <Badge tone={badge.tone ?? "outline"}>{badge.label}</Badge>}
         </div>
 
         <div className="absolute right-3 top-3 flex flex-col gap-2">
@@ -97,6 +98,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
             active={!!wished}
             onClick={() => toggleWishlist(product.id)}
             label={wished ? "Remove from wishlist" : "Add to wishlist"}
+            className={cn(!wished && "opacity-0 group-hover:opacity-100 focus:opacity-100")}
           >
             <Heart className={cn("h-4 w-4", wished && "fill-current")} strokeWidth={1.5} />
           </IconToggle>
@@ -104,6 +106,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
             active={!!comparing}
             onClick={() => toggleCompare(product.id)}
             label={comparing ? "Remove from compare" : "Add to compare"}
+            className={cn(!comparing && "opacity-0 group-hover:opacity-100 focus:opacity-100")}
           >
             <GitCompareArrows className="h-4 w-4" strokeWidth={1.5} />
           </IconToggle>
@@ -140,22 +143,20 @@ export function ProductCard({ product, priority }: { product: Product; priority?
         <div className="flex items-center justify-between">
           <Link
             href={`/designers/${brand?.slug}`}
-            className="link-underline text-[0.7rem] font-medium uppercase tracking-[0.12em] text-ink-muted"
+            className="link-underline text-[0.7rem] font-medium uppercase tracking-luxe text-ink-muted"
           >
             {brand?.name}
           </Link>
           <div className="flex items-center gap-1.5">
             {product.variants.slice(0, 4).map((v, i) => (
-              <button
+              <SwatchButton
                 key={v.id}
+                size="sm"
+                color={v.hex}
+                selected={i === variantIndex}
                 onMouseEnter={() => setVariantIndex(i)}
                 onClick={() => setVariantIndex(i)}
-                aria-label={`View ${v.color}`}
-                className={cn(
-                  "h-3 w-3 rounded-full border transition-transform",
-                  i === variantIndex ? "scale-110 border-ink" : "border-line"
-                )}
-                style={{ background: v.hex }}
+                label={`View ${v.color}`}
               />
             ))}
           </div>
@@ -182,46 +183,5 @@ export function ProductCard({ product, priority }: { product: Product; priority?
         </Link>
       </div>
     </div>
-  );
-}
-
-function Tag({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <span
-      className={cn(
-        "rounded-full bg-canvas-raised/95 px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-luxe text-ink shadow-sm",
-        className
-      )}
-    >
-      {children}
-    </span>
-  );
-}
-
-function IconToggle({
-  active,
-  onClick,
-  label,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      aria-label={label}
-      aria-pressed={active}
-      className={cn(
-        "flex h-8 w-8 items-center justify-center rounded-full border shadow-sm backdrop-blur transition-all",
-        active
-          ? "border-gold bg-gold text-canvas"
-          : "border-line bg-canvas-raised/90 text-ink opacity-0 group-hover:opacity-100 focus:opacity-100"
-      )}
-    >
-      {children}
-    </button>
   );
 }

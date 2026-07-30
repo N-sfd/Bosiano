@@ -7,7 +7,7 @@ import { useHydrated } from "@/lib/hooks";
 import { getProduct } from "@/lib/products";
 import { getBrand } from "@/lib/brands";
 import { Media } from "@/components/Media";
-import { Stars } from "@/components/product/ProductDetail";
+import { Stars } from "@/components/ui/Stars";
 import { formatPrice } from "@/lib/utils";
 
 export default function ComparePage() {

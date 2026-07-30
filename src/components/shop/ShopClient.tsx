@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { SlidersHorizontal, X, Check } from "lucide-react";
+import { SlidersHorizontal, Check } from "lucide-react";
 import { products as allProducts, totalStock, allMaterialTags, allCountries } from "@/lib/products";
 import { brands } from "@/lib/brands";
 import { semanticSearch } from "@/lib/search";
@@ -11,6 +11,11 @@ import { useUI } from "@/store/useUI";
 import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { OptionChip } from "@/components/ui/OptionChip";
+import { Select } from "@/components/ui/Select";
+import { Sheet } from "@/components/ui/Sheet";
 
 const sortOptions = [
   { id: "featured", label: "Featured" },
@@ -276,16 +281,15 @@ export function ShopClient() {
       <FacetGroup title="Colour">
         <div className="flex flex-wrap gap-2">
           {facets.colors.slice(0, 14).map((c) => (
-            <button
+            <OptionChip
               key={c}
+              shape="pill"
+              size="sm"
+              selected={color === c}
               onClick={() => setParam("color", color === c ? null : c)}
-              className={cn(
-                "rounded-full border px-3 py-1.5 text-xs transition-colors",
-                color === c ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"
-              )}
             >
               {c}
-            </button>
+            </OptionChip>
           ))}
         </div>
       </FacetGroup>
@@ -293,16 +297,15 @@ export function ShopClient() {
       <FacetGroup title="Size">
         <div className="flex flex-wrap gap-2">
           {facets.sizes.map((s) => (
-            <button
+            <OptionChip
               key={s}
+              shape="box"
+              size="sm"
+              selected={size === s}
               onClick={() => setParam("size", size === s ? null : s)}
-              className={cn(
-                "min-w-10 rounded-md border px-2 py-1.5 text-xs transition-colors",
-                size === s ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"
-              )}
             >
               {s}
-            </button>
+            </OptionChip>
           ))}
         </div>
       </FacetGroup>
@@ -319,38 +322,25 @@ export function ShopClient() {
           <p className="mt-1 text-sm text-ink-muted">{filtered.length} items · filters update instantly</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => setFilter(true)} className="btn-outline !py-3 lg:hidden">
+          <Button variant="outline" size="sm" onClick={() => setFilter(true)} className="lg:hidden">
             <SlidersHorizontal className="h-4 w-4" /> Filter
-          </button>
-          <label className="flex items-center gap-2 text-xs uppercase tracking-luxe text-ink-muted">
-            Sort
-            <select
-              value={sort}
-              onChange={(e) => setParam("sort", e.target.value)}
-              className="border border-line bg-canvas px-3 py-2.5 text-xs uppercase tracking-[0.1em] focus:outline-none"
-              aria-label="Sort products"
-            >
-              {sortOptions.map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          </Button>
+          <Select
+            label="Sort"
+            value={sort}
+            onChange={(v) => setParam("sort", v)}
+            options={sortOptions}
+            aria-label="Sort products"
+          />
         </div>
       </div>
 
       {activeFilters.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 pt-4">
           {activeFilters.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setParam(f.key, null)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-canvas-sunk px-3 py-1.5 text-xs"
-            >
+            <Badge key={f.key} onRemove={() => setParam(f.key, null)}>
               {f.label}
-              <X className="h-3 w-3" />
-            </button>
+            </Badge>
           ))}
           <button
             onClick={() => router.push(pathname, { scroll: false })}
@@ -381,23 +371,18 @@ export function ShopClient() {
         </div>
       </div>
 
-      {filterOpen && (
-        <div className="fixed inset-0 z-[130] lg:hidden">
-          <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" onClick={() => setFilter(false)} aria-hidden />
-          <div className="absolute bottom-0 left-0 right-0 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-canvas-raised p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-serif text-2xl">Filter &amp; Sort</h2>
-              <button className="btn-ghost" aria-label="Close filters" onClick={() => setFilter(false)}>
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            {Filters}
-            <button onClick={() => setFilter(false)} className="btn-primary mt-8 w-full">
-              <Check className="h-4 w-4" /> Show {filtered.length} results
-            </button>
-          </div>
-        </div>
-      )}
+      <Sheet
+        open={filterOpen}
+        onClose={() => setFilter(false)}
+        title="Filter & Sort"
+        footer={
+          <Button onClick={() => setFilter(false)} className="mt-8 w-full">
+            <Check className="h-4 w-4" /> Show {filtered.length} results
+          </Button>
+        }
+      >
+        {Filters}
+      </Sheet>
     </div>
   );
 }

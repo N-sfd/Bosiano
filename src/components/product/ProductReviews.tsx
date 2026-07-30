@@ -1,6 +1,6 @@
 import type { Product } from "@/lib/types";
 import { getReviews, ratingBreakdown } from "@/lib/reviews";
-import { Stars } from "./ProductDetail";
+import { Stars } from "@/components/ui/Stars";
 import { CheckCircle2 } from "lucide-react";
 
 export function ProductReviews({ product }: { product: Product }) {

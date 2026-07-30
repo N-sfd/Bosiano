@@ -10,8 +10,6 @@ import {
   ShieldCheck,
   Ruler,
   Sparkles,
-  Star,
-  ChevronDown,
   Check,
   Leaf,
   ArrowRight,
@@ -31,6 +29,14 @@ import { SizeGuide } from "./SizeGuide";
 import { VirtualTryOn } from "./VirtualTryOn";
 import { ShareActions } from "./ShareActions";
 import { StoreAvailability } from "./StoreAvailability";
+import { Badge } from "@/components/ui/Badge";
+import { SwatchButton } from "@/components/ui/SwatchButton";
+import { OptionChip } from "@/components/ui/OptionChip";
+import { IconToggle } from "@/components/ui/IconToggle";
+import { Button } from "@/components/ui/Button";
+import { Accordion } from "@/components/ui/Accordion";
+import { QuantityStepper } from "@/components/ui/QuantityStepper";
+import { Stars } from "@/components/ui/Stars";
 
 export function ProductDetail({ product }: { product: Product }) {
   const brand = getBrand(product.brandId);
@@ -41,6 +47,7 @@ export function ProductDetail({ product }: { product: Product }) {
   const [tryOnOpen, setTryOnOpen] = useState(false);
   const [added, setAdded] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>("details");
+  const [qty, setQty] = useState(1);
 
   const variant = product.variants[variantIndex];
   const addToCart = useStore((s) => s.addToCart);
@@ -78,7 +85,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
   const handleAdd = () => {
     if (!size || sizeOut) return;
-    addToCart({ productId: product.id, variantId: variant.id, size, quantity: 1 });
+    addToCart({ productId: product.id, variantId: variant.id, size, quantity: qty });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -102,11 +109,11 @@ export function ProductDetail({ product }: { product: Product }) {
 
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            {product.isNew && <Badge>New</Badge>}
-            {product.isExclusive && <Badge>Exclusive</Badge>}
-            {product.isPreorder && <Badge>Pre-order</Badge>}
+            {product.isNew && <Badge tone="neutral">New</Badge>}
+            {product.isExclusive && <Badge tone="neutral">Exclusive</Badge>}
+            {product.isPreorder && <Badge tone="neutral">Pre-order</Badge>}
             {product.isSustainable && <Badge tone="eco">Sustainable</Badge>}
-            {product.sameDayEligible && <Badge>Same-day</Badge>}
+            {product.sameDayEligible && <Badge tone="neutral">Same-day</Badge>}
           </div>
 
           <Link href={`/designers/${brand?.slug}`} className="link-underline mt-3 inline-block text-xs uppercase tracking-luxe text-ink-muted">
@@ -139,19 +146,17 @@ export function ProductDetail({ product }: { product: Product }) {
             <p className="eyebrow">Colour — {variant.color}</p>
             <div className="mt-3 flex flex-wrap gap-2.5">
               {product.variants.map((v, i) => (
-                <button
+                <SwatchButton
                   key={v.id}
+                  size="md"
+                  color={v.hex}
+                  selected={i === variantIndex}
                   onClick={() => {
                     setVariantIndex(i);
                     setSize(null);
+                    setQty(1);
                   }}
-                  aria-label={v.color}
-                  aria-pressed={i === variantIndex}
-                  className={cn(
-                    "h-9 w-9 rounded-full border-2 transition-transform hover:scale-105",
-                    i === variantIndex ? "border-ink ring-2 ring-gold ring-offset-2 ring-offset-canvas" : "border-line"
-                  )}
-                  style={{ background: v.hex }}
+                  label={v.color}
                 />
               ))}
             </div>
@@ -177,21 +182,22 @@ export function ProductDetail({ product }: { product: Product }) {
                 const stock = variant.inventory[s] ?? 0;
                 const disabled = stock <= 0 && !product.isPreorder;
                 return (
-                  <button
+                  <OptionChip
                     key={s}
+                    shape="box"
+                    size="md"
                     disabled={disabled}
-                    onClick={() => setSize(s)}
-                    className={cn(
-                      "relative min-w-14 rounded-md border px-3 py-3 text-sm transition-colors",
-                      size === s ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink",
-                      disabled && "cursor-not-allowed border-line text-ink-muted/50 line-through hover:border-line"
-                    )}
+                    selected={size === s}
+                    onClick={() => {
+                      setSize(s);
+                      setQty(1);
+                    }}
                   >
                     {s}
                     {stock > 0 && stock <= 3 && (
                       <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-gold" title="Low stock" />
                     )}
-                  </button>
+                  </OptionChip>
                 );
               })}
             </div>
@@ -218,17 +224,21 @@ export function ProductDetail({ product }: { product: Product }) {
             )}
           </div>
 
+          {!sizeOut && (
+            <div className="mt-5">
+              <p className="eyebrow mb-3">Quantity</p>
+              <QuantityStepper value={qty} onChange={setQty} max={selectedStock ?? undefined} />
+            </div>
+          )}
+
           <div className="mt-7 flex flex-col gap-3">
             {sizeOut && !product.isPreorder ? (
-              <button
-                onClick={() => toggleNotify(product.id)}
-                className={cn("btn-primary w-full", notified && "bg-[#3a4a3b]")}
-              >
+              <Button onClick={() => toggleNotify(product.id)} className={cn("w-full", notified && "bg-[#3a4a3b]")}>
                 <Bell className="h-4 w-4" />
                 {notified ? "We'll notify you" : "Notify me when available"}
-              </button>
+              </Button>
             ) : (
-              <button onClick={handleAdd} disabled={!size} className={cn("btn-primary w-full", added && "bg-[#3a4a3b]")}>
+              <Button onClick={handleAdd} disabled={!size} className={cn("w-full", added && "bg-[#3a4a3b]")}>
                 {added ? (
                   <>
                     <Check className="h-4 w-4" /> Added to bag
@@ -240,28 +250,28 @@ export function ProductDetail({ product }: { product: Product }) {
                 ) : (
                   `Add to bag — ${formatPrice(product.price)}`
                 )}
-              </button>
+              </Button>
             )}
             <div className="flex gap-3">
-              <button onClick={() => setTryOnOpen(true)} className="btn-outline flex-1">
+              <Button variant="outline" onClick={() => setTryOnOpen(true)} className="flex-1">
                 <Ruler className="h-4 w-4" /> Virtual try-on
-              </button>
-              <button
+              </Button>
+              <IconToggle
+                active={!!wished}
                 onClick={() => toggleWishlist(product.id)}
-                aria-pressed={!!wished}
-                className={cn("btn-outline !px-4", wished && "border-gold bg-gold text-canvas")}
-                aria-label="Add to wishlist"
+                label="Add to wishlist"
+                className="h-[52px] w-[52px]"
               >
                 <Heart className={cn("h-4 w-4", wished && "fill-current")} />
-              </button>
-              <button
+              </IconToggle>
+              <IconToggle
+                active={!!comparing}
                 onClick={() => toggleCompare(product.id)}
-                aria-pressed={!!comparing}
-                className={cn("btn-outline !px-4", comparing && "border-gold bg-gold text-canvas")}
-                aria-label="Add to compare"
+                label="Add to compare"
+                className="h-[52px] w-[52px]"
               >
                 <GitCompareArrows className="h-4 w-4" />
-              </button>
+              </IconToggle>
               <ShareActions product={product} />
             </div>
             <Link
@@ -374,19 +384,6 @@ export function ProductDetail({ product }: { product: Product }) {
   );
 }
 
-function Badge({ children, tone }: { children: React.ReactNode; tone?: "eco" }) {
-  return (
-    <span
-      className={cn(
-        "rounded-full px-2.5 py-1 text-[0.65rem] uppercase tracking-luxe",
-        tone === "eco" ? "bg-[#3a4a3b] text-canvas" : "bg-canvas-sunk text-ink"
-      )}
-    >
-      {children}
-    </span>
-  );
-}
-
 function Row({ icon: Icon, title, copy, accent }: { icon: any; title: string; copy: string; accent?: boolean }) {
   return (
     <div className="flex items-start gap-3">
@@ -395,49 +392,6 @@ function Row({ icon: Icon, title, copy, accent }: { icon: any; title: string; co
         <p className="text-sm font-medium">{title}</p>
         <p className="text-xs text-ink-muted">{copy}</p>
       </div>
-    </div>
-  );
-}
-
-function Accordion({
-  id,
-  title,
-  open,
-  onToggle,
-  children,
-}: {
-  id: string;
-  title: string;
-  open: boolean;
-  onToggle: (id: string | null) => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <button
-        onClick={() => onToggle(open ? null : id)}
-        aria-expanded={open}
-        className="flex w-full items-center justify-between py-4 text-left font-serif text-lg"
-      >
-        {title}
-        <ChevronDown className={cn("h-5 w-5 transition-transform", open && "rotate-180")} />
-      </button>
-      {open && <div className="pb-5">{children}</div>}
-    </div>
-  );
-}
-
-export function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
-  return (
-    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
-      {[1, 2, 3, 4, 5].map((i) => (
-        <Star
-          key={i}
-          style={{ width: size, height: size }}
-          className={cn(i <= Math.round(rating) ? "fill-gold text-gold" : "fill-transparent text-line")}
-          strokeWidth={1.5}
-        />
-      ))}
     </div>
   );
 }
