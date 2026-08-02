@@ -44,8 +44,8 @@ export function CartDrawer() {
   const hydrated = useHydrated();
   const [splitShip, setSplitShip] = useState(false);
 
-  const lines = hydrated ? resolveCart(cart) : [];
-  const later = hydrated ? resolveCart(savedForLater) : [];
+  const lines = useMemo(() => (hydrated ? resolveCart(cart) : []), [hydrated, cart]);
+  const later = useMemo(() => (hydrated ? resolveCart(savedForLater) : []), [hydrated, savedForLater]);
   const subtotal = hydrated ? cartSubtotal(cart) : 0;
   const remaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
   const progress = Math.min(100, (subtotal / FREE_SHIP_THRESHOLD) * 100);

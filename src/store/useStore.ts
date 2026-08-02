@@ -226,6 +226,7 @@ interface StoreState {
 
   addPoints: (n: number, label?: string) => void;
   redeemPoints: (n: number, label?: string) => boolean;
+  spendPoints: (n: number, label?: string) => boolean;
   applyReferralPurchase: (friendName: string) => void;
   subscribeMembership: (planId: string) => void;
   cancelMembership: (planId: string) => void;
@@ -759,6 +760,19 @@ export const useStore = create<StoreState>()(
         set({
           loyaltyPoints: s.loyaltyPoints - n,
           storeCredit: s.storeCredit + Math.round(n / 100),
+          pointsHistory: [
+            { id: `ph-${Date.now()}`, label, delta: -n, at: Date.now() },
+            ...s.pointsHistory,
+          ].slice(0, 40),
+        });
+        return true;
+      },
+
+      spendPoints: (n, label = "Redeemed at checkout") => {
+        const s = get();
+        if (n <= 0 || s.loyaltyPoints < n) return false;
+        set({
+          loyaltyPoints: s.loyaltyPoints - n,
           pointsHistory: [
             { id: `ph-${Date.now()}`, label, delta: -n, at: Date.now() },
             ...s.pointsHistory,

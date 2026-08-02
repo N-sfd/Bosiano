@@ -47,7 +47,7 @@ export default function CheckoutPage() {
   const storeCredit = useStore((s) => s.storeCredit);
   const applyGiftCard = useStore((s) => s.applyGiftCard);
   const applyStoreCredit = useStore((s) => s.applyStoreCredit);
-  const redeemPoints = useStore((s) => s.redeemPoints);
+  const spendPoints = useStore((s) => s.spendPoints);
   const savedAddresses = useStore((s) => s.savedAddresses);
   const savedPayments = useStore((s) => s.savedPayments);
   const giftWrap = useStore((s) => s.checkoutGiftWrap);
@@ -85,7 +85,7 @@ export default function CheckoutPage() {
   const placeOrder = () => {
     if (useGiftCard && giftApplied > 0) applyGiftCard(giftApplied);
     if (useCredit && creditApplied > 0) applyStoreCredit(creditApplied);
-    if (usePoints && pointsRedeemValue > 0) redeemPoints(pointsRedeemValue * 100, "Checkout redemption");
+    if (usePoints && pointsRedeemValue > 0) spendPoints(pointsRedeemValue * 100, "Checkout redemption");
     addPoints(points, "Order reward");
     setEarned(points);
     clearCart();
