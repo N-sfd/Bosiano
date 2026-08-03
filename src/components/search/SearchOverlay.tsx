@@ -151,7 +151,7 @@ export function SearchOverlay() {
             animate={{ y: 0 }}
             exit={{ y: -24 }}
             transition={{ ease: [0.22, 1, 0.36, 1], duration: 0.35 }}
-            className="relative mx-auto max-h-[92vh] w-full max-w-shell overflow-y-auto bg-canvas-raised px-5 pb-10 pt-6 sm:px-8 lg:px-12"
+            className="relative mx-auto max-h-[min(92dvh,92vh)] w-full max-w-shell overflow-y-auto overscroll-contain bg-canvas-raised px-4 pb-[calc(2.5rem+env(safe-area-inset-bottom))] pt-5 sm:px-8 sm:pt-6 lg:px-12"
             role="dialog"
             aria-label="Search"
           >

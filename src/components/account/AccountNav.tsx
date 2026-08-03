@@ -23,6 +23,7 @@ import {
   LayoutGrid,
   Shield,
   Store,
+  Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -43,6 +44,7 @@ const links = [
   { href: "/stores", label: "Stores", icon: MapPin },
   { href: "/app", label: "Mobile app", icon: Smartphone },
   { href: "/rewards", label: "Bosiano Club", icon: Award },
+  { href: "/account/club", label: "My Club dashboard", icon: Crown },
   { href: "/admin", label: "Admin", icon: Shield },
   { href: "/vendor", label: "Vendor portal", icon: Store },
   { href: "/account/settings", label: "Settings", icon: Settings },
@@ -51,7 +53,7 @@ const links = [
 export function AccountNav() {
   const pathname = usePathname();
   return (
-    <nav className="flex gap-2 overflow-x-auto lg:flex-col lg:overflow-visible" aria-label="Account">
+    <nav className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] lg:flex-col lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden" aria-label="Account">
       {links.map((l) => {
         const active = pathname === l.href;
         return (

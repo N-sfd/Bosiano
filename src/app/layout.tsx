@@ -47,10 +47,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <AnnouncementBar />
         <Header />
-        <main id="main" className="min-h-screen pb-16 lg:pb-0">
+        <main id="main" className="min-h-screen pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-0">
           {children}
         </main>
-        <Footer />
+        <div className="pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-0">
+          <Footer />
+        </div>
         <MobileNav />
         <ConciergeWidget />
       </body>

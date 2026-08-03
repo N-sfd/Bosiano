@@ -81,7 +81,7 @@ function Wordmark({ compact }: { compact?: boolean }) {
     <span
       className={cn(
         "font-serif italic font-medium leading-none tracking-[0.01em]",
-        compact ? "text-[1.65rem]" : "text-[2.15rem]"
+        compact ? "text-[1.35rem] sm:text-[1.65rem]" : "text-[1.55rem] sm:text-[2.15rem]"
       )}
     >
       Bosiano
@@ -99,20 +99,20 @@ function ItalyLine({
   return (
     <span
       className={cn(
-        "mt-1 inline-flex items-center gap-2.5 uppercase opacity-75",
+        "mt-1 inline-flex items-center gap-1.5 uppercase opacity-75 sm:gap-2.5",
         align === "left" ? "justify-start" : "justify-center"
       )}
     >
-      <span className={cn("h-px bg-current", compact ? "w-8" : "w-10")} />
+      <span className={cn("h-px bg-current", compact ? "w-6 sm:w-8" : "w-7 sm:w-10")} />
       <span
         className={cn(
-          "font-medium leading-none tracking-[0.34em]",
-          compact ? "text-[0.48rem]" : "text-[0.56rem]"
+          "font-medium leading-none tracking-[0.28em] sm:tracking-[0.34em]",
+          compact ? "text-[0.42rem] sm:text-[0.48rem]" : "text-[0.48rem] sm:text-[0.56rem]"
         )}
       >
         Italy
       </span>
-      <span className={cn("h-px bg-current", compact ? "w-8" : "w-10")} />
+      <span className={cn("h-px bg-current", compact ? "w-6 sm:w-8" : "w-7 sm:w-10")} />
     </span>
   );
 }

@@ -30,7 +30,7 @@ export function MobileNav() {
     <>
       {/* bottom nav */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-[80] flex items-stretch border-t border-line bg-canvas-raised/95 backdrop-blur-md lg:hidden"
+        className="fixed bottom-0 left-0 right-0 z-[80] flex items-stretch border-t border-line bg-canvas-raised/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
         aria-label="Mobile"
       >
         {items.map((item) => {
@@ -79,7 +79,7 @@ export function MobileNav() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ ease: [0.22, 1, 0.36, 1], duration: 0.4 }}
-              className="absolute left-0 top-0 flex h-full w-[86%] max-w-sm flex-col bg-canvas-raised"
+              className="absolute left-0 top-0 flex h-full w-[min(86vw,24rem)] max-w-sm flex-col bg-canvas-raised"
               role="dialog"
               aria-label="Menu"
             >

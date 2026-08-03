@@ -13,10 +13,12 @@
   }
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
   body {
     @apply bg-canvas text-ink font-sans antialiased;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
   h1, h2, h3, h4 {
     @apply font-serif;

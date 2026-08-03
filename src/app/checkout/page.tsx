@@ -59,6 +59,7 @@ export default function CheckoutPage() {
   const [guest, setGuest] = useState(true);
   const [shipping, setShipping] = useState("express");
   const [deliveryDate, setDeliveryDate] = useState(deliveryDates[0]);
+  const [payMethod, setPayMethod] = useState("card");
   const [promo, setPromo] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
   const [useGiftCard, setUseGiftCard] = useState(false);
@@ -71,6 +72,8 @@ export default function CheckoutPage() {
   const [address1, setAddress1] = useState("");
   const [city, setCity] = useState("");
   const [postcode, setPostcode] = useState("");
+
+  const splitShip = useStore((s) => s.checkoutSplitShip);
 
   const lines = hydrated ? resolveCart(cart) : [];
   const subtotal = hydrated ? cartSubtotal(cart) : 0;
@@ -263,21 +266,62 @@ export default function CheckoutPage() {
           </Section>
 
           <Section step={4} title="Payment">
-            {!guest && defaultPayment && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {[
+                { id: "card", label: "Credit / debit" },
+                { id: "apple", label: "Apple Pay" },
+                { id: "google", label: "Google Pay" },
+                { id: "paypal", label: "PayPal" },
+                { id: "klarna", label: "Klarna" },
+                { id: "affirm", label: "Affirm" },
+              ].map((m) => (
+                <OptionChip
+                  key={m.id}
+                  shape="pill"
+                  size="sm"
+                  selected={payMethod === m.id}
+                  onClick={() => setPayMethod(m.id)}
+                >
+                  {m.label}
+                </OptionChip>
+              ))}
+            </div>
+            {!guest && defaultPayment && payMethod === "card" && (
               <RadioCard
                 selected
                 icon={CreditCard}
                 title={`${defaultPayment.brand} ···· ${defaultPayment.last4}`}
-                subtitle={`Expires ${defaultPayment.exp}`}
+                subtitle={`Expires ${defaultPayment.exp} · saved method`}
                 onClick={() => {}}
                 className="mb-3"
               />
             )}
-            <Input label="Card number" placeholder="1234 5678 9012 3456" />
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <Input label="Expiry" placeholder="MM / YY" />
-              <Input label="CVC" placeholder="123" />
-            </div>
+            {payMethod === "card" && (
+              <>
+                <Input label="Card number" placeholder="1234 5678 9012 3456" />
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  <Input label="Expiry" placeholder="MM / YY" />
+                  <Input label="CVC" placeholder="123" />
+                </div>
+              </>
+            )}
+            {payMethod !== "card" && (
+              <p className="rounded-xl border border-line bg-canvas-sunk px-4 py-3 text-sm text-ink-soft">
+                You&apos;ll complete payment with{" "}
+                <span className="font-medium text-ink">
+                  {payMethod === "apple"
+                    ? "Apple Pay"
+                    : payMethod === "google"
+                      ? "Google Pay"
+                      : payMethod === "paypal"
+                        ? "PayPal"
+                        : payMethod === "klarna"
+                          ? "Klarna"
+                          : "Affirm"}
+                </span>{" "}
+                after placing the order.
+              </p>
+            )}
             <div className="mt-4 space-y-2 text-sm text-ink-soft">
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={useGiftCard} onChange={(e) => setUseGiftCard(e.target.checked)} className="accent-gold" />
@@ -292,9 +336,9 @@ export default function CheckoutPage() {
                 Redeem loyalty rewards (up to {formatPrice(Math.floor(loyaltyPoints / 100))})
               </label>
             </div>
-            <p className="mt-3 flex items-center gap-2 text-xs text-ink-muted">
-              <Lock className="h-3.5 w-3.5" /> Cards, Affirm, Klarna, PayPal, Apple Pay &amp; Google Pay supported.
-            </p>
+            {splitShip && (
+              <p className="mt-3 text-xs text-ink-muted">Split shipment enabled — ready items ship first.</p>
+            )}
           </Section>
 
           <Section step={5} title="Gifting">

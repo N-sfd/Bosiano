@@ -15,14 +15,14 @@ import {
   Sparkles,
   Package,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useUI } from "@/store/useUI";
 import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import { resolveCart, cartSubtotal, FREE_SHIP_THRESHOLD } from "@/lib/cart";
 import { getBrand } from "@/lib/brands";
 import { Media } from "@/components/Media";
-import { relatedProducts, totalStock } from "@/lib/products";
+import { relatedProducts } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
 import { ExpressPayButtons } from "@/components/checkout/ExpressPayButtons";
 import { pointsEarned, tierForPoints } from "@/lib/club";
@@ -41,8 +41,9 @@ export function CartDrawer() {
   const giftWrap = useStore((s) => s.checkoutGiftWrap);
   const giftMessage = useStore((s) => s.checkoutGiftMessage);
   const setCheckoutGift = useStore((s) => s.setCheckoutGift);
+  const splitShip = useStore((s) => s.checkoutSplitShip);
+  const setCheckoutSplitShip = useStore((s) => s.setCheckoutSplitShip);
   const hydrated = useHydrated();
-  const [splitShip, setSplitShip] = useState(false);
 
   const lines = useMemo(() => (hydrated ? resolveCart(cart) : []), [hydrated, cart]);
   const later = useMemo(() => (hydrated ? resolveCart(savedForLater) : []), [hydrated, savedForLater]);
@@ -59,7 +60,19 @@ export function CartDrawer() {
     return relatedProducts(seed, 3);
   }, [lines]);
 
-  const etaLabel = splitShip ? "Split: express + standard" : "Estimated delivery · 1–3 days";
+  const shipSteps = splitShip
+    ? [
+        { label: "Ready items", state: "active" as const },
+        { label: "Express out", state: "upcoming" as const },
+        { label: "Preorder follows", state: "upcoming" as const },
+      ]
+    : [
+        { label: "Packed", state: "active" as const },
+        { label: "In transit", state: "upcoming" as const },
+        { label: remaining > 0 ? "Delivery 2–4d" : "Express 1–2d", state: "upcoming" as const },
+      ];
+
+  const etaLabel = splitShip ? "Split: express + standard" : remaining > 0 ? "Est. delivery · 2–4 days" : "Est. delivery · 1–2 days";
 
   return (
     <AnimatePresence>
@@ -111,6 +124,20 @@ export function CartDrawer() {
                   <div className="h-1 w-full overflow-hidden rounded-full bg-canvas-sunk">
                     <div className="h-full rounded-full bg-gold transition-all duration-500" style={{ width: `${progress}%` }} />
                   </div>
+                  <div className="flex items-center gap-1">
+                    {shipSteps.map((step, i) => (
+                      <div key={step.label} className="flex flex-1 flex-col items-center gap-1">
+                        <div
+                          className={`h-1.5 w-full rounded-full ${
+                            step.state === "active" ? "bg-gold" : "bg-canvas-sunk"
+                          }`}
+                        />
+                        <span className="text-[0.55rem] uppercase tracking-luxe text-ink-muted">
+                          {i + 1}. {step.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                   <div className="flex flex-wrap gap-2 text-[0.65rem] uppercase tracking-luxe text-ink-muted">
                     <span className="inline-flex items-center gap-1 rounded-full bg-canvas-sunk px-2.5 py-1">
                       <Truck className="h-3 w-3" /> {etaLabel}
@@ -128,7 +155,7 @@ export function CartDrawer() {
 
                 <div className="flex-1 overflow-y-auto px-6">
                   {lines.map(({ line, product, variant }) => {
-                    const stock = totalStock(product);
+                    const sizeStock = variant.inventory[line.size] ?? 0;
                     return (
                       <div key={`${line.variantId}-${line.size}`} className="flex gap-4 border-b border-line py-5">
                         <Link href={`/product/${product.slug}`} onClick={() => setCart(false)} className="w-20 shrink-0">
@@ -144,9 +171,14 @@ export function CartDrawer() {
                           <p className="mt-0.5 text-xs text-ink-muted">
                             {variant.color} · Size {line.size}
                           </p>
-                          {stock > 0 && stock <= 6 && (
+                          {sizeStock > 0 && sizeStock <= 5 && (
                             <p className="mt-1 inline-flex items-center gap-1 text-[0.65rem] uppercase tracking-luxe text-[#8a4b2f]">
-                              <Clock className="h-3 w-3" /> Only {stock} left
+                              <Clock className="h-3 w-3" /> Only {sizeStock} left in {line.size} — hurry
+                            </p>
+                          )}
+                          {sizeStock <= 0 && (
+                            <p className="mt-1 text-[0.65rem] uppercase tracking-luxe text-ink-muted">
+                              Pre-order / ships when restocked
                             </p>
                           )}
                           <div className="mt-auto flex items-center justify-between pt-2">
@@ -249,7 +281,7 @@ export function CartDrawer() {
                       <input
                         type="checkbox"
                         checked={splitShip}
-                        onChange={(e) => setSplitShip(e.target.checked)}
+                        onChange={(e) => setCheckoutSplitShip(e.target.checked)}
                         className="accent-gold"
                       />
                       Split shipment (ship ready items first)

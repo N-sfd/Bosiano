@@ -127,6 +127,7 @@ interface StoreState {
   savedPayments: SavedPayment[];
   checkoutGiftWrap: boolean;
   checkoutGiftMessage: string;
+  checkoutSplitShip: boolean;
   followedDesigners: string[];
   designerAlerts: boolean;
   savedLiveEvents: string[];
@@ -231,6 +232,7 @@ interface StoreState {
   subscribeMembership: (planId: string) => void;
   cancelMembership: (planId: string) => void;
   setCheckoutGift: (wrap: boolean, message?: string) => void;
+  setCheckoutSplitShip: (on: boolean) => void;
   applyGiftCard: (amount: number) => void;
   applyStoreCredit: (amount: number) => void;
 
@@ -366,6 +368,7 @@ export const useStore = create<StoreState>()(
       ],
       checkoutGiftWrap: false,
       checkoutGiftMessage: "",
+      checkoutSplitShip: false,
       followedDesigners: ["maison-verane", "sanso"],
       designerAlerts: true,
       savedLiveEvents: ["live-3"],
@@ -828,6 +831,8 @@ export const useStore = create<StoreState>()(
 
       setCheckoutGift: (wrap, message = "") =>
         set({ checkoutGiftWrap: wrap, checkoutGiftMessage: message }),
+
+      setCheckoutSplitShip: (on) => set({ checkoutSplitShip: on }),
 
       applyGiftCard: (amount) =>
         set((s) => ({ giftCardBalance: Math.max(0, s.giftCardBalance - amount) })),

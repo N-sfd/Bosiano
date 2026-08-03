@@ -84,6 +84,72 @@ export function pointsEarned(subtotal: number, pointsBalance: number) {
   return Math.round(subtotal * tier.multiplier);
 }
 
+export interface ClubReward {
+  id: string;
+  title: string;
+  copy: string;
+  pointsCost?: number;
+  tierMin: ClubTierId;
+  expiresInDays?: number;
+}
+
+/** Catalog of redeemable / claimable rewards shown on the account Club dashboard. */
+export const CLUB_REWARDS: ClubReward[] = [
+  {
+    id: "welcome-25",
+    title: "Welcome reward",
+    copy: "$25 off your next order over $150",
+    tierMin: "member",
+    expiresInDays: 90,
+  },
+  {
+    id: "birthday",
+    title: "Birthday reward",
+    copy: "Double points week + $40 gift",
+    tierMin: "member",
+    expiresInDays: 30,
+  },
+  {
+    id: "ship-free",
+    title: "Complimentary shipping",
+    copy: "Express shipping credit on your next order",
+    pointsCost: 800,
+    tierMin: "member",
+  },
+  {
+    id: "early-sale",
+    title: "Early sale access",
+    copy: "Shop the sale 48 hours early",
+    tierMin: "member",
+  },
+  {
+    id: "exclusive-drop",
+    title: "Exclusive product access",
+    copy: "Unlock Gold-only capsules this month",
+    tierMin: "gold",
+  },
+  {
+    id: "stylist-hour",
+    title: "Personal stylist hour",
+    copy: "Book a Private Client styling session",
+    pointsCost: 2500,
+    tierMin: "private-client",
+  },
+  {
+    id: "private-event",
+    title: "Private event invite",
+    copy: "Invitation-only designer salon",
+    tierMin: "private-client",
+  },
+];
+
+export function availableRewardsFor(points: number): ClubReward[] {
+  const tier = tierForPoints(points);
+  const order: ClubTierId[] = ["member", "gold", "private-client"];
+  const unlocked = order.indexOf(tier.id);
+  return CLUB_REWARDS.filter((r) => order.indexOf(r.tierMin) <= unlocked);
+}
+
 export const REFERRAL_REWARD = 50;
 export const REFERRAL_FRIEND_REWARD = 25;
 

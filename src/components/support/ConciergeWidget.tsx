@@ -27,7 +27,7 @@ export function ConciergeWidget() {
   };
 
   return (
-    <div className="fixed bottom-20 right-4 z-[90] lg:bottom-6 lg:right-6">
+    <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-[85] lg:bottom-6 lg:right-6">
       {open && (
         <div className="mb-3 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-line bg-canvas-raised shadow-xl">
           <div className="flex items-center justify-between border-b border-line bg-ink px-4 py-3 text-canvas">

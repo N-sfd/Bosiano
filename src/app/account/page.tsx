@@ -89,8 +89,8 @@ export default function AccountDashboard() {
               </p>
             )}
           </div>
-          <Link href="/rewards" className="btn bg-canvas px-6 py-3 text-ink hover:bg-gold hover:text-canvas">
-            Club & rewards <ArrowRight className="h-4 w-4" />
+          <Link href="/account/club" className="btn bg-canvas px-6 py-3 text-ink hover:bg-gold hover:text-canvas">
+            Club dashboard <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>
