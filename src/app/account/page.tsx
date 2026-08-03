@@ -21,7 +21,7 @@ import {
 import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import { getProduct } from "@/lib/products";
-import { orders } from "@/lib/orders";
+import { orders as seedOrders } from "@/lib/orders";
 import { resolveCart } from "@/lib/cart";
 import { Media } from "@/components/Media";
 import { StatusPill } from "@/components/account/StatusPill";
@@ -46,8 +46,10 @@ export default function AccountDashboard() {
   const pointsHistory = useStore((s) => s.pointsHistory);
   const savedAddresses = useStore((s) => s.savedAddresses);
   const savedPayments = useStore((s) => s.savedPayments);
+  const storeOrders = useStore((s) => s.adminOrders);
   const hydrated = useHydrated();
 
+  const orders = hydrated ? storeOrders : seedOrders;
   const points = hydrated ? loyaltyPoints : 2480;
   const progress = tierProgress(points);
   const recent = hydrated ? recentlyViewed.map((id) => getProduct(id)).filter(Boolean).slice(0, 6) : [];

@@ -1,15 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, MapPin, Truck, Check, RotateCcw, Copy } from "lucide-react";
-import { orders } from "@/lib/orders";
+import { orders as seedOrders } from "@/lib/orders";
+import { useStore } from "@/store/useStore";
+import { useHydrated } from "@/lib/hooks";
 import { Media } from "@/components/Media";
 import { formatPrice, cn } from "@/lib/utils";
 import { StatusPill } from "@/components/account/StatusPill";
 
 export default function OrdersPage() {
-  const [open, setOpen] = useState<string | null>(orders[0]?.id ?? null);
+  const hydrated = useHydrated();
+  const storeOrders = useStore((s) => s.adminOrders);
+  const orders = hydrated ? storeOrders : seedOrders;
+  const [open, setOpen] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (hydrated) setOpen((current) => current ?? orders[0]?.id ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
 
   return (
     <div className="space-y-8">

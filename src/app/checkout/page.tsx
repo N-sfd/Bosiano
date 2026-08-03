@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Lock,
   Truck,
@@ -53,6 +53,7 @@ export default function CheckoutPage() {
   const giftWrap = useStore((s) => s.checkoutGiftWrap);
   const giftMessage = useStore((s) => s.checkoutGiftMessage);
   const setCheckoutGift = useStore((s) => s.setCheckoutGift);
+  const placeOrder = useStore((s) => s.placeOrder);
   const hydrated = useHydrated();
 
   const [guest, setGuest] = useState(true);
@@ -66,6 +67,10 @@ export default function CheckoutPage() {
   const [digitalReceipt, setDigitalReceipt] = useState(true);
   const [placed, setPlaced] = useState(false);
   const [earned, setEarned] = useState(0);
+  const [orderId, setOrderId] = useState("");
+  const [address1, setAddress1] = useState("");
+  const [city, setCity] = useState("");
+  const [postcode, setPostcode] = useState("");
 
   const lines = hydrated ? resolveCart(cart) : [];
   const subtotal = hydrated ? cartSubtotal(cart) : 0;
@@ -82,12 +87,39 @@ export default function CheckoutPage() {
   const defaultAddress = savedAddresses.find((a) => a.isDefault) ?? savedAddresses[0];
   const defaultPayment = savedPayments.find((p) => p.isDefault) ?? savedPayments[0];
 
-  const placeOrder = () => {
+  useEffect(() => {
+    if (!guest && defaultAddress) {
+      setAddress1(defaultAddress.line1);
+      setCity(defaultAddress.city);
+      setPostcode(defaultAddress.postcode);
+    } else if (guest) {
+      setAddress1("");
+      setCity("");
+      setPostcode("");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guest]);
+
+  const handlePlaceOrder = () => {
     if (useGiftCard && giftApplied > 0) applyGiftCard(giftApplied);
     if (useCredit && creditApplied > 0) applyStoreCredit(creditApplied);
     if (usePoints && pointsRedeemValue > 0) spendPoints(pointsRedeemValue * 100, "Checkout redemption");
     addPoints(points, "Order reward");
     setEarned(points);
+    const order = placeOrder({
+      items: lines.map(({ product, variant, line }) => ({
+        name: product.name,
+        brand: getBrand(product.brandId)?.name ?? "",
+        image: variant.images[0],
+        price: product.price,
+        qty: line.quantity,
+        size: line.size,
+      })),
+      total,
+      address: [address1, [city, postcode].filter(Boolean).join(" ")].filter(Boolean).join(", ") || "Address on file",
+      eta: shipping === "pickup" ? "Ready for pickup · Bond Street" : `Arriving ${deliveryDate}`,
+    });
+    setOrderId(order.id);
     clearCart();
     setPlaced(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -101,7 +133,7 @@ export default function CheckoutPage() {
         </span>
         <h1 className="mt-6 font-serif text-4xl">Thank you for your order</h1>
         <p className="mt-2 max-w-md text-ink-soft">
-          Order <span className="font-medium text-ink">#BSN-{Math.floor(48000 + Math.random() * 999)}</span> is
+          Order <span className="font-medium text-ink">#{orderId}</span> is
           confirmed{digitalReceipt ? " with a digital gift receipt" : ""}. You earned{" "}
           <span className="font-medium text-gold-deep">{earned} {tier.name} points</span>.
         </p>
@@ -187,10 +219,10 @@ export default function CheckoutPage() {
               <Input label="First name" defaultValue={guest ? "" : "Amelia"} />
               <Input label="Last name" defaultValue={guest ? "" : "Rousseau"} />
             </div>
-            <Input label="Address" className="mt-3" defaultValue={guest ? "" : defaultAddress?.line1} />
+            <Input label="Address" className="mt-3" value={address1} onChange={(e) => setAddress1(e.target.value)} />
             <div className="mt-3 grid grid-cols-3 gap-3">
-              <Input label="City" defaultValue={guest ? "" : defaultAddress?.city} />
-              <Input label="Postcode" defaultValue={guest ? "" : defaultAddress?.postcode} />
+              <Input label="City" value={city} onChange={(e) => setCity(e.target.value)} />
+              <Input label="Postcode" value={postcode} onChange={(e) => setPostcode(e.target.value)} />
               <Input label="Country" defaultValue={defaultAddress?.country ?? "United Kingdom"} />
             </div>
           </Section>
@@ -354,9 +386,16 @@ export default function CheckoutPage() {
               You&apos;ll earn {points} Bosiano Club points ({tier.name} · {tier.multiplier}×).
             </p>
 
-            <Button onClick={placeOrder} className="mt-5 w-full">
+            <Button
+              onClick={handlePlaceOrder}
+              disabled={shipping !== "pickup" && (!address1.trim() || !city.trim() || !postcode.trim())}
+              className="mt-5 w-full"
+            >
               <Lock className="h-4 w-4" /> Place order
             </Button>
+            {shipping !== "pickup" && (!address1.trim() || !city.trim() || !postcode.trim()) && (
+              <p className="mt-2 text-center text-xs text-ink-muted">Enter a delivery address to place your order.</p>
+            )}
           </div>
         </aside>
       </div>

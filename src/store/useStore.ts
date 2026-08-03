@@ -286,6 +286,12 @@ interface StoreState {
   setLookbookShoppable: (id: string, shoppable: boolean) => void;
   setLookbookPublished: (id: string, published: boolean) => void;
   setOrderStatus: (id: string, status: Order["status"]) => void;
+  placeOrder: (payload: {
+    items: Order["items"];
+    total: number;
+    address: string;
+    eta: string;
+  }) => Order;
   setEditorialPublished: (slug: string, published: boolean) => void;
   setDesignerPublished: (id: string, published: boolean) => void;
   setStorePublished: (id: string, published: boolean) => void;
@@ -1297,6 +1303,29 @@ export const useStore = create<StoreState>()(
         set((s) => ({
           adminOrders: s.adminOrders.map((o) => (o.id === id ? { ...o, status } : o)),
         })),
+
+      placeOrder: ({ items, total, address, eta }) => {
+        const now = new Date();
+        const order: Order = {
+          id: `BSN-${Math.floor(48000 + Math.random() * 1999)}`,
+          date: now.toISOString().slice(0, 10),
+          status: "processing",
+          total,
+          items,
+          timeline: [
+            { label: "Order placed", date: now.toLocaleString(), done: true },
+            { label: "Payment confirmed", date: now.toLocaleString(), done: true },
+            { label: "Preparing your order", date: "", done: false },
+            { label: "Shipped", date: "", done: false },
+            { label: "Delivered", date: "", done: false },
+          ],
+          tracking: `1Z-BSN-${Math.floor(1000 + Math.random() * 8999)}-${Math.floor(1000 + Math.random() * 8999)}-${Math.floor(100 + Math.random() * 899)}`,
+          eta,
+          address,
+        };
+        set((s) => ({ adminOrders: [order, ...s.adminOrders] }));
+        return order;
+      },
 
       setEditorialPublished: (slug, published) =>
         set((s) => ({
