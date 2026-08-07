@@ -1,16 +1,22 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export type LogoTone = "ink" | "gold";
 
-function toneColor(tone: LogoTone) {
-  return tone === "gold" ? "#CBA96A" : "#080808";
-}
+const LOGO = {
+  ink: "/brand/logo-primary.png",
+  gold: "/brand/logo-gold.png",
+} as const;
+
+const MARK = {
+  ink: "/brand/monogram-ink.png",
+  gold: "/brand/monogram-gold.png",
+} as const;
 
 /**
- * Updated logo system based on the user's latest BOSIANO ITALY boards.
- * Uses a refined Italian luxury wordmark instead of the older BS monogram lockup.
+ * Official Bosianos lockup — primary (ink) and gold PNG assets.
  */
 export function BosianosLogo({
   variant = "stacked",
@@ -25,94 +31,72 @@ export function BosianosLogo({
   compact?: boolean;
   className?: string;
 }) {
-  const color = toneColor(tone);
-
   if (variant === "mark") {
     return (
       <span
         className={cn(
-          "inline-flex items-center justify-center font-serif italic leading-none",
-          compact ? "text-3xl" : "text-4xl",
+          "relative inline-block",
+          compact ? "h-8 w-8" : "h-10 w-10",
           className
         )}
-        style={{ color }}
-        aria-label="Bosiano"
+        aria-label="Bosianos"
       >
-        B
+        <Image
+          src={MARK[tone]}
+          alt="Bosianos"
+          fill
+          className="object-contain"
+          sizes={compact ? "32px" : "40px"}
+          priority={false}
+        />
       </span>
     );
   }
 
-  if (variant === "horizontal") {
-    return (
-      <span className={cn("inline-flex items-center", className)} style={{ color }}>
-        <span className="flex flex-col items-start">
-          <Wordmark compact={compact} />
-          <ItalyLine align="left" compact={compact} />
-        </span>
-      </span>
-    );
-  }
+  const isGold = tone === "gold";
+  const width = compact
+    ? isGold
+      ? 140
+      : 120
+    : isGold
+      ? showTagline
+        ? 220
+        : 180
+      : 160;
+  const height = compact
+    ? isGold
+      ? 90
+      : 48
+    : isGold
+      ? showTagline
+        ? 140
+        : 110
+      : 64;
 
-  if (variant === "wordmark") {
-    return (
-      <span className={cn("inline-flex flex-col items-center", className)} style={{ color }}>
-        <Wordmark compact={compact} />
-        <ItalyLine compact={compact} />
-      </span>
-    );
-  }
-
-  return (
-    <span className={cn("inline-flex flex-col items-center", className)} style={{ color }}>
-      <Wordmark compact={compact} />
-      <ItalyLine compact={compact} />
-      {showTagline && (
-        <span className="mt-1 text-[0.48rem] font-medium uppercase tracking-[0.3em] opacity-60">
-          Premium Fashion Marketplace
-        </span>
-      )}
-    </span>
-  );
-}
-
-function Wordmark({ compact }: { compact?: boolean }) {
   return (
     <span
       className={cn(
-        "font-serif italic font-medium leading-none tracking-[0.01em]",
-        compact ? "text-[1.35rem] sm:text-[1.65rem]" : "text-[1.55rem] sm:text-[2.15rem]"
+        "relative inline-block shrink-0",
+        variant === "horizontal" && "align-middle",
+        className
       )}
+      style={{ width, height }}
+      aria-label="Bosianos"
     >
-      Bosiano
-    </span>
-  );
-}
-
-function ItalyLine({
-  compact,
-  align = "center",
-}: {
-  compact?: boolean;
-  align?: "center" | "left";
-}) {
-  return (
-    <span
-      className={cn(
-        "mt-1 inline-flex items-center gap-1.5 uppercase opacity-75 sm:gap-2.5",
-        align === "left" ? "justify-start" : "justify-center"
-      )}
-    >
-      <span className={cn("h-px bg-current", compact ? "w-6 sm:w-8" : "w-7 sm:w-10")} />
-      <span
+      <Image
+        src={LOGO[tone]}
+        alt="Bosianos"
+        fill
         className={cn(
-          "font-medium leading-none tracking-[0.28em] sm:tracking-[0.34em]",
-          compact ? "text-[0.42rem] sm:text-[0.48rem]" : "text-[0.48rem] sm:text-[0.56rem]"
+          "object-contain",
+          variant === "horizontal" || variant === "wordmark"
+            ? "object-left"
+            : "object-center",
+          isGold ? "object-top" : "object-center"
         )}
-      >
-        Italy
-      </span>
-      <span className={cn("h-px bg-current", compact ? "w-6 sm:w-8" : "w-7 sm:w-10")} />
+        sizes={`${width}px`}
+        priority={tone === "ink"}
+      />
     </span>
   );
 }
@@ -124,9 +108,5 @@ export function BosianosMark({
   className?: string;
   tone?: LogoTone;
 }) {
-  return (
-    <span className={cn("inline-block font-serif italic", className)} style={{ color: toneColor(tone) }}>
-      B
-    </span>
-  );
+  return <BosianosLogo variant="mark" tone={tone} className={className} />;
 }
