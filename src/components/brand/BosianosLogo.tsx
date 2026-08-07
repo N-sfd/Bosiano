@@ -5,18 +5,11 @@ import { cn } from "@/lib/utils";
 
 export type LogoTone = "ink" | "gold";
 
-const LOGO = {
-  ink: "/brand/logo-primary.png",
-  gold: "/brand/logo-gold.png",
-} as const;
-
-const MARK = {
-  ink: "/brand/monogram-ink.png",
-  gold: "/brand/monogram-gold.png",
-} as const;
+const CREST = "/brand/crest-primary.png";
+const LOCKUP = "/brand/logo-lockup.png";
 
 /**
- * Official Bosianos lockup — primary (ink) and gold PNG assets.
+ * Bosiano brand mark — crowned tiger crest + BOSIANO / ITALIAN HERITAGE.
  */
 export function BosianosLogo({
   variant = "stacked",
@@ -31,72 +24,103 @@ export function BosianosLogo({
   compact?: boolean;
   className?: string;
 }) {
+  const color = tone === "gold" ? "#CBA96A" : "#1a1510";
+  const isGold = tone === "gold";
+
   if (variant === "mark") {
     return (
       <span
         className={cn(
-          "relative inline-block",
-          compact ? "h-8 w-8" : "h-10 w-10",
+          "relative inline-block overflow-hidden",
+          compact ? "h-9 w-9" : "h-11 w-11",
           className
         )}
-        aria-label="Bosianos"
+        aria-label="Bosiano"
       >
         <Image
-          src={MARK[tone]}
-          alt="Bosianos"
+          src={CREST}
+          alt=""
           fill
-          className="object-contain"
-          sizes={compact ? "32px" : "40px"}
+          className={cn("object-contain", !isGold && "mix-blend-multiply")}
+          sizes={compact ? "36px" : "44px"}
+        />
+      </span>
+    );
+  }
+
+  /* Full photographic lockup — best for light surfaces / marketing */
+  if (variant === "stacked" && showTagline && !compact) {
+    return (
+      <span
+        className={cn("relative inline-block h-[148px] w-[168px] sm:h-[168px] sm:w-[190px]", className)}
+        aria-label="Bosiano — Italian Heritage"
+      >
+        <Image
+          src={LOCKUP}
+          alt="Bosiano Italian Heritage"
+          fill
+          className={cn("object-contain object-left", !isGold && "mix-blend-multiply")}
+          sizes="190px"
           priority={false}
         />
       </span>
     );
   }
 
-  const isGold = tone === "gold";
-  const width = compact
-    ? isGold
-      ? 140
-      : 120
-    : isGold
-      ? showTagline
-        ? 220
-        : 180
-      : 160;
-  const height = compact
-    ? isGold
-      ? 90
-      : 48
-    : isGold
-      ? showTagline
-        ? 140
-        : 110
-      : 64;
+  const crestSize = compact ? (variant === "horizontal" ? 36 : 40) : variant === "horizontal" ? 44 : 56;
+  const showLine = showTagline || variant === "stacked" || variant === "wordmark";
 
   return (
     <span
       className={cn(
-        "relative inline-block shrink-0",
-        variant === "horizontal" && "align-middle",
+        "inline-flex items-center gap-2.5 sm:gap-3",
+        (variant === "stacked" || variant === "wordmark") && "flex-col gap-1.5 sm:gap-2",
         className
       )}
-      style={{ width, height }}
-      aria-label="Bosianos"
+      style={{ color }}
+      aria-label="Bosiano — Italian Heritage"
     >
-      <Image
-        src={LOGO[tone]}
-        alt="Bosianos"
-        fill
+      <span
+        className="relative shrink-0 overflow-hidden"
+        style={{ width: crestSize, height: crestSize }}
+      >
+        <Image
+          src={CREST}
+          alt=""
+          fill
+          className={cn("object-contain", !isGold && "mix-blend-multiply")}
+          sizes={`${crestSize}px`}
+          priority={!isGold}
+        />
+      </span>
+
+      <span
         className={cn(
-          "object-contain",
-          variant === "horizontal" || variant === "wordmark"
-            ? "object-left"
-            : "object-center",
-          isGold ? "object-top" : "object-center"
+          "flex flex-col",
+          variant === "horizontal" ? "items-start" : "items-center text-center"
         )}
-        sizes={`${width}px`}
-        priority={tone === "ink"}
-      />
+      >
+        <span
+          className={cn(
+            "font-serif font-semibold leading-none tracking-[0.12em]",
+            compact
+              ? "text-[0.95rem] sm:text-[1.1rem]"
+              : "text-[1.15rem] sm:text-[1.45rem]"
+          )}
+        >
+          BOSIANO
+        </span>
+        {showLine && (
+          <span
+            className={cn(
+              "mt-1 font-sans font-medium uppercase leading-none tracking-[0.28em] opacity-70",
+              compact ? "text-[0.38rem] sm:text-[0.42rem]" : "text-[0.42rem] sm:text-[0.5rem]"
+            )}
+          >
+            Italian Heritage
+          </span>
+        )}
+      </span>
     </span>
   );
 }

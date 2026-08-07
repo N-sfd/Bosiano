@@ -23,15 +23,15 @@ const sans = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Bosianos — Premium Fashion Marketplace",
-    template: "%s · Bosianos",
+    default: "Bosiano — Italian Heritage",
+    template: "%s · Bosiano",
   },
   description:
-    "Bosianos is a curated luxury marketplace bringing together the world's most considered designers. Shop tailoring, dresses, bags, and more with AI-powered discovery.",
-  keywords: ["luxury fashion", "designer", "marketplace", "Bosianos"],
+    "Bosiano is a curated luxury marketplace of Italian heritage — uniting considered designers, craftsmanship, and AI-powered discovery.",
+  keywords: ["luxury fashion", "Italian heritage", "designer", "marketplace", "Bosiano"],
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/brand/crest-primary.png", type: "image/png" }],
+    apple: [{ url: "/brand/crest-primary.png", type: "image/png" }],
   },
 };
 

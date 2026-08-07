@@ -143,12 +143,13 @@ export function Header() {
             <Link
               href="/"
               className="mx-1 shrink-0 transition-transform duration-500 ease-silk sm:mx-4"
-              aria-label="Bosianos home"
+              aria-label="Bosiano home"
               onMouseEnter={() => { setActive(null); setExploreOpen(false); }}
             >
               <BosianosLogo
-                variant="wordmark"
+                variant="horizontal"
                 tone="ink"
+                showTagline
                 compact={scrolled}
                 className="transition-all duration-500"
               />
