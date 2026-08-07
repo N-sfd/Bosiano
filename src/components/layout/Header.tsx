@@ -147,7 +147,7 @@ export function Header() {
               onMouseEnter={() => { setActive(null); setExploreOpen(false); }}
             >
               <BosianosLogo
-                variant="horizontal"
+                variant="stacked"
                 tone="ink"
                 showTagline
                 compact={scrolled}

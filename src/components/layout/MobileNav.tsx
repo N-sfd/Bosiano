@@ -84,7 +84,7 @@ export function MobileNav() {
               aria-label="Menu"
             >
               <div className="flex items-center justify-between border-b border-line px-6 py-5">
-                <BosianosLogo variant="horizontal" tone="ink" showTagline compact />
+                <BosianosLogo variant="stacked" tone="ink" showTagline compact />
                 <button className="btn-ghost" aria-label="Close menu" onClick={() => setMenu(false)}>
                   <X className="h-5 w-5" strokeWidth={1.5} />
                 </button>

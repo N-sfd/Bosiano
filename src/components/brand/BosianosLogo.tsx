@@ -5,11 +5,14 @@ import { cn } from "@/lib/utils";
 
 export type LogoTone = "ink" | "gold";
 
-const CREST = "/brand/crest-primary.png";
+/** Official Bosiano crest + wordmark lockup (Italian Heritage). */
 const LOCKUP = "/brand/logo-lockup.png";
+/** Crest only — crowned tiger shield. */
+const CREST = "/brand/crest-primary.png";
 
 /**
- * Bosiano brand mark — crowned tiger crest + BOSIANO / ITALIAN HERITAGE.
+ * Renders the real brand PNG assets (not a CSS recreation),
+ * so the site matches the Bosiano identity boards.
  */
 export function BosianosLogo({
   variant = "stacked",
@@ -24,103 +27,54 @@ export function BosianosLogo({
   compact?: boolean;
   className?: string;
 }) {
-  const color = tone === "gold" ? "#CBA96A" : "#1a1510";
   const isGold = tone === "gold";
 
   if (variant === "mark") {
+    const size = compact ? 40 : 52;
     return (
       <span
-        className={cn(
-          "relative inline-block overflow-hidden",
-          compact ? "h-9 w-9" : "h-11 w-11",
-          className
-        )}
+        className={cn("relative inline-block shrink-0", className)}
+        style={{ width: size, height: size }}
         aria-label="Bosiano"
       >
         <Image
           src={CREST}
-          alt=""
-          fill
-          className={cn("object-contain", !isGold && "mix-blend-multiply")}
-          sizes={compact ? "36px" : "44px"}
-        />
-      </span>
-    );
-  }
-
-  /* Full photographic lockup — best for light surfaces / marketing */
-  if (variant === "stacked" && showTagline && !compact) {
-    return (
-      <span
-        className={cn("relative inline-block h-[148px] w-[168px] sm:h-[168px] sm:w-[190px]", className)}
-        aria-label="Bosiano — Italian Heritage"
-      >
-        <Image
-          src={LOCKUP}
-          alt="Bosiano Italian Heritage"
-          fill
-          className={cn("object-contain object-left", !isGold && "mix-blend-multiply")}
-          sizes="190px"
+          alt="Bosiano"
+          width={size}
+          height={size}
+          className={cn("h-full w-full object-contain", !isGold && "mix-blend-multiply")}
           priority={false}
         />
       </span>
     );
   }
 
-  const crestSize = compact ? (variant === "horizontal" ? 36 : 40) : variant === "horizontal" ? 44 : 56;
-  const showLine = showTagline || variant === "stacked" || variant === "wordmark";
+  /* Full lockup: crest + BOSIANO + ITALIAN HERITAGE */
+  const height = compact ? 64 : 104;
+  const width = Math.round(height * (445 / 490));
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2.5 sm:gap-3",
-        (variant === "stacked" || variant === "wordmark") && "flex-col gap-1.5 sm:gap-2",
+        "relative inline-block shrink-0 overflow-hidden",
+        isGold && "rounded-sm bg-[#F5F0E8]/95 p-1 shadow-sm",
         className
       )}
-      style={{ color }}
+      style={{ width: isGold ? width + 8 : width, height: isGold ? height + 8 : height }}
       aria-label="Bosiano — Italian Heritage"
     >
-      <span
-        className="relative shrink-0 overflow-hidden"
-        style={{ width: crestSize, height: crestSize }}
-      >
-        <Image
-          src={CREST}
-          alt=""
-          fill
-          className={cn("object-contain", !isGold && "mix-blend-multiply")}
-          sizes={`${crestSize}px`}
-          priority={!isGold}
-        />
-      </span>
-
-      <span
+      <Image
+        src={LOCKUP}
+        alt="Bosiano Italian Heritage"
+        width={width}
+        height={height}
         className={cn(
-          "flex flex-col",
-          variant === "horizontal" ? "items-start" : "items-center text-center"
+          "h-full w-full object-contain object-center",
+          !isGold && "mix-blend-multiply"
         )}
-      >
-        <span
-          className={cn(
-            "font-serif font-semibold leading-none tracking-[0.12em]",
-            compact
-              ? "text-[0.95rem] sm:text-[1.1rem]"
-              : "text-[1.15rem] sm:text-[1.45rem]"
-          )}
-        >
-          BOSIANO
-        </span>
-        {showLine && (
-          <span
-            className={cn(
-              "mt-1 font-sans font-medium uppercase leading-none tracking-[0.28em] opacity-70",
-              compact ? "text-[0.38rem] sm:text-[0.42rem]" : "text-[0.42rem] sm:text-[0.5rem]"
-            )}
-          >
-            Italian Heritage
-          </span>
-        )}
-      </span>
+        sizes={`${width}px`}
+        priority={!isGold}
+      />
     </span>
   );
 }

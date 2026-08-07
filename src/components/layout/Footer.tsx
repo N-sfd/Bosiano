@@ -84,7 +84,7 @@ export function Footer() {
         <div className="shell grid grid-cols-2 gap-8 py-14 md:grid-cols-4 lg:grid-cols-5">
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" aria-label="Bosiano home" className="inline-block">
-              <BosianosLogo variant="horizontal" tone="gold" showTagline />
+              <BosianosLogo variant="stacked" tone="gold" showTagline />
             </Link>
             <p className="mt-5 max-w-xs text-sm text-canvas/70">
               A curated marketplace uniting the world&apos;s most considered designers, delivered with
