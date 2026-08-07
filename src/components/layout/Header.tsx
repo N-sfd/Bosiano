@@ -159,7 +159,7 @@ export function Header() {
             <div className="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-3">
               <button
                 className="mr-1 hidden max-w-[200px] items-center gap-2 truncate rounded-full border border-line bg-canvas-raised px-3.5 py-2 text-left transition-colors hover:border-ink lg:mr-3 lg:inline-flex xl:max-w-[240px]"
-                aria-label="Search Bosianos"
+                aria-label="Search Bosiano"
                 onClick={() => setSearch(true)}
                 onMouseEnter={() => { setActive(null); setExploreOpen(false); }}
               >

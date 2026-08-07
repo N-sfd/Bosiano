@@ -121,7 +121,7 @@ export function Footer() {
 
         <div className="border-t border-white/10">
           <div className="shell flex flex-col items-center justify-between gap-3 py-6 text-xs text-canvas/50 sm:flex-row">
-            <p>© {new Date().getFullYear()} Bosianos. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Bosiano. All rights reserved.</p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link href="/about" className="hover:text-canvas">Privacy Policy</Link>
               <Link href="/about" className="hover:text-canvas">Terms of Service</Link>

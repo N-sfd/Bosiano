@@ -5,14 +5,27 @@ import { cn } from "@/lib/utils";
 
 export type LogoTone = "ink" | "gold";
 
-/** Official Bosiano crest + wordmark lockup (Italian Heritage). */
-const LOCKUP = "/brand/logo-lockup.png";
-/** Crest only — crowned tiger shield. */
 const CREST = "/brand/crest-primary.png";
+const LOCKUP = "/brand/logo-lockup.png";
+
+/** Transparent lockup aspect (232×353 after bg removal). */
+const LOCKUP_RATIO = 232 / 353;
+
+const TONE = {
+  ink: {
+    word: "#1A1510",
+    tag: "rgba(26, 21, 16, 0.62)",
+    rule: "rgba(26, 21, 16, 0.28)",
+  },
+  gold: {
+    word: "#CBA96A",
+    tag: "rgba(203, 169, 106, 0.78)",
+    rule: "rgba(203, 169, 106, 0.35)",
+  },
+} as const;
 
 /**
- * Renders the real brand PNG assets (not a CSS recreation),
- * so the site matches the Bosiano identity boards.
+ * Bosiano crest + typography on transparent PNGs — works on light and dark surfaces.
  */
 export function BosianosLogo({
   variant = "stacked",
@@ -27,7 +40,8 @@ export function BosianosLogo({
   compact?: boolean;
   className?: string;
 }) {
-  const isGold = tone === "gold";
+  const colors = TONE[tone];
+  const onDark = tone === "gold";
 
   if (variant === "mark") {
     const size = compact ? 40 : 52;
@@ -37,45 +51,103 @@ export function BosianosLogo({
         style={{ width: size, height: size }}
         aria-label="Bosiano"
       >
+        <CrestImage size={size} onDark={onDark} />
+      </span>
+    );
+  }
+
+  /* Full transparent lockup on light surfaces */
+  if (!onDark && (variant === "stacked" || variant === "wordmark")) {
+    const height = compact ? 64 : 100;
+    const width = Math.round(height * LOCKUP_RATIO);
+    return (
+      <span
+        className={cn("relative inline-block shrink-0", className)}
+        style={{ width, height }}
+        aria-label="Bosiano — Italian Heritage"
+      >
         <Image
-          src={CREST}
-          alt="Bosiano"
-          width={size}
-          height={size}
-          className={cn("h-full w-full object-contain", !isGold && "mix-blend-multiply")}
-          priority={false}
+          src={LOCKUP}
+          alt="Bosiano Italian Heritage"
+          width={width}
+          height={height}
+          className="h-full w-full object-contain"
+          sizes={`${width}px`}
+          priority
         />
       </span>
     );
   }
 
-  /* Full lockup: crest + BOSIANO + ITALIAN HERITAGE */
-  const height = compact ? 64 : 104;
-  const width = Math.round(height * (445 / 490));
+  const crestSize = compact ? (onDark ? 48 : 40) : onDark ? 64 : 52;
+  const showLine = showTagline || variant === "stacked" || variant === "wordmark";
+  const stacked = variant === "stacked" || variant === "wordmark" || onDark;
 
   return (
     <span
       className={cn(
-        "relative inline-block shrink-0 overflow-hidden",
-        isGold && "rounded-sm bg-[#F5F0E8]/95 p-1 shadow-sm",
+        "inline-flex gap-2.5 sm:gap-3",
+        stacked ? "flex-col items-center text-center" : "items-center",
         className
       )}
-      style={{ width: isGold ? width + 8 : width, height: isGold ? height + 8 : height }}
       aria-label="Bosiano — Italian Heritage"
     >
-      <Image
-        src={LOCKUP}
-        alt="Bosiano Italian Heritage"
-        width={width}
-        height={height}
-        className={cn(
-          "h-full w-full object-contain object-center",
-          !isGold && "mix-blend-multiply"
+      <span className="relative shrink-0" style={{ width: crestSize, height: crestSize }}>
+        <CrestImage size={crestSize} onDark={onDark} priority={!onDark} />
+      </span>
+
+      <span className={cn("flex flex-col", stacked ? "items-center" : "items-start")}>
+        <span
+          className={cn(
+            "font-serif font-semibold leading-none tracking-[0.14em]",
+            compact ? "text-[1rem] sm:text-[1.15rem]" : "text-[1.25rem] sm:text-[1.55rem]",
+            onDark && "drop-shadow-[0_1px_8px_rgba(203,169,106,0.25)]"
+          )}
+          style={{ color: colors.word }}
+        >
+          BOSIANO
+        </span>
+
+        {showLine && (
+          <span
+            className={cn(
+              "mt-1.5 inline-flex items-center gap-2 uppercase",
+              compact ? "text-[0.4rem] tracking-[0.26em]" : "text-[0.48rem] tracking-[0.32em]"
+            )}
+            style={{ color: colors.tag }}
+          >
+            <span className="h-px w-4 sm:w-6" style={{ backgroundColor: colors.rule }} aria-hidden />
+            Italian Heritage
+            <span className="h-px w-4 sm:w-6" style={{ backgroundColor: colors.rule }} aria-hidden />
+          </span>
         )}
-        sizes={`${width}px`}
-        priority={!isGold}
-      />
+      </span>
     </span>
+  );
+}
+
+function CrestImage({
+  size,
+  onDark,
+  priority = false,
+}: {
+  size: number;
+  onDark: boolean;
+  priority?: boolean;
+}) {
+  return (
+    <Image
+      src={CREST}
+      alt=""
+      width={size}
+      height={size}
+      className={cn(
+        "h-full w-full object-contain",
+        onDark && "drop-shadow-[0_2px_12px_rgba(203,169,106,0.35)]"
+      )}
+      sizes={`${size}px`}
+      priority={priority}
+    />
   );
 }
 
