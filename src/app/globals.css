@@ -5,6 +5,21 @@
 :root {
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
+  --page-bg: #f7f4ef;
+  --section-bg: #fcfaf7;
+  --hero-start: #f7f4ef;
+  --hero-end: #efe8dd;
+  --card-bg: #ffffff;
+  --heading: #2a211b;
+  --body: #5c534d;
+  --gold: #c5a059;
+  --gold-hover: #b98a35;
+  --border: #e5d6b3;
+  /* Bosiano brand tokens */
+  --bosiano-black: #0b0b0b;
+  --bosiano-ivory: #f7f4ef;
+  --bosiano-gold: #c8a96a;
+  --bosiano-navy: #0c1622;
 }
 
 @layer base {
@@ -14,16 +29,21 @@
   html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+    color-scheme: light;
   }
   body {
-    @apply bg-canvas text-ink font-sans antialiased;
+    @apply bg-canvas font-sans antialiased;
+    color: var(--body);
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
   }
   h1, h2, h3, h4 {
     @apply font-serif;
+    color: var(--heading);
   }
-  /* Accessible focus ring */
+  p {
+    color: var(--body);
+  }
   :focus-visible {
     @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-canvas;
   }
@@ -36,15 +56,24 @@
   .shell {
     @apply mx-auto w-full max-w-shell px-6 sm:px-10 lg:px-14;
   }
+  .section-surface {
+    @apply bg-canvas-raised;
+  }
+  .card-surface {
+    @apply bg-canvas-card border border-line;
+  }
+  .hero-wash {
+    @apply bg-hero-wash;
+  }
   .eyebrow {
-    @apply text-[0.68rem] font-medium uppercase tracking-luxe text-ink-muted;
+    @apply text-[0.68rem] font-medium uppercase tracking-luxe text-gold-deep;
   }
   .link-underline {
     @apply relative inline-block;
   }
   .link-underline::after {
     content: "";
-    @apply absolute -bottom-0.5 left-0 h-px w-0 bg-current transition-all duration-300 ease-silk;
+    @apply absolute -bottom-0.5 left-0 h-px w-0 bg-gold transition-all duration-300 ease-silk;
   }
   .link-underline:hover::after {
     @apply w-full;
@@ -52,14 +81,16 @@
   .btn {
     @apply inline-flex items-center justify-center gap-2 text-[0.78rem] font-medium uppercase tracking-[0.14em] transition-all duration-300 ease-silk disabled:cursor-not-allowed disabled:opacity-40;
   }
+  /* CTA — gold background, dark text */
   .btn-primary {
-    @apply btn bg-ink px-7 py-4 text-canvas hover:bg-gold-deep;
+    @apply btn bg-gold px-7 py-4 text-ink hover:bg-gold-deep;
   }
+  /* Secondary — ivory background, gold border */
   .btn-outline {
-    @apply btn border border-ink px-7 py-4 text-ink hover:bg-ink hover:text-canvas;
+    @apply btn border border-gold bg-canvas px-7 py-4 text-ink hover:border-gold-deep hover:bg-canvas-raised;
   }
   .btn-ghost {
-    @apply btn px-3 py-2 text-ink hover:text-gold;
+    @apply btn px-3 py-2 text-ink-soft hover:text-gold-deep;
   }
   .card-hover {
     @apply transition-transform duration-500 ease-silk;
@@ -81,9 +112,65 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Brand system utilities — mockups & heritage surfaces only */
+  .brand-wordmark {
+    font-family: var(--font-serif);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .brand-subtitle {
+    font-family: var(--font-sans);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .brand-crest {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  .brand-crest img,
+  .bosiano-logo-img {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  .bosiano-logo-link {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+  /* Header / footer logo sizing helpers (BosianoBrand also sets explicit px) */
+  .bosiano-logo {
+    width: auto;
+    max-width: 100%;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+  .brand-gold {
+    color: var(--bosiano-gold);
+  }
+  .brand-emboss {
+    opacity: 0.55;
+    filter: contrast(1.05) brightness(0.92);
+  }
+  .brand-foil {
+    color: var(--bosiano-gold);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  .brand-engraving {
+    opacity: 0.7;
+    letter-spacing: 0.2em;
+  }
+  .brand-embroidery {
+    letter-spacing: 0.22em;
+    text-shadow: 0 0.5px 0 rgba(255, 255, 255, 0.35);
+  }
 }
 
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

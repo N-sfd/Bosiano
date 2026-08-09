@@ -34,6 +34,7 @@ export const ADMIN_SECTIONS = [
   { id: "promotions", label: "Promotions", href: "/admin/promotions" },
   { id: "loyalty", label: "Loyalty", href: "/admin/loyalty" },
   { id: "gift-cards", label: "Gift cards", href: "/admin/gift-cards" },
+  { id: "brand", label: "Brand identity", href: "/admin/brand" },
   { id: "editorial", label: "Editorial", href: "/admin/editorial" },
   { id: "lookbooks", label: "Lookbooks", href: "/admin/lookbooks" },
   { id: "campaigns", label: "Campaigns", href: "/admin/campaigns" },

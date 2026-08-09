@@ -18,7 +18,7 @@ export function VendorNav() {
             href={s.href}
             className={cn(
               "block rounded-lg px-3 py-2 text-[0.78rem] transition-colors",
-              active ? "bg-ink text-canvas" : "text-ink-soft hover:bg-canvas-raised hover:text-ink"
+              active ? "bg-void text-canvas" : "text-ink-soft hover:bg-canvas-raised hover:text-ink"
             )}
           >
             {s.label}

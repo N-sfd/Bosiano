@@ -113,7 +113,7 @@ export function LookDetailClient({ look }: { look: ShopLook }) {
             sizes="(max-width: 1024px) 100vw, 50vw"
           >
             {look.video && (
-              <div className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-ink/70 px-3 py-1.5 text-[0.65rem] uppercase tracking-luxe text-canvas">
+              <div className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-void/70 px-3 py-1.5 text-[0.65rem] uppercase tracking-luxe text-canvas">
                 <Play className="h-3 w-3 fill-current" /> Runway film
               </div>
             )}
@@ -126,13 +126,13 @@ export function LookDetailClient({ look }: { look: ShopLook }) {
                   onClick={() => setActiveHotspot(activeHotspot === h.id ? null : h.id)}
                   className={cn(
                     "group absolute flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110",
-                    activeHotspot === h.id ? "bg-gold text-canvas" : "bg-canvas-raised text-ink"
+                    activeHotspot === h.id ? "bg-gold text-void" : "bg-canvas-raised text-ink"
                   )}
                   style={{ left: `${h.x}%`, top: `${h.y}%` }}
                   aria-label={`Shop ${h.label}`}
                 >
                   <Plus className="h-4 w-4" />
-                  <span className="pointer-events-none absolute left-10 z-10 hidden whitespace-nowrap rounded-full bg-ink px-3 py-1.5 text-[0.65rem] uppercase tracking-luxe text-canvas group-hover:block">
+                  <span className="pointer-events-none absolute left-10 z-10 hidden whitespace-nowrap rounded-full bg-void px-3 py-1.5 text-[0.65rem] uppercase tracking-luxe text-canvas group-hover:block">
                     {h.label}
                     {piece ? ` · ${formatPrice(piece.product.price)}` : ""}
                   </span>
@@ -166,7 +166,7 @@ export function LookDetailClient({ look }: { look: ShopLook }) {
             <div className="flex gap-3">
               <button
                 onClick={() => (saved ? unsaveLook(look.id) : saveLook(look.id, replacements))}
-                className={cn("btn-outline flex-1", saved && "border-gold bg-gold text-canvas")}
+                className={cn("btn-outline flex-1", saved && "border-gold bg-gold text-void")}
               >
                 <Heart className={cn("h-4 w-4", saved && "fill-current")} /> {saved ? "Saved" : "Save look"}
               </button>
@@ -249,7 +249,7 @@ export function LookDetailClient({ look }: { look: ShopLook }) {
 
       {aiOpen && (
         <div className="fixed inset-0 z-[140] flex items-end justify-center sm:items-center" role="dialog">
-          <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={() => setAiOpen(false)} aria-hidden />
+          <div className="absolute inset-0 bg-void/50 backdrop-blur-sm" onClick={() => setAiOpen(false)} aria-hidden />
           <div className="relative w-full max-w-md rounded-t-3xl bg-canvas-raised p-6 sm:rounded-2xl">
             <div className="flex items-start justify-between">
               <div>

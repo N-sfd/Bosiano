@@ -123,7 +123,7 @@ export default function WishlistPage() {
             onClick={() => setActiveId(l.id)}
             className={cn(
               "rounded-full px-4 py-2 text-xs uppercase tracking-luxe transition-colors",
-              activeId === l.id ? "bg-ink text-canvas" : "border border-line text-ink-soft hover:border-ink"
+              activeId === l.id ? "bg-void text-canvas" : "border border-line text-ink-soft hover:border-ink"
             )}
           >
             {l.name} · {l.productIds.length}

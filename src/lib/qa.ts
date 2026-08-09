@@ -12,7 +12,7 @@ const questionBank = [
   },
   {
     question: "Can I have this gift-wrapped?",
-    answer: "Gift wrapping is available at checkout for a complimentary Bosianos presentation box.",
+    answer: "Gift wrapping is available at checkout for a complimentary Bosiano presentation box.",
   },
   {
     question: "Where was this made?",
@@ -29,7 +29,7 @@ export function getProductQuestions(productId: string): ProductQuestion[] {
     author: ["Maya R.", "James L.", "Sofia K.", "Elena V."][(idx + i) % 4],
     question: q.question,
     answer: q.answer,
-    answeredBy: "Bosianos Concierge",
+    answeredBy: "Bosiano Concierge",
     date: `2026-0${(i % 6) + 1}-${10 + ((idx + i) % 18)}`,
   }));
 }

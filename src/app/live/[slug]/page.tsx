@@ -81,11 +81,11 @@ export default function LiveEventPage({ params }: { params: { slug: string } }) 
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[1.4fr_1fr]">
         <div>
-          <div className="relative overflow-hidden rounded-2xl bg-ink">
+          <div className="relative overflow-hidden rounded-2xl bg-void">
             <Media seed={event.hero} ratio="wide" monogram={false} className="opacity-85" />
             <div className="absolute inset-0 flex items-center justify-center">
               {event.status === "live" ? (
-                <span className="inline-flex items-center gap-2 rounded-full bg-[#b33] px-4 py-2 text-xs uppercase tracking-luxe text-canvas">
+                <span className="inline-flex items-center gap-2 rounded-full bg-[#b33] px-4 py-2 text-xs uppercase tracking-luxe text-ink">
                   <Radio className="h-3.5 w-3.5" /> Live
                 </span>
               ) : (
@@ -94,7 +94,7 @@ export default function LiveEventPage({ params }: { params: { slug: string } }) 
                 </span>
               )}
             </div>
-            <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-end justify-between gap-3 text-canvas">
+            <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-end justify-between gap-3 text-ink">
               <div>
                 <h1 className="font-serif text-3xl sm:text-4xl">{event.title}</h1>
                 <p className="mt-1 text-sm text-canvas/80">
@@ -131,7 +131,7 @@ export default function LiveEventPage({ params }: { params: { slug: string } }) 
               {chat.map((m, i) => (
                 <div
                   key={i}
-                  className={cn("rounded-lg px-3 py-2", m.who === "You" ? "bg-ink text-canvas" : "bg-canvas-sunk")}
+                  className={cn("rounded-lg px-3 py-2", m.who === "You" ? "bg-void text-canvas" : "bg-canvas-sunk")}
                 >
                   <span className="text-[0.65rem] uppercase tracking-luxe opacity-70">{m.who}</span>
                   <p>{m.text}</p>

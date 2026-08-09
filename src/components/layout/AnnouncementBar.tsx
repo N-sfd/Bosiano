@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const messages = [
   "Complimentary express shipping on orders over $250",
-  "Members earn 2× rewards points this week — join Bosianos Club",
+  "Members earn 2× rewards points this week — join Bosiano Club",
   "New season arrivals from 8 designers, just landed",
   "Free returns within 30 days · Shop with confidence",
 ];
@@ -16,7 +16,7 @@ export function AnnouncementBar() {
     return () => clearInterval(t);
   }, []);
   return (
-    <div className="bg-ink text-canvas">
+    <div className="bg-void text-gold">
       <div className="shell flex items-center justify-center overflow-hidden px-4 py-2.5 sm:py-3">
         <p
           key={i}

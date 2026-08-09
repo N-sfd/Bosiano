@@ -36,8 +36,10 @@ function primaryBadge(
 
 export function ProductCard({ product, priority }: { product: Product; priority?: boolean }) {
   const brand = getBrand(product.brandId);
-  const [variantIndex, setVariantIndex] = useState(0);
-  const variant = product.variants[variantIndex];
+  const [variantIndex, setVariantIndex] = useState(() =>
+    Math.max(0, product.variants.findIndex((v) => v.colorId === product.defaultColor))
+  );
+  const variant = product.variants[variantIndex] ?? product.variants[0];
   const wishlist = useStore((s) => s.wishlist);
   const compare = useStore((s) => s.compare);
   const notifyList = useStore((s) => s.notifyList);
@@ -67,8 +69,11 @@ export function ProductCard({ product, priority }: { product: Product; priority?
       <div className="relative overflow-hidden rounded-xl">
         <Link href={`/product/${product.slug}`} aria-label={product.name}>
           <Media
-            seed={variant.images[0]}
-            swatches={[variant.hex]}
+            seed={
+              product.imagesByColor?.[variant.colorId]?.[0]?.src ??
+              variant.images[0] ??
+              product.cardImage
+            }
             ratio="portrait"
             label={product.name}
             priority={priority}
@@ -83,7 +88,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
         <div className="pointer-events-none absolute left-3 top-3 flex items-center gap-1.5">
           {isPinned && (
             <span
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-ink/90 text-canvas shadow-sm"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-void/90 text-canvas shadow-sm"
               title="Pinned"
               aria-label="Pinned"
             >
@@ -121,16 +126,16 @@ export function ProductCard({ product, priority }: { product: Product; priority?
 
         {soldOut && (
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/90 via-ink/70 to-transparent px-3 pb-3 pt-10">
-            <p className="text-center text-[0.65rem] font-semibold uppercase tracking-luxe text-canvas">Sold Out</p>
+            <p className="text-center text-[0.65rem] font-semibold uppercase tracking-luxe text-ink">Sold Out</p>
             {restock && (
-              <p className="mt-0.5 text-center text-[0.65rem] text-canvas/75">Est. restock {restock}</p>
+              <p className="mt-0.5 text-center text-[0.65rem] text-ink/75">Est. restock {restock}</p>
             )}
             <button
               onClick={(e) => {
                 e.preventDefault();
                 toggleNotify(product.id);
               }}
-              className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-full bg-canvas px-3 py-2 text-[0.65rem] font-medium uppercase tracking-luxe text-ink transition-colors hover:bg-gold hover:text-canvas"
+              className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-full bg-canvas px-3 py-2 text-[0.65rem] font-medium uppercase tracking-luxe text-ink transition-colors hover:bg-gold hover:text-void"
             >
               <Bell className="h-3 w-3" />
               {notified ? "We'll notify you" : "Notify me when available"}

@@ -33,7 +33,7 @@ export default function DesignerPage({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-ink text-canvas">
+      <section className="relative overflow-hidden bg-void text-canvas">
         <Media seed={brand.hero} ratio="auto" className="absolute inset-0 h-full w-full opacity-70" monogram={false} />
         <div className="shell relative flex min-h-[52vh] flex-col justify-end py-16">
           <p className="font-serif text-2xl tracking-[0.2em] text-canvas/70">{brand.logotype}</p>
@@ -152,7 +152,7 @@ export default function DesignerPage({ params }: { params: { slug: string } }) {
                 <Play className="h-6 w-6 fill-current" />
               </span>
             </div>
-            <p className="absolute bottom-4 left-4 text-xs uppercase tracking-luxe text-canvas">House film</p>
+            <p className="absolute bottom-4 left-4 text-xs uppercase tracking-luxe text-ink">House film</p>
           </div>
         </section>
       )}

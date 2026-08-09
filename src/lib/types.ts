@@ -1,7 +1,75 @@
+import type { ProductBranding } from "./branding";
+
+export type { ProductBranding };
+
 export type Currency = "USD";
+
+export interface ProductColor {
+  id: string;
+  label: string;
+  swatch: string;
+}
+
+export type ProductImageRole =
+  | "hero"
+  | "front"
+  | "angle"
+  | "side"
+  | "back"
+  | "detail"
+  | "hardware"
+  | "leather"
+  | "interior"
+  | "lifestyle"
+  | "view";
+
+export type ProductImageView =
+  | "hero"
+  | "folded"
+  | "draped"
+  | "worn"
+  | "edge"
+  | "label"
+  | "packaging"
+  | "angle"
+  | "detail"
+  | "front"
+  | "side"
+  | "back"
+  | "interior"
+  | "hardware";
+
+export interface ProductImage {
+  src: string;
+  alt: string;
+  role: ProductImageRole;
+  /** Internal view label for metadata / a11y — not rendered on the PDP gallery */
+  label?: string;
+  /** Optional structured view tag (e.g. scarf: folded | draped | label) */
+  view?: ProductImageView;
+  /** Optional hi-res twin — must depict the exact same shot as src */
+  zoomSrc?: string;
+  /** Must match product.styleId for every colour variant frame */
+  styleId: string;
+  /** Physical design id shared by all colour variants (e.g. BCFB-01) */
+  designId: string;
+  /** Signature hardware id — must be stable within one SKU */
+  hardwareId?: string;
+  /** Owning product slug — must match the SKU these frames belong to */
+  productSlug?: string;
+  /** Colour / finish variant id (imagesByColor key) */
+  variant?: string;
+  /** Print / pattern identity — must be stable within one SKU */
+  patternId?: string;
+  /** Border construction identity — must be stable within one SKU */
+  borderStyleId?: string;
+}
 
 export interface ProductVariant {
   id: string;
+  /** Normalized colour id — matches imagesByColor keys (e.g. "optic-white") */
+  colorId: string;
+  /** Display label (e.g. "Optic White") */
   color: string;
   hex: string;
   images: string[];
@@ -31,6 +99,10 @@ export interface Product {
   brandId: string;
   category: string;
   subcategory: string;
+  /** Fine-grained type for gallery integrity checks (e.g. heeled-mule, ring) */
+  productType: string;
+  /** Stable design/model id — all colour variants of this SKU must share it */
+  styleId: string;
   gender: "women" | "men" | "unisex";
   price: number;
   compareAtPrice?: number;
@@ -42,7 +114,17 @@ export interface Product {
   materialTags: string[];
   care: string;
   sizes: string[];
+  /** Normalised colour list — id is the single key used for swatches + galleries */
+  colors: ProductColor[];
+  /** Default colour id — drives card + initial PDP gallery */
+  defaultColor: string;
+  /** Default-colour gallery (same as imagesByColor[defaultColor]) */
+  images: ProductImage[];
+  /** Per-colour galleries — PDP must use imagesByColor[selectedColor] only */
+  imagesByColor: Record<string, ProductImage[]>;
   variants: ProductVariant[];
+  /** Primary shop-card image — defaultColor hero / first variant gallery[0] */
+  cardImage: string;
   rating: number;
   reviewCount: number;
   tags: string[];
@@ -53,6 +135,8 @@ export interface Product {
   barcode: string;
   modelMeasurements?: ModelMeasurements;
   stores: StoreLocation[];
+  /** Quiet-luxury branding metadata — never drives flat PNG overlays on cards */
+  branding: ProductBranding;
   isNew?: boolean;
   isExclusive?: boolean;
   isSustainable?: boolean;

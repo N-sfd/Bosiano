@@ -62,7 +62,7 @@ export function AccountNav() {
             href={l.href}
             className={cn(
               "flex shrink-0 items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors",
-              active ? "bg-ink text-canvas" : "text-ink-soft hover:bg-canvas-sunk"
+              active ? "bg-void text-canvas" : "text-ink-soft hover:bg-canvas-sunk"
             )}
           >
             <l.icon className="h-4 w-4" strokeWidth={1.5} />

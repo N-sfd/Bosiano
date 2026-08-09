@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 
 const methods = [
-  { id: "apple", label: "Apple\u00A0Pay", className: "bg-ink text-canvas" },
+  { id: "apple", label: "Apple\u00A0Pay", className: "bg-void text-canvas" },
   { id: "google", label: "Google\u00A0Pay", className: "bg-white text-ink border border-line" },
   { id: "paypal", label: "PayPal", className: "bg-[#ffc439] text-[#003087]" },
   { id: "klarna", label: "Klarna", className: "bg-[#ffb3c7] text-ink" },

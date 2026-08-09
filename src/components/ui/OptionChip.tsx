@@ -26,7 +26,7 @@ export function OptionChip({
         "relative border text-sm transition-colors",
         shape === "box" ? "rounded-md" : "rounded-full",
         size === "md" ? "min-w-14 px-3 py-3" : "min-w-10 px-2 py-1.5 text-xs",
-        selected ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink",
+        selected ? "border-ink bg-void text-canvas" : "border-line hover:border-ink",
         disabled && "cursor-not-allowed border-line text-ink-muted/50 line-through hover:border-line",
         className
       )}

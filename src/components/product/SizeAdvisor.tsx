@@ -37,7 +37,7 @@ export function SizeAdvisor({
 
   return (
     <div className="fixed inset-0 z-[130] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={onClose} aria-hidden />
+      <div className="absolute inset-0 bg-void/50 backdrop-blur-sm" onClick={onClose} aria-hidden />
       <div className="relative w-full max-w-md rounded-2xl bg-canvas-raised p-7" role="dialog" aria-label="Size advisor">
         <button className="absolute right-4 top-4 btn-ghost" aria-label="Close" onClick={onClose}>
           <X className="h-5 w-5" />
@@ -62,7 +62,7 @@ export function SizeAdvisor({
                   onClick={() => setFit(f)}
                   className={cn(
                     "rounded-lg border py-2.5 text-xs capitalize transition-colors",
-                    fit === f ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"
+                    fit === f ? "border-ink bg-void text-canvas" : "border-line hover:border-ink"
                   )}
                 >
                   {f}

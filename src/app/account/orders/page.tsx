@@ -89,7 +89,7 @@ export default function OrdersPage() {
                             <span
                               className={cn(
                                 "absolute -left-6 top-0.5 flex h-4 w-4 items-center justify-center rounded-full border-2",
-                                t.done ? "border-gold bg-gold text-canvas" : "border-line bg-canvas-raised"
+                                t.done ? "border-gold bg-gold text-void" : "border-line bg-canvas-raised"
                               )}
                             >
                               {t.done && <Check className="h-2.5 w-2.5" />}

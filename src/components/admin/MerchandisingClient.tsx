@@ -69,11 +69,11 @@ export function MerchandisingClient() {
                 type="button"
                 onClick={() => togglePin(p.id)}
                 className={`rounded-xl border px-3 py-3 text-left text-sm transition-colors ${
-                  on ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink/40"
+                  on ? "border-ink bg-void text-canvas" : "border-line hover:border-ink/40"
                 }`}
               >
                 <p className="font-medium">{p.name}</p>
-                <p className={`mt-1 text-[0.65rem] uppercase tracking-luxe ${on ? "text-canvas/70" : "text-ink-muted"}`}>
+                <p className={`mt-1 text-[0.65rem] uppercase tracking-luxe ${on ? "text-ink/70" : "text-ink-muted"}`}>
                   {on ? "Pinned" : "Pin"}
                 </p>
               </button>
@@ -153,7 +153,7 @@ export function MerchandisingClient() {
                 <button
                   type="button"
                   className={`rounded-full px-3 py-1 text-[0.65rem] uppercase tracking-luxe ${
-                    c.published ? "bg-ink text-canvas" : "border border-line"
+                    c.published ? "bg-void text-canvas" : "border border-line"
                   }`}
                   onClick={() => updateCollection(c.id, { published: !c.published })}
                 >
@@ -269,7 +269,7 @@ export function MerchandisingClient() {
               <button
                 type="button"
                 className={`rounded-full px-3 py-1 text-[0.65rem] uppercase tracking-luxe ${
-                  l.published ? "bg-ink text-canvas" : "border border-line"
+                  l.published ? "bg-void text-canvas" : "border border-line"
                 }`}
                 onClick={() => setLandingPublished(l.id, !l.published)}
               >
@@ -330,7 +330,7 @@ export function MerchandisingClient() {
               <button
                 type="button"
                 className={`rounded-full px-3 py-1 text-[0.65rem] uppercase tracking-luxe ${
-                  l.shoppable ? "bg-ink text-canvas" : "border border-line"
+                  l.shoppable ? "bg-void text-canvas" : "border border-line"
                 }`}
                 onClick={() => setLookbookShoppable(l.id, !l.shoppable)}
               >

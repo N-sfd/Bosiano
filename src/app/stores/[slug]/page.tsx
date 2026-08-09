@@ -63,7 +63,7 @@ export default function StoreDetailPage({ params }: { params: { slug: string } }
 
   return (
     <div>
-      <section className="relative overflow-hidden bg-ink text-canvas">
+      <section className="relative overflow-hidden bg-void text-canvas">
         <Media seed={store.hero} ratio="auto" className="absolute inset-0 h-full w-full opacity-60" monogram={false} />
         <div className="shell relative py-20">
           <p className="eyebrow !text-canvas/70">{store.city}</p>
@@ -125,7 +125,7 @@ export default function StoreDetailPage({ params }: { params: { slug: string } }
                   onClick={() => setFitSlot(s)}
                   className={cn(
                     "rounded-full border px-3 py-1.5 text-xs",
-                    fitSlot === s ? "border-ink bg-ink text-canvas" : "border-line"
+                    fitSlot === s ? "border-ink bg-void text-canvas" : "border-line"
                   )}
                 >
                   {s}
@@ -205,7 +205,7 @@ export default function StoreDetailPage({ params }: { params: { slug: string } }
               {chat.map((m, i) => (
                 <div
                   key={i}
-                  className={cn("rounded-lg px-3 py-2", m.who === "You" ? "bg-ink text-canvas" : "bg-canvas-sunk")}
+                  className={cn("rounded-lg px-3 py-2", m.who === "You" ? "bg-void text-canvas" : "bg-canvas-sunk")}
                 >
                   <span className="text-[0.65rem] uppercase tracking-luxe opacity-70">{m.who}</span>
                   <p>{m.text}</p>

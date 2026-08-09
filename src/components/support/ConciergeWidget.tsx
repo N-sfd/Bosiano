@@ -30,7 +30,7 @@ export function ConciergeWidget() {
     <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-[85] lg:bottom-6 lg:right-6">
       {open && (
         <div className="mb-3 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-line bg-canvas-raised shadow-xl">
-          <div className="flex items-center justify-between border-b border-line bg-ink px-4 py-3 text-canvas">
+          <div className="flex items-center justify-between border-b border-line bg-void px-4 py-3 text-ink">
             <span className="inline-flex items-center gap-2 text-sm">
               <Bot className="h-4 w-4 text-gold" /> Concierge
             </span>
@@ -42,7 +42,7 @@ export function ConciergeWidget() {
             {msgs.map((m, i) => (
               <div
                 key={i}
-                className={cn("rounded-lg px-3 py-2", m.role === "user" ? "ml-6 bg-ink text-canvas" : "mr-6 bg-canvas-sunk")}
+                className={cn("rounded-lg px-3 py-2", m.role === "user" ? "ml-6 bg-void text-canvas" : "mr-6 bg-canvas-sunk")}
               >
                 {m.text}
               </div>
@@ -67,7 +67,7 @@ export function ConciergeWidget() {
       )}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-ink text-canvas shadow-lg hover:bg-gold"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-void text-canvas shadow-lg hover:bg-gold"
         aria-label="Open concierge"
       >
         <MessageCircle className="h-6 w-6" />

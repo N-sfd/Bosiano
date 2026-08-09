@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { OnboardingQuiz } from "@/components/onboarding/OnboardingQuiz";
 
 export const metadata: Metadata = {
-  title: "Style Quiz — Personalize Bosianos",
+  title: "Style Quiz — Personalize Bosiano",
   description: "Tell us your style, designers, sizes, colors, budget, and occasions.",
 };
 

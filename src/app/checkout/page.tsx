@@ -131,7 +131,7 @@ export default function CheckoutPage() {
   if (placed) {
     return (
       <div className="shell flex flex-col items-center justify-center py-24 text-center">
-        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#3a4a3b] text-canvas">
+        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#3a4a3b] text-ink">
           <PartyPopper className="h-7 w-7" />
         </span>
         <h1 className="mt-6 font-serif text-4xl">Thank you for your order</h1>
@@ -176,13 +176,13 @@ export default function CheckoutPage() {
         <div className="flex rounded-full border border-line p-1 text-xs uppercase tracking-luxe">
           <button
             onClick={() => setGuest(true)}
-            className={cn("rounded-full px-4 py-2", guest ? "bg-ink text-canvas" : "text-ink-muted")}
+            className={cn("rounded-full px-4 py-2", guest ? "bg-void text-canvas" : "text-ink-muted")}
           >
             Guest
           </button>
           <button
             onClick={() => setGuest(false)}
-            className={cn("rounded-full px-4 py-2", !guest ? "bg-ink text-canvas" : "text-ink-muted")}
+            className={cn("rounded-full px-4 py-2", !guest ? "bg-void text-canvas" : "text-ink-muted")}
           >
             Member
           </button>
@@ -380,7 +380,7 @@ export default function CheckoutPage() {
                 <div key={`${line.variantId}-${line.size}`} className="flex gap-3">
                   <div className="relative w-16 shrink-0">
                     <Media seed={variant.images[0]} swatches={[variant.hex]} ratio="portrait" className="rounded-lg" />
-                    <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[0.65rem] text-canvas">
+                    <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-void text-[0.65rem] text-ink">
                       {line.quantity}
                     </span>
                   </div>

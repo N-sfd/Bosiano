@@ -3,7 +3,14 @@
 import { useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { SlidersHorizontal, Check } from "lucide-react";
-import { products as allProducts, totalStock, allMaterialTags, allCountries } from "@/lib/products";
+import {
+  products as allProducts,
+  totalStock,
+  allMaterialTags,
+  allCountries,
+  getCategoryLabel,
+  normalizeShopSubcategory,
+} from "@/lib/products";
 import { brands } from "@/lib/brands";
 import { semanticSearch } from "@/lib/search";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -49,8 +56,10 @@ export function ShopClient() {
   const trackAnalytics = useStore((s) => s.trackAnalytics);
 
   const category = params.get("category") ?? "";
-  const sub = params.get("sub") ?? "";
+  const subRaw = params.get("sub") ?? "";
+  const sub = normalizeShopSubcategory(subRaw);
   const brand = params.get("brand") ?? "";
+  const collection = params.get("collection") ?? "";
   const color = params.get("color") ?? "";
   const size = params.get("size") ?? "";
   const material = params.get("material") ?? "";
@@ -75,6 +84,15 @@ export function ShopClient() {
     router.push(`${pathname}?${next.toString()}`, { scroll: false });
   };
 
+  const setParams = (updates: Record<string, string | null>) => {
+    const next = new URLSearchParams(params.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === "") next.delete(key);
+      else next.set(key, value);
+    });
+    router.push(`${pathname}?${next.toString()}`, { scroll: false });
+  };
+
   const toggleBool = (key: string, current: boolean) => setParam(key, current ? null : "true");
 
   const facets = useMemo(() => {
@@ -95,8 +113,12 @@ export function ShopClient() {
     let list = allProducts.filter((p) => {
       if (semanticIds && !semanticIds.has(p.id)) return false;
       if (category && p.category !== category && p.gender !== category) return false;
+      /* Belts live under accessories — never surface in Bags results */
+      if (category === "bags" && (p.productType === "belt" || /belt/i.test(p.subcategory))) return false;
       if (sub && p.subcategory !== sub) return false;
       if (brand && p.brandId !== brand) return false;
+      if (collection === "house" && p.brandId !== "bosiano") return false;
+      if (collection === "marketplace" && p.brandId === "bosiano") return false;
       if (color && !p.variants.some((v) => v.color === color)) return false;
       if (size && !p.sizes.includes(size)) return false;
       if (material && !p.materialTags.includes(material)) return false;
@@ -174,7 +196,7 @@ export function ShopClient() {
   ]);
 
   const activeFilters = [
-    category && { key: "category", label: category },
+    category && { key: "category", label: getCategoryLabel(category) },
     sub && { key: "sub", label: sub },
     brand && { key: "brand", label: brands.find((b) => b.id === brand)?.name ?? brand },
     color && { key: "color", label: color },
@@ -222,10 +244,34 @@ export function ShopClient() {
         </FacetChip>
       </FacetGroup>
 
+      <FacetGroup title="Collection">
+        <FacetChip
+          active={collection === "house" || brand === "bosiano"}
+          onClick={() => {
+            if (collection === "house" || brand === "bosiano") {
+              setParams({ collection: null, brand: null });
+            } else {
+              setParams({ collection: "house", brand: "bosiano" });
+            }
+          }}
+        >
+          Bosiano Collection
+        </FacetChip>
+        <FacetChip
+          active={collection === "marketplace"}
+          onClick={() => {
+            if (collection === "marketplace") setParams({ collection: null });
+            else setParams({ collection: "marketplace", brand: null });
+          }}
+        >
+          Designer Marketplace
+        </FacetChip>
+      </FacetGroup>
+
       <FacetGroup title="Category">
         {facets.cats.map((c) => (
           <FacetChip key={c} active={category === c} onClick={() => setParam("category", category === c ? null : c)}>
-            {c}
+            {getCategoryLabel(c)}
           </FacetChip>
         ))}
       </FacetGroup>
@@ -239,7 +285,13 @@ export function ShopClient() {
       </FacetGroup>
 
       <FacetGroup title="Designer">
-        {brands.map((b) => (
+        {brands
+          .filter((b) => {
+            if (collection === "house") return b.id === "bosiano";
+            if (collection === "marketplace") return b.id !== "bosiano";
+            return true;
+          })
+          .map((b) => (
           <FacetChip key={b.id} active={brand === b.id} onClick={() => setParam("brand", brand === b.id ? null : b.id)}>
             {b.name}
           </FacetChip>
@@ -316,8 +368,14 @@ export function ShopClient() {
     <div className="shell py-8 lg:py-12">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-5">
         <div>
-          <h1 className="font-serif text-3xl capitalize sm:text-4xl">
-            {q ? `“${q}”` : category ? category : "All Pieces"}
+          <h1 className="font-serif text-3xl sm:text-4xl">
+            {q
+              ? `“${q}”`
+              : sub
+                ? sub
+                : category
+                  ? getCategoryLabel(category)
+                  : "All Pieces"}
           </h1>
           <p className="mt-1 text-sm text-ink-muted">{filtered.length} items · filters update instantly</p>
         </div>

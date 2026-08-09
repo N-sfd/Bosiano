@@ -60,7 +60,7 @@ const slides: Slide[] = [
   {
     seed: "hero-okoro-heritage",
     swatches: ["#2a3b57", "#a4562f", "#b5904a"],
-    eyebrow: "Okoro · Now on Bosianos",
+    eyebrow: "Okoro · Now on Bosiano",
     title: "Heritage, Reimagined",
     copy: "Hand-dyed adire and woven aso-oke — one-of-a-kind pieces from Lagos.",
     cta: { label: "Explore the house", href: "/designers/okoro" },
@@ -88,7 +88,7 @@ export function Hero() {
   const slide = slides[index];
 
   return (
-    <section className="relative h-[68vh] min-h-[480px] max-h-[720px] w-full overflow-hidden bg-ink sm:h-[72vh] sm:min-h-[520px]">
+    <section className="relative h-[68vh] min-h-[480px] max-h-[720px] w-full overflow-hidden bg-void sm:h-[72vh] sm:min-h-[520px]">
       <AnimatePresence mode="sync">
         <motion.div
           key={index}
@@ -161,20 +161,20 @@ export function Hero() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              "relative max-w-xl rounded-sm text-canvas sm:max-w-2xl",
+              "relative max-w-xl rounded-sm text-ink sm:max-w-2xl",
               slide.align === "center" && "mx-auto text-center"
             )}
           >
             <div
               className={cn(
-                "pointer-events-none absolute -inset-x-4 -inset-y-3 rounded-2xl bg-ink/35 blur-xl sm:-inset-x-6 sm:-inset-y-4",
+                "pointer-events-none absolute -inset-x-4 -inset-y-3 rounded-2xl bg-void/35 blur-xl sm:-inset-x-6 sm:-inset-y-4",
                 slide.align === "center" && "left-1/2 w-[min(100%,36rem)] -translate-x-1/2"
               )}
               aria-hidden
             />
             <div className="relative">
               <p className="eyebrow !text-canvas/85">{slide.eyebrow}</p>
-              <h1 className="mt-4 font-serif text-5xl leading-[0.98] text-balance sm:text-6xl lg:text-7xl">
+              <h1 className="mt-4 font-serif text-5xl leading-[0.98] text-balance text-canvas sm:text-6xl lg:text-7xl">
                 {slide.title}
               </h1>
               <p className="mt-4 max-w-lg text-sm leading-relaxed text-canvas/90 sm:text-base lg:text-lg">
@@ -183,14 +183,14 @@ export function Hero() {
               <div className={cn("mt-8 flex flex-wrap gap-3", slide.align === "center" && "justify-center")}>
                 <Link
                   href={slide.cta.href}
-                  className="bg-canvas px-10 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink transition-colors hover:bg-gold hover:text-canvas"
+                  className="bg-gold px-10 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink transition-colors hover:bg-gold-deep"
                 >
                   {slide.cta.label}
                 </Link>
                 {slide.secondary && (
                   <Link
                     href={slide.secondary.href}
-                    className="inline-flex items-center justify-center gap-2 border border-canvas/70 bg-ink/20 px-10 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-canvas backdrop-blur-sm transition-colors hover:bg-canvas hover:text-ink"
+                    className="inline-flex items-center justify-center gap-2 border border-gold bg-canvas/90 px-10 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink backdrop-blur-sm transition-colors hover:border-gold-deep hover:bg-canvas"
                   >
                     <Play className="h-3.5 w-3.5 fill-current" /> {slide.secondary.label}
                   </Link>
@@ -211,7 +211,7 @@ export function Hero() {
           <button
             onClick={() => setPlaying((p) => !p)}
             aria-label={playing ? "Pause slideshow" : "Play slideshow"}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-canvas/50 text-canvas transition-colors hover:bg-canvas hover:text-ink"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-canvas/50 text-ink transition-colors hover:bg-canvas hover:text-ink"
           >
             {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
           </button>

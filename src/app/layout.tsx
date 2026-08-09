@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     "Bosiano is a curated luxury marketplace of Italian heritage — uniting considered designers, craftsmanship, and AI-powered discovery.",
   keywords: ["luxury fashion", "Italian heritage", "designer", "marketplace", "Bosiano"],
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/brand/crest-primary.png", type: "image/png" }],
-    apple: [{ url: "/brand/crest-primary.png", type: "image/png" }],
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/brand/crest-shield.png", type: "image/png" }],
+    apple: [{ url: "/brand/crest-shield.png", type: "image/png" }],
   },
 };
 
@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-xs focus:uppercase focus:tracking-luxe focus:text-canvas"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-gold focus:px-5 focus:py-3 focus:text-xs focus:uppercase focus:tracking-luxe focus:text-void"
         >
           Skip to content
         </a>

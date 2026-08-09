@@ -7,7 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "audit:catalog": "tsx --tsconfig tsconfig.json scripts/audit-catalog-galleries.ts",
+    "validate:catalog": "tsx --tsconfig tsconfig.json scripts/validate-catalog.ts",
+    "prebuild": "npm run validate:catalog"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -28,6 +31,7 @@
     "eslint-config-next": "^14.2.35",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
+    "tsx": "^4.23.11",
     "typescript": "^5.5.4"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "champagne-border": [
+    "/products/bosiano-silk-twill-scarf/champagne-01-flat.png",
+    "/products/bosiano-silk-twill-scarf/champagne-01b-flat.png",
+    "/products/bosiano-silk-twill-scarf/champagne-02-folded.png",
+    "/products/bosiano-silk-twill-scarf/champagne-03-draped.png",
+    "/products/bosiano-silk-twill-scarf/champagne-05-edge.png",
+    "/products/bosiano-silk-twill-scarf/champagne-06-label.png"
+  ],
+  "cognac-border": [
+    "/products/bosiano-silk-twill-scarf/cognac-01-flat.png",
+    "/products/bosiano-silk-twill-scarf/cognac-02-folded.png",
+    "/products/bosiano-silk-twill-scarf/cognac-05-edge.png",
+    "/products/bosiano-silk-twill-scarf/cognac-06-label.png"
+  ]
+}

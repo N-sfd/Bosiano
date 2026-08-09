@@ -87,17 +87,17 @@ export function VirtualTryOn({
 
   return (
     <div className="fixed inset-0 z-[130] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-ink/60 backdrop-blur-sm" onClick={onClose} aria-hidden />
+      <div className="absolute inset-0 bg-void/60 backdrop-blur-sm" onClick={onClose} aria-hidden />
       <div
         className="relative grid max-h-[92vh] w-full max-w-4xl overflow-hidden overflow-y-auto rounded-2xl bg-canvas-raised md:grid-cols-2"
         role="dialog"
         aria-label="Virtual try-on"
       >
-        <button className="absolute right-4 top-4 z-10 btn-ghost text-canvas md:text-ink" aria-label="Close" onClick={onClose}>
+        <button className="absolute right-4 top-4 z-10 btn-ghost text-ink md:text-ink" aria-label="Close" onClick={onClose}>
           <X className="h-5 w-5" />
         </button>
 
-        <div className="relative bg-ink">
+        <div className="relative bg-void">
           <Media
             seed={`tryon-${modality}-${variant.id}-${body}`}
             swatches={[variant.hex, "#2f3033", "#c2a367"]}
@@ -106,7 +106,7 @@ export function VirtualTryOn({
             label={product.name}
           >
             {rendering && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-ink/50 text-canvas">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-void/50 text-ink">
                 <RotateCw className="h-8 w-8 animate-spin" />
                 <p className="text-xs uppercase tracking-luxe">Rendering {modality} try-on…</p>
               </div>
@@ -150,7 +150,7 @@ export function VirtualTryOn({
                 onClick={() => setTab(id)}
                 className={cn(
                   "rounded-full px-3 py-1.5 text-xs uppercase tracking-luxe",
-                  tab === id ? "bg-ink text-canvas" : "border border-line"
+                  tab === id ? "bg-void text-canvas" : "border border-line"
                 )}
               >
                 {label}
@@ -182,7 +182,7 @@ export function VirtualTryOn({
                     }}
                     className={cn(
                       "rounded-full border px-4 py-2 text-xs transition-colors",
-                      body === b ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"
+                      body === b ? "border-ink bg-void text-canvas" : "border-line hover:border-ink"
                     )}
                   >
                     {b}
@@ -200,7 +200,7 @@ export function VirtualTryOn({
                         onClick={() => setSize(s)}
                         className={cn(
                           "min-w-10 rounded-md border px-2 py-1.5 text-xs",
-                          size === s ? "border-ink bg-ink text-canvas" : "border-line"
+                          size === s ? "border-ink bg-void text-canvas" : "border-line"
                         )}
                       >
                         {s}

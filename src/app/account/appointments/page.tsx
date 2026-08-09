@@ -125,7 +125,7 @@ export default function AppointmentsPage() {
               onClick={() => setSlot(s)}
               className={cn(
                 "rounded-full border px-3 py-1.5 text-xs",
-                slot === s ? "border-ink bg-ink text-canvas" : "border-line"
+                slot === s ? "border-ink bg-void text-canvas" : "border-line"
               )}
             >
               {s}
@@ -156,7 +156,7 @@ export default function AppointmentsPage() {
           {videoOpen && (
             <div className="relative mt-4 overflow-hidden rounded-xl bg-ink">
               <Media seed={stylist.avatar} ratio="landscape" monogram={false} className="opacity-70" />
-              <p className="absolute bottom-3 left-3 text-xs uppercase tracking-luxe text-canvas">
+              <p className="absolute bottom-3 left-3 text-xs uppercase tracking-luxe text-ink">
                 Connected with {stylist.name}
               </p>
             </div>
@@ -175,7 +175,7 @@ export default function AppointmentsPage() {
                 <p className="text-[0.65rem] uppercase tracking-luxe text-ink-muted">{stylist.name}</p>
                 <p>I’ve pulled three coats for your budget — see the shared board.</p>
               </div>
-              <div className="rounded-lg bg-ink px-3 py-2 text-canvas">
+              <div className="rounded-lg bg-ink px-3 py-2 text-ink">
                 <p className="text-[0.65rem] uppercase tracking-luxe opacity-70">You</p>
                 <p>Love the camel — can we add a tote?</p>
               </div>

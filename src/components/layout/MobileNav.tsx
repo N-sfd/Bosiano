@@ -9,7 +9,8 @@ import { useStore, cartCount } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import { megaNav, exploreNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
-import { BosianosLogo } from "@/components/brand/BosianosLogo";
+import { BosianoBrand } from "@/components/brand/BosianoBrand";
+import { brand } from "@/config/brand";
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -40,7 +41,7 @@ export function MobileNav() {
               <span className="relative">
                 <item.icon className="h-5 w-5" strokeWidth={1.5} />
                 {!!item.badge && item.badge > 0 && (
-                  <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[0.55rem] font-semibold text-canvas">
+                  <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[0.55rem] font-semibold text-ink">
                     {item.badge}
                   </span>
                 )}
@@ -73,7 +74,7 @@ export function MobileNav() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[140] lg:hidden"
           >
-            <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" onClick={() => setMenu(false)} aria-hidden />
+            <div className="absolute inset-0 bg-void/60 backdrop-blur-sm" onClick={() => setMenu(false)} aria-hidden />
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
@@ -84,7 +85,7 @@ export function MobileNav() {
               aria-label="Menu"
             >
               <div className="flex items-center justify-between border-b border-line px-6 py-5">
-                <BosianosLogo variant="stacked" tone="ink" showTagline compact />
+                <BosianoBrand variant="crest-simple" size="md" decorative />
                 <button className="btn-ghost" aria-label="Close menu" onClick={() => setMenu(false)}>
                   <X className="h-5 w-5" strokeWidth={1.5} />
                 </button>
@@ -116,7 +117,7 @@ export function MobileNav() {
               </nav>
               <div className="space-y-3 border-t border-line px-6 py-5">
                 <Link href="/rewards" onClick={() => setMenu(false)} className="btn-primary w-full">
-                  Join Bosianos Club
+                  Join {brand.clubName}
                 </Link>
                 <Link href="/account" onClick={() => setMenu(false)} className="btn-outline w-full">
                   My Account

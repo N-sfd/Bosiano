@@ -63,7 +63,7 @@ export default function AccountDashboard() {
         <p className="mt-1 text-sm text-ink-muted">Orders, wardrobe, loyalty, and style — in one place.</p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-ink text-canvas">
+      <div className="overflow-hidden rounded-2xl bg-void text-canvas">
         <div className="grid gap-6 p-7 sm:grid-cols-[1fr_auto] sm:items-center">
           <div>
             <p className="eyebrow !text-canvas/70 inline-flex items-center gap-2">
@@ -89,7 +89,7 @@ export default function AccountDashboard() {
               </p>
             )}
           </div>
-          <Link href="/account/club" className="btn bg-canvas px-6 py-3 text-ink hover:bg-gold hover:text-canvas">
+          <Link href="/account/club" className="btn bg-canvas px-6 py-3 text-ink hover:bg-gold hover:text-void">
             Club dashboard <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

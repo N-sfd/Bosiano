@@ -120,7 +120,7 @@ export default function ConciergePage() {
                 onClick={() => setChannel(id)}
                 className={cn(
                   "rounded-full border px-3 py-1.5 text-xs uppercase tracking-luxe",
-                  channel === id ? "border-ink bg-ink text-canvas" : "border-line"
+                  channel === id ? "border-ink bg-void text-canvas" : "border-line"
                 )}
               >
                 {label}
@@ -134,7 +134,7 @@ export default function ConciergePage() {
                 <Video className="h-4 w-4" /> {videoOn ? "End video desk" : "Start video consultation"}
               </button>
               {videoOn && (
-                <div className="relative mt-4 overflow-hidden rounded-xl bg-ink text-canvas">
+                <div className="relative mt-4 overflow-hidden rounded-xl bg-void text-canvas">
                   <div className="flex aspect-video items-center justify-center">
                     <p className="text-sm">Connected to concierge video desk</p>
                   </div>
@@ -150,7 +150,7 @@ export default function ConciergePage() {
                     className={cn(
                       "rounded-xl px-4 py-3 text-sm",
                       m.role === "user"
-                        ? "ml-8 bg-ink text-canvas"
+                        ? "ml-8 bg-void text-canvas"
                         : m.role === "agent"
                           ? "mr-8 border border-gold/40 bg-gold/10"
                           : "mr-8 bg-canvas-sunk"

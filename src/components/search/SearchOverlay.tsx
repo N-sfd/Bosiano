@@ -129,7 +129,7 @@ export function SearchOverlay() {
       window.location.href = `/product/${hit.slug}`;
       setSearch(false);
     } else {
-      setScanMsg("No product matched that barcode. Try a Bosianos code from a product page.");
+      setScanMsg("No product matched that barcode. Try a Bosiano code from a product page.");
     }
   };
 
@@ -145,7 +145,7 @@ export function SearchOverlay() {
     <AnimatePresence>
       {searchOpen && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[120]">
-          <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" onClick={() => setSearch(false)} aria-hidden />
+          <div className="absolute inset-0 bg-void/60 backdrop-blur-sm" onClick={() => setSearch(false)} aria-hidden />
           <motion.div
             initial={{ y: -24 }}
             animate={{ y: 0 }}
@@ -204,7 +204,7 @@ export function SearchOverlay() {
                       onClick={listening ? stopVoice : startVoice}
                       className={cn(
                         "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-colors",
-                        listening ? "border-gold bg-gold text-canvas" : "border-line hover:border-ink"
+                        listening ? "border-gold bg-gold text-void" : "border-line hover:border-ink"
                       )}
                       aria-label={listening ? "Stop voice search" : "Start voice search"}
                     >
@@ -400,7 +400,7 @@ export function SearchOverlay() {
                           }}
                           className={cn(
                             "rounded-full border px-3 py-1.5 text-xs capitalize transition-colors",
-                            tags.includes(t) ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"
+                            tags.includes(t) ? "border-ink bg-void text-canvas" : "border-line hover:border-ink"
                           )}
                         >
                           {t}
@@ -518,7 +518,7 @@ function ModeTab({
       onClick={onClick}
       className={cn(
         "inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium uppercase tracking-luxe transition-colors",
-        active ? "bg-ink text-canvas" : "border border-line text-ink-soft hover:border-ink"
+        active ? "bg-void text-canvas" : "border border-line text-ink-soft hover:border-ink"
       )}
     >
       {icon}

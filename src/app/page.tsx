@@ -46,7 +46,7 @@ const trust = [
   { icon: Truck, title: "Complimentary shipping", copy: "Express delivery over $250" },
   { icon: RefreshCw, title: "30-day free returns", copy: "Easy, prepaid returns portal" },
   { icon: ShieldCheck, title: "Guaranteed authentic", copy: "Sourced direct from houses" },
-  { icon: Sparkles, title: "Bosianos Club", copy: "Earn points on every order" },
+  { icon: Sparkles, title: "Bosiano Club", copy: "Earn points on every order" },
 ];
 
 export default function HomePage() {
@@ -87,6 +87,71 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Bosiano Collection */}
+      <section className="border-y border-line bg-canvas-raised py-16 lg:py-24">
+        <div className="shell">
+          <SectionHeader
+            eyebrow="Bosiano Collection"
+            title="The Bosiano Edit"
+            description="Crest hardware, leather emboss, and quiet embroidery — house pieces with integrated branding, never watermarks."
+            href="/shop?collection=house&brand=bosiano"
+          />
+          <div className="mt-8">
+            <ProductRail
+              products={products.filter((p) => p.brandId === "bosiano")}
+              label="bosiano collection"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Signature hardware moment */}
+      <section className="shell py-16 lg:py-20">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-canvas-sunk">
+            <Media
+              seed="/brand/crest-metal-hardware.png"
+              ratio="portrait"
+              label="Bosiano crest hardware"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
+          </div>
+          <div>
+            <p className="eyebrow">Signature hardware</p>
+            <h2 className="mt-2 font-serif text-3xl text-ink sm:text-4xl">The Bosiano crest lock</h2>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-soft sm:text-base">
+              The Shield Crest is Bosiano’s iconic hardware signature — satin and brushed gold on
+              clasps, locks, and leather tags. The B monogram handles the smallest details: buttons,
+              crowns, zipper pulls, and jewelry clasps.
+            </p>
+            <Link
+              href="/shop?brand=bosiano&category=bags"
+              className="btn-primary mt-8 inline-flex items-center gap-2"
+            >
+              Shop leather &amp; hardware <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Designer Marketplace */}
+      <section className="border-y border-line py-16 lg:py-24">
+        <div className="shell">
+          <SectionHeader
+            eyebrow="Designer Marketplace"
+            title="Curated houses"
+            description="Authentic designer pieces with their original branding intact — filter by house."
+            href="/shop?collection=marketplace"
+          />
+          <div className="mt-8">
+            <ProductRail
+              products={products.filter((p) => p.brandId !== "bosiano").slice(0, 8)}
+              label="designer marketplace"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* category tiles */}
       <section className="shell pb-16 lg:pb-24">
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
@@ -120,10 +185,10 @@ export default function HomePage() {
       <PersonalizedRail />
 
       {/* editorial split */}
-      <section className="bg-ink text-canvas">
+      <section className="bg-void text-canvas">
         <div className="shell grid gap-0 lg:grid-cols-2">
           <div className="order-2 flex flex-col justify-center py-14 lg:order-1 lg:pr-16">
-            <p className="eyebrow !text-canvas/70 mb-4">The Bosianos Journal</p>
+            <p className="eyebrow !text-canvas/70 mb-4">The Bosiano Journal</p>
             <h2 className="font-serif text-4xl leading-tight sm:text-5xl">The New Tailoring: Softness as Strength</h2>
             <p className="mt-4 max-w-md text-canvas/80">
               How a generation of designers is rewriting the rules of the suit — trading rigidity for
@@ -196,8 +261,8 @@ export default function HomePage() {
       <section className="shell py-16 lg:py-24">
         <div className="relative overflow-hidden rounded-3xl">
           <Media seed="loyalty-club" swatches={["#2f3033", "#8a6a2c", "#c2a367"]} ratio="wide" className="min-h-[340px]" monogram={false} sizes="100vw">
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-ink/50 p-8 text-center text-canvas">
-              <p className="eyebrow !text-canvas/80">Bosianos Club</p>
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-void/50 p-8 text-center text-ink">
+              <p className="eyebrow !text-canvas/80">Bosiano Club</p>
               <h2 className="mt-3 max-w-2xl font-serif text-4xl leading-tight sm:text-5xl">
                 Rewards worthy of your wardrobe
               </h2>
@@ -207,7 +272,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/rewards"
-                className="mt-7 bg-canvas px-8 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink transition-colors hover:bg-gold hover:text-canvas"
+                className="mt-7 bg-canvas px-8 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink transition-colors hover:bg-gold hover:text-void"
               >
                 Join the Club
               </Link>

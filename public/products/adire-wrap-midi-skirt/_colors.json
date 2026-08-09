@@ -1,0 +1,10 @@
+{
+    "indigo":  [
+                   "/products/adire-wrap-midi-skirt/indigo-01-hero.png",
+                   "/products/adire-wrap-midi-skirt/indigo-02-detail.png"
+               ],
+    "rust":  [
+                 "/products/adire-wrap-midi-skirt/rust-01-hero.png",
+                 "/products/adire-wrap-midi-skirt/rust-02-detail.png"
+             ]
+}

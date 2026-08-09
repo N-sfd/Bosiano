@@ -36,7 +36,7 @@ export default function AccountClubPage() {
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-ink p-7 text-canvas">
+      <div className="overflow-hidden rounded-2xl bg-void p-7 text-ink">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-luxe text-canvas/60">{progress.current.name} tier</p>

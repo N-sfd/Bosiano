@@ -49,7 +49,7 @@ export function AdminOverview() {
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <QuickCard
           title="Analytics"
           body="Revenue, conversion, search, wishlist, abandonment, LTV, and more"
@@ -64,6 +64,11 @@ export function AdminOverview() {
           title="Inventory"
           body={`${snap.lowStock} low · ${snap.outOfStock} sold out — set thresholds & restock dates`}
           href="/admin/inventory"
+        />
+        <QuickCard
+          title="Brand identity"
+          body="Wordmark, crest hierarchy, colors, and asset paths"
+          href="/admin/brand"
         />
       </div>
 

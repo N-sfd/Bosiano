@@ -19,7 +19,7 @@ export function FollowDesignerButton({ brand }: { brand: Brand }) {
     <div className="flex flex-wrap items-center gap-3">
       <button
         onClick={() => toggle(brand.id)}
-        className={cn("btn", isFollowing ? "bg-canvas text-ink hover:bg-gold hover:text-canvas" : "bg-gold text-canvas")}
+        className={cn("btn", isFollowing ? "bg-canvas text-ink hover:bg-gold hover:text-void" : "bg-gold text-void")}
       >
         {isFollowing ? (
           <>

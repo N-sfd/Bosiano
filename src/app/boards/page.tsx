@@ -60,7 +60,7 @@ export default function BoardsPage() {
             onClick={() => setActiveId(b.id)}
             className={cn(
               "rounded-full border px-4 py-2 text-sm",
-              board?.id === b.id ? "border-ink bg-ink text-canvas" : "border-line"
+              board?.id === b.id ? "border-ink bg-void text-canvas" : "border-line"
             )}
           >
             {b.title}

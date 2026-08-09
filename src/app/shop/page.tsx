@@ -4,7 +4,7 @@ import { ShopClient } from "@/components/shop/ShopClient";
 
 export const metadata: Metadata = {
   title: "Shop",
-  description: "Shop the full Bosianos edit — tailoring, dresses, bags, shoes and more from our curated designers.",
+  description: "Shop the full Bosiano edit — tailoring, dresses, bags, shoes and more from our curated designers.",
 };
 
 export default function ShopPage() {

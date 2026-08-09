@@ -20,7 +20,7 @@ export function IconToggle({
       aria-pressed={active}
       className={cn(
         "flex h-8 w-8 items-center justify-center rounded-full border shadow-sm backdrop-blur transition-all",
-        active ? "border-gold bg-gold text-canvas" : "border-line bg-canvas-raised/90 text-ink",
+        active ? "border-gold bg-gold text-void" : "border-line bg-canvas-raised/90 text-ink",
         className
       )}
     >

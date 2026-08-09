@@ -1,0 +1,18 @@
+﻿{
+  "charcoal": [
+    "/products/sculpted-wool-blazer/charcoal-01-front.png",
+    "/products/sculpted-wool-blazer/charcoal-02-threeq.png",
+    "/products/sculpted-wool-blazer/charcoal-03-back.png",
+    "/products/sculpted-wool-blazer/charcoal-04-lapel.png"
+  ],
+  "camel": [
+    "/products/sculpted-wool-blazer/camel-01-front.png",
+    "/products/sculpted-wool-blazer/camel-02-threeq.png",
+    "/products/sculpted-wool-blazer/camel-03-back.png"
+  ],
+  "ivory": [
+    "/products/sculpted-wool-blazer/ivory-01-front.png",
+    "/products/sculpted-wool-blazer/ivory-02-threeq.png",
+    "/products/sculpted-wool-blazer/ivory-03-back.png"
+  ]
+}

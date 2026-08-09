@@ -36,12 +36,12 @@ export default function LiveShoppingPage() {
         >
           <Media seed={event.hero} ratio="wide" className="min-h-[320px]" monogram={false} />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/30 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-8 text-canvas">
+          <div className="absolute bottom-0 left-0 right-0 p-8 text-ink">
             <span className="inline-flex items-center gap-2 rounded-full bg-[#b33] px-3 py-1 text-[0.65rem] uppercase tracking-luxe">
               <span className="h-2 w-2 animate-pulse rounded-full bg-canvas" /> Live now · {event.viewers?.toLocaleString()} watching
             </span>
             <h2 className="mt-3 font-serif text-4xl group-hover:text-gold">{event.title}</h2>
-            <p className="mt-2 text-canvas/85">
+            <p className="mt-2 text-ink/85">
               {event.host} · {event.hostRole}
             </p>
           </div>
@@ -93,7 +93,7 @@ function EventCard({
       <Link href={`/live/${event.slug}`} className="group block">
         <div className="relative">
           <Media seed={event.hero} ratio="landscape" monogram={false} />
-          <span className="absolute left-3 top-3 rounded-full bg-ink/70 px-2.5 py-1 text-[0.6rem] uppercase tracking-luxe text-canvas">
+          <span className="absolute left-3 top-3 rounded-full bg-void/70 px-2.5 py-1 text-[0.6rem] uppercase tracking-luxe text-canvas">
             {event.status === "upcoming" ? "Upcoming" : "Replay"}
           </span>
           {event.status === "replay" && (

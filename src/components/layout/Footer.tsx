@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Instagram, Youtube, Twitter, Facebook } from "lucide-react";
-import { BosianosLogo } from "@/components/brand/BosianosLogo";
+import { BosianoBrand } from "@/components/brand/BosianoBrand";
+import { brand } from "@/config/brand";
 
 const columns = [
   {
@@ -34,7 +35,8 @@ const columns = [
     heading: "About",
     links: [
       { label: "Our Story", href: "/about" },
-      { label: "The Bosiano Journal", href: "/journal" },
+      { label: brand.journalName, href: "/journal" },
+      { label: "Italian Heritage", href: "/brand" },
       { label: "AI Personal Stylist", href: "/stylist" },
       { label: "Book a Stylist", href: "/account/appointments" },
       { label: "Stores", href: "/stores" },
@@ -53,15 +55,15 @@ export function Footer() {
       <div className="border-b border-line">
         <div className="shell grid gap-6 py-14 lg:grid-cols-2 lg:items-center">
           <div>
-            <h2 className="font-serif text-3xl sm:text-4xl">Join the Bosianos world</h2>
+            <h2 className="font-serif text-3xl text-ink sm:text-4xl">Join the Bosiano world</h2>
             <p className="mt-2 max-w-md text-sm text-ink-soft">
               Be first to receive new arrivals, private designer previews, and stories from The Journal.
             </p>
             <Link
               href="/rewards"
-              className="mt-4 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-medium uppercase tracking-luxe text-gold-deep transition-colors hover:bg-gold hover:text-canvas"
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-medium uppercase tracking-luxe text-gold transition-colors hover:bg-gold hover:text-void"
             >
-              Join Bosianos Club &amp; get $25 off your first order
+              Join Bosiano Club &amp; get $25 off your first order
             </Link>
           </div>
           <form className="flex w-full max-w-md gap-3 lg:ml-auto" aria-label="Newsletter signup">
@@ -79,14 +81,21 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Brand footer — gold on jet black per brand guide */}
-      <div className="bg-ink text-canvas">
+      {/* Brand footer — same full lockup as header */}
+      <div className="bg-void text-canvas">
         <div className="shell grid grid-cols-2 gap-8 py-14 md:grid-cols-4 lg:grid-cols-5">
           <div className="col-span-2 lg:col-span-2">
-            <Link href="/" aria-label="Bosiano home" className="inline-block">
-              <BosianosLogo variant="stacked" tone="gold" showTagline />
+            <Link
+              href="/"
+              aria-label={`${brand.displayName} home`}
+              className="bosiano-logo-link inline-flex bg-transparent p-0 shadow-none"
+            >
+              <BosianoBrand variant="crest-full" size="xl" priority />
             </Link>
-            <p className="mt-5 max-w-xs text-sm text-canvas/70">
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-canvas/70">
+              Crafted in the spirit of Italian luxury.
+            </p>
+            <p className="mt-3 max-w-xs text-sm text-canvas/55">
               A curated marketplace uniting the world&apos;s most considered designers, delivered with
               uncompromising service.
             </p>

@@ -129,6 +129,22 @@ export const brands: Brand[] = [
     videoSeed: "solene-hero",
     relatedBrandIds: ["belrose", "sanso", "maison-verane"],
   },
+  {
+    id: "bosiano",
+    slug: "bosiano",
+    name: "Bosiano",
+    tagline: "ITALIAN HERITAGE",
+    origin: "Milan, Italy",
+    since: 2024,
+    hero: "bosiano-hero",
+    logotype: "BOSIANO",
+    bio: "The house line of Bosiano — quiet luxury closer to Cucinelli and Zegna. Emboss leather, foil fragrance, micro embroidery; never logo everywhere.",
+    featured: true,
+    collections: ["Crest Leather", "Heritage Silk", "Maison Timepieces"],
+    sustainability: "Vegetable-tanned Italian leather and responsible gold vermeil.",
+    videoSeed: "bosiano-hero",
+    relatedBrandIds: ["sanso", "belrose", "maison-verane"],
+  },
 ];
 
 export function getBrand(id: string) {

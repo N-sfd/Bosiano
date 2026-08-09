@@ -60,7 +60,7 @@ export default function WardrobePage() {
               onClick={() => setSource(s.id)}
               className={cn(
                 "rounded-full border px-3 py-1.5 text-xs uppercase tracking-luxe",
-                source === s.id ? "border-ink bg-ink text-canvas" : "border-line text-ink-soft"
+                source === s.id ? "border-ink bg-void text-canvas" : "border-line text-ink-soft"
               )}
             >
               {s.label}

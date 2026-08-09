@@ -213,7 +213,7 @@ export function OnboardingQuiz() {
                   onClick={() => toggle(current.key, o.id, !!current.multi)}
                   className={cn(
                     "inline-flex items-center gap-1.5 rounded-full border px-4 py-2.5 text-sm transition-colors",
-                    active ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"
+                    active ? "border-ink bg-void text-canvas" : "border-line hover:border-ink"
                   )}
                 >
                   {active && <Check className="h-3.5 w-3.5" />}

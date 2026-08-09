@@ -138,7 +138,7 @@ export function SearchResults() {
                   onClick={() => setTab(t.id)}
                   className={cn(
                     "rounded-full px-4 py-2 text-xs uppercase tracking-luxe transition-colors",
-                    tab === t.id ? "bg-ink text-canvas" : "border border-line text-ink-soft hover:border-ink"
+                    tab === t.id ? "bg-void text-canvas" : "border border-line text-ink-soft hover:border-ink"
                   )}
                 >
                   {t.label} · {count}

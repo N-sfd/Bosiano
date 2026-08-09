@@ -3,10 +3,10 @@ import { cn } from "@/lib/utils";
 
 const tones = {
   neutral: "bg-canvas-sunk text-ink",
-  ink: "bg-ink text-canvas",
-  gold: "bg-gold text-canvas",
+  ink: "bg-void text-canvas",
+  gold: "bg-gold text-ink",
   eco: "bg-[#3a4a3b] text-canvas",
-  outline: "border border-line bg-canvas-raised/95 text-ink shadow-sm",
+  outline: "border border-line bg-canvas-card/95 text-ink shadow-sm",
 };
 
 export function Badge({

@@ -136,7 +136,7 @@ export default function ReturnsPage() {
             <span
               className={cn(
                 "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs",
-                i < step ? "bg-gold text-canvas" : i === step ? "bg-ink text-canvas" : "bg-canvas-sunk text-ink-muted"
+                i < step ? "bg-gold text-void" : i === step ? "bg-void text-canvas" : "bg-canvas-sunk text-ink-muted"
               )}
             >
               {i < step ? <Check className="h-3.5 w-3.5" /> : i + 1}
@@ -201,7 +201,7 @@ export default function ReturnsPage() {
                 <span
                   className={cn(
                     "flex h-5 w-5 items-center justify-center rounded-md border",
-                    selectedItems.includes(it.name) ? "border-ink bg-ink text-canvas" : "border-line"
+                    selectedItems.includes(it.name) ? "border-ink bg-void text-canvas" : "border-line"
                   )}
                 >
                   {selectedItems.includes(it.name) && <Check className="h-3 w-3" />}
@@ -222,7 +222,7 @@ export default function ReturnsPage() {
                     onClick={() => setReason(r)}
                     className={cn(
                       "rounded-full border px-4 py-2 text-sm",
-                      reason === r ? "border-ink bg-ink text-canvas" : "border-line"
+                      reason === r ? "border-ink bg-void text-canvas" : "border-line"
                     )}
                   >
                     {r}
@@ -278,7 +278,7 @@ export default function ReturnsPage() {
                       onClick={() => setRefundMethod(m.id)}
                       className={cn(
                         "rounded-full border px-4 py-2 text-sm",
-                        refundMethod === m.id ? "border-ink bg-ink text-canvas" : "border-line"
+                        refundMethod === m.id ? "border-ink bg-void text-canvas" : "border-line"
                       )}
                     >
                       {m.label}
@@ -321,7 +321,7 @@ export default function ReturnsPage() {
                     onClick={() => setPickup(s)}
                     className={cn(
                       "rounded-full border px-3 py-1.5 text-xs",
-                      pickup === s ? "border-ink bg-ink text-canvas" : "border-line"
+                      pickup === s ? "border-ink bg-void text-canvas" : "border-line"
                     )}
                   >
                     {s}
@@ -339,7 +339,7 @@ export default function ReturnsPage() {
 
         {step === 4 && activeReturn && (
           <div className="text-center">
-            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#3a4a3b] text-canvas">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#3a4a3b] text-ink">
               <PackageCheck className="h-6 w-6" />
             </span>
             <h2 className="mt-4 font-serif text-3xl">Return #{activeReturn.id}</h2>
@@ -355,7 +355,7 @@ export default function ReturnsPage() {
                   <span
                     className={cn(
                       "mt-0.5 flex h-5 w-5 items-center justify-center rounded-full",
-                      t.done ? "bg-gold text-canvas" : "bg-canvas-sunk text-ink-muted"
+                      t.done ? "bg-gold text-void" : "bg-canvas-sunk text-ink-muted"
                     )}
                   >
                     {t.done ? <Check className="h-3 w-3" /> : null}

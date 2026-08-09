@@ -7,7 +7,7 @@ import { Reveal } from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
   title: "Designers",
-  description: "Explore the houses of Bosianos — each with a distinct point of view, curated for the discerning.",
+  description: "Explore the houses of Bosiano — each with a distinct point of view, curated for the discerning.",
 };
 
 export default function DesignersPage() {
@@ -29,7 +29,7 @@ export default function DesignersPage() {
             <Reveal key={b.id} delay={(i % 2) * 0.08}>
               <Link href={`/designers/${b.slug}`} className="group block overflow-hidden rounded-2xl">
                 <Media seed={b.hero} ratio="wide" label={b.name} className="card-hover group-hover:scale-[1.03]" monogram={false}>
-                  <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-ink/75 via-ink/10 to-transparent p-7 text-canvas">
+                  <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-ink/75 via-ink/10 to-transparent p-7 text-ink">
                     <p className="font-serif text-3xl">{b.name}</p>
                     <p className="mt-1 max-w-md text-sm text-canvas/85">{b.tagline}</p>
                     <p className="mt-3 text-[0.65rem] uppercase tracking-luxe text-canvas/70">

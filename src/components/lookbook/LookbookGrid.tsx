@@ -42,7 +42,7 @@ export function LookbookGrid() {
             onClick={() => setSource(f.id)}
             className={cn(
               "rounded-full px-4 py-2 text-xs uppercase tracking-luxe transition-colors",
-              source === f.id ? "bg-ink text-canvas" : "border border-line text-ink-soft hover:border-ink"
+              source === f.id ? "bg-void text-canvas" : "border border-line text-ink-soft hover:border-ink"
             )}
           >
             {f.label}
@@ -72,7 +72,7 @@ export function LookbookGrid() {
                   </span>
                 ))}
                 {look.video && (
-                  <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-ink/70 px-2.5 py-1 text-[0.6rem] uppercase tracking-luxe text-canvas">
+                  <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-void/70 px-2.5 py-1 text-[0.6rem] uppercase tracking-luxe text-canvas">
                     <Play className="h-3 w-3 fill-current" /> Video
                   </span>
                 )}

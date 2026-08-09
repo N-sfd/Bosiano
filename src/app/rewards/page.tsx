@@ -32,7 +32,7 @@ export default function RewardsPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-ink text-canvas">
+      <section className="relative overflow-hidden bg-void text-canvas">
         <Media seed="rewards-hero" swatches={["#141414", "#8a6a2c", "#c2a367"]} ratio="auto" className="absolute inset-0 h-full w-full opacity-60" monogram={false} />
         <div className="shell relative py-24 text-center lg:py-32">
           <p className="eyebrow !text-canvas/70 inline-flex items-center gap-2">
@@ -44,7 +44,7 @@ export default function RewardsPage() {
           <p className="mx-auto mt-5 max-w-xl text-canvas/85">
             Configurable tiers with welcome rewards, multipliers, early access, and concierge services.
           </p>
-          <Link href="/account" className="mt-8 inline-flex bg-canvas px-8 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink transition-colors hover:bg-gold hover:text-canvas">
+          <Link href="/account" className="mt-8 inline-flex bg-canvas px-8 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em] text-ink transition-colors hover:bg-gold hover:text-void">
             View my Club
           </Link>
         </div>
@@ -113,7 +113,7 @@ export default function RewardsPage() {
                 )}
               >
                 {t.id === "gold" && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-4 py-1 text-[0.6rem] font-semibold uppercase tracking-luxe text-canvas">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-4 py-1 text-[0.6rem] font-semibold uppercase tracking-luxe text-ink">
                     Most popular
                   </span>
                 )}

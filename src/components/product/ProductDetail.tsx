@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { getBrand } from "@/lib/brands";
+import { getProductBreadcrumbs } from "@/lib/products";
 import { Media } from "@/components/Media";
 import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
@@ -40,8 +41,13 @@ import { Stars } from "@/components/ui/Stars";
 
 export function ProductDetail({ product }: { product: Product }) {
   const brand = getBrand(product.brandId);
-  const [variantIndex, setVariantIndex] = useState(0);
-  const [size, setSize] = useState<string | null>(null);
+  const initialVariantIndex = Math.max(
+    0,
+    product.variants.findIndex((v) => v.colorId === product.defaultColor)
+  );
+  const [variantIndex, setVariantIndex] = useState(initialVariantIndex);
+  const isOneSize = product.sizes.length === 1 && /^one[\s-]?size$/i.test(product.sizes[0]);
+  const [size, setSize] = useState<string | null>(isOneSize ? product.sizes[0] : null);
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
   const [tryOnOpen, setTryOnOpen] = useState(false);
@@ -49,7 +55,7 @@ export function ProductDetail({ product }: { product: Product }) {
   const [openSection, setOpenSection] = useState<string | null>("details");
   const [qty, setQty] = useState(1);
 
-  const variant = product.variants[variantIndex];
+  const variant = product.variants[variantIndex] ?? product.variants[0];
   const addToCart = useStore((s) => s.addToCart);
   const toggleWishlist = useStore((s) => s.toggleWishlist);
   const toggleCompare = useStore((s) => s.toggleCompare);
@@ -63,6 +69,19 @@ export function ProductDetail({ product }: { product: Product }) {
   useEffect(() => {
     viewProduct(product.id);
   }, [product.id, viewProduct]);
+
+  /* Reset colour / size / qty when navigating between products client-side */
+  useEffect(() => {
+    const idx = Math.max(
+      0,
+      product.variants.findIndex((v) => v.colorId === product.defaultColor)
+    );
+    setVariantIndex(idx);
+    const oneSize = product.sizes.length === 1 && /^one[\s-]?size$/i.test(product.sizes[0]);
+    setSize(oneSize ? product.sizes[0] : null);
+    setQty(1);
+    setAdded(false);
+  }, [product.slug, product.defaultColor, product.sizes, product.variants]);
 
   const wished = hydrated && wishlist.includes(product.id);
   const comparing = hydrated && compare.includes(product.id);
@@ -93,19 +112,22 @@ export function ProductDetail({ product }: { product: Product }) {
   return (
     <div className="shell py-8 lg:py-12">
       <nav className="mb-6 flex flex-wrap items-center gap-2 text-xs text-ink-muted" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-ink">
-          Home
-        </Link>
-        <span>/</span>
-        <Link href={`/shop?category=${product.category}`} className="capitalize hover:text-ink">
-          {product.category}
-        </Link>
-        <span>/</span>
-        <span className="text-ink">{product.name}</span>
+        {getProductBreadcrumbs(product).map((crumb, i, all) => (
+          <span key={`${crumb.label}-${i}`} className="contents">
+            {i > 0 ? <span>/</span> : null}
+            {crumb.href && i < all.length - 1 ? (
+              <Link href={crumb.href} className="hover:text-ink">
+                {crumb.label}
+              </Link>
+            ) : (
+              <span className={i === all.length - 1 ? "text-ink" : undefined}>{crumb.label}</span>
+            )}
+          </span>
+        ))}
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <ProductGallery product={product} variant={variant} />
+        <ProductGallery key={`${product.slug}-${variant.colorId}`} product={product} variant={variant} />
 
         <div>
           <div className="flex flex-wrap items-center gap-2">
@@ -153,7 +175,8 @@ export function ProductDetail({ product }: { product: Product }) {
                   selected={i === variantIndex}
                   onClick={() => {
                     setVariantIndex(i);
-                    setSize(null);
+                    /* One-size accessories keep size selected; sized apparel resets */
+                    if (!isOneSize) setSize(null);
                     setQty(1);
                   }}
                   label={v.color}
@@ -164,43 +187,47 @@ export function ProductDetail({ product }: { product: Product }) {
 
           <div className="mt-7">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="eyebrow">Size</p>
-              <div className="flex items-center gap-3">
-                <button onClick={() => setGuideOpen(true)} className="text-xs text-ink-muted hover:text-ink hover:underline">
-                  Size guide
-                </button>
-                <button
-                  onClick={() => setAdvisorOpen(true)}
-                  className="inline-flex items-center gap-1.5 text-xs text-gold-deep hover:underline"
-                >
-                  <Sparkles className="h-3.5 w-3.5" /> AI size recommendation
-                </button>
-              </div>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {product.sizes.map((s) => {
-                const stock = variant.inventory[s] ?? 0;
-                const disabled = stock <= 0 && !product.isPreorder;
-                return (
-                  <OptionChip
-                    key={s}
-                    shape="box"
-                    size="md"
-                    disabled={disabled}
-                    selected={size === s}
-                    onClick={() => {
-                      setSize(s);
-                      setQty(1);
-                    }}
+              <p className="eyebrow">{isOneSize ? "Size — One Size" : "Size"}</p>
+              {!isOneSize && (
+                <div className="flex items-center gap-3">
+                  <button onClick={() => setGuideOpen(true)} className="text-xs text-ink-muted hover:text-ink hover:underline">
+                    Size guide
+                  </button>
+                  <button
+                    onClick={() => setAdvisorOpen(true)}
+                    className="inline-flex items-center gap-1.5 text-xs text-gold-deep hover:underline"
                   >
-                    {s}
-                    {stock > 0 && stock <= 3 && (
-                      <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-gold" title="Low stock" />
-                    )}
-                  </OptionChip>
-                );
-              })}
+                    <Sparkles className="h-3.5 w-3.5" /> AI size recommendation
+                  </button>
+                </div>
+              )}
             </div>
+            {!isOneSize && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {product.sizes.map((s) => {
+                  const stock = variant.inventory[s] ?? 0;
+                  const disabled = stock <= 0 && !product.isPreorder;
+                  return (
+                    <OptionChip
+                      key={s}
+                      shape="box"
+                      size="md"
+                      disabled={disabled}
+                      selected={size === s}
+                      onClick={() => {
+                        setSize(s);
+                        setQty(1);
+                      }}
+                    >
+                      {s}
+                      {stock > 0 && stock <= 3 && (
+                        <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-gold" title="Low stock" />
+                      )}
+                    </OptionChip>
+                  );
+                })}
+              </div>
+            )}
             {size && selectedStock !== null && (
               <p
                 className={cn(
@@ -211,13 +238,15 @@ export function ProductDetail({ product }: { product: Product }) {
                 {product.isPreorder && selectedStock <= 0
                   ? "Available for pre-order · ships when restocked"
                   : selectedStock <= 0
-                    ? "Currently unavailable in this size"
+                    ? isOneSize
+                      ? "Currently unavailable"
+                      : "Currently unavailable in this size"
                     : selectedStock <= 3
-                      ? `Only ${selectedStock} left in ${variant.color} · ${size}`
-                      : `In stock · ${variant.color} · ${size}`}
+                      ? `Only ${selectedStock} left in ${variant.color}${isOneSize ? "" : ` · ${size}`}`
+                      : `In stock · ${variant.color}${isOneSize ? "" : ` · ${size}`}`}
               </p>
             )}
-            {product.modelMeasurements && (
+            {product.modelMeasurements && !isOneSize && (
               <p className="mt-2 text-xs text-ink-muted">
                 Model wears {product.modelMeasurements.sizeWorn} · {product.modelMeasurements.height}
               </p>
@@ -244,7 +273,7 @@ export function ProductDetail({ product }: { product: Product }) {
                     <Check className="h-4 w-4" /> Added to bag
                   </>
                 ) : !size ? (
-                  "Select a size"
+                  isOneSize ? `Add to bag — ${formatPrice(product.price)}` : "Select a size"
                 ) : product.isPreorder && (selectedStock ?? 0) <= 0 ? (
                   `Pre-order — ${formatPrice(product.price)}`
                 ) : (
@@ -253,14 +282,16 @@ export function ProductDetail({ product }: { product: Product }) {
               </Button>
             )}
             <div className="flex gap-3">
-              <Button variant="outline" onClick={() => setTryOnOpen(true)} className="flex-1">
-                <Ruler className="h-4 w-4" /> Virtual try-on
-              </Button>
+              {!isOneSize && (
+                <Button variant="outline" onClick={() => setTryOnOpen(true)} className="flex-1">
+                  <Ruler className="h-4 w-4" /> Virtual try-on
+                </Button>
+              )}
               <IconToggle
                 active={!!wished}
                 onClick={() => toggleWishlist(product.id)}
                 label="Add to wishlist"
-                className="h-[52px] w-[52px]"
+                className={cn("h-[52px]", isOneSize ? "flex-1" : "w-[52px]")}
               >
                 <Heart className={cn("h-4 w-4", wished && "fill-current")} />
               </IconToggle>

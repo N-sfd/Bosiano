@@ -23,7 +23,7 @@ export function ProductRail({ products, label = "products" }: { products: Produc
             type="button"
             onClick={() => scroll(-1)}
             aria-label={`Previous ${label}`}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-ink text-ink transition-colors hover:bg-ink hover:text-canvas"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-ink text-ink transition-colors hover:bg-gold hover:text-void"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -31,7 +31,7 @@ export function ProductRail({ products, label = "products" }: { products: Produc
             type="button"
             onClick={() => scroll(1)}
             aria-label={`Next ${label}`}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-ink text-ink transition-colors hover:bg-ink hover:text-canvas"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-ink text-ink transition-colors hover:bg-gold hover:text-void"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

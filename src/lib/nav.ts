@@ -2,6 +2,42 @@ import type { NavItem } from "./types";
 
 export const megaNav: NavItem[] = [
   {
+    label: "Bosiano",
+    href: "/shop?collection=house&brand=bosiano",
+    columns: [
+      {
+        heading: "Bosiano Collection",
+        links: [
+          { label: "Shop the House", href: "/shop?collection=house&brand=bosiano" },
+          { label: "Leather Bags", href: "/shop?brand=bosiano&category=bags" },
+          { label: "Clothing", href: "/shop?brand=bosiano&category=clothing" },
+          { label: "Small Leather Goods", href: "/shop?brand=bosiano&category=bags&sub=Small%20Leather%20Goods" },
+          { label: "Belts", href: "/shop?brand=bosiano&category=accessories&sub=Belts" },
+          { label: "Fragrance", href: "/shop?brand=bosiano&category=fragrance" },
+          { label: "Gifts", href: "/shop?brand=bosiano&category=gifts" },
+          { label: "Italian Heritage", href: "/brand" },
+        ],
+      },
+      {
+        heading: "Signature hardware",
+        links: [
+          { label: "Crest clasp bags", href: "/product/bosiano-crest-leather-handbag" },
+          { label: "Cognac flap bag", href: "/product/bosiano-cognac-flap-bag" },
+          { label: "B monogram belt", href: "/product/bosiano-b-leather-belt" },
+          { label: "Zip wallet", href: "/product/bosiano-crest-zip-wallet" },
+        ],
+      },
+    ],
+    featured: [
+      {
+        title: "House of Bosiano",
+        image: "bosiano-hero",
+        href: "/shop?collection=house&brand=bosiano",
+        caption: "Crest hardware · leather emboss · quiet embroidery",
+      },
+    ],
+  },
+  {
     label: "New In",
     href: "/shop?sort=new",
     columns: [
@@ -83,19 +119,15 @@ export const megaNav: NavItem[] = [
       {
         heading: "Clothing",
         links: [
+          { label: "New In", href: "/shop?category=men&sort=new" },
+          { label: "Outerwear", href: "/shop?category=men&sub=Outerwear" },
           { label: "Knitwear", href: "/shop?category=men&sub=Knitwear" },
           { label: "Shirts", href: "/shop?category=men&sub=Shirts" },
+          /* Category label is always plural Trousers — never Pant / Pants / Trouser */
           { label: "Trousers", href: "/shop?category=men&sub=Trousers" },
           { label: "Denim", href: "/shop?category=men&sub=Denim" },
-          { label: "Outerwear", href: "/shop?category=men&sub=Outerwear" },
-        ],
-      },
-      {
-        heading: "Accessories",
-        links: [
-          { label: "Bags", href: "/shop?category=bags" },
           { label: "Shoes", href: "/shop?category=shoes" },
-          { label: "Jewelry", href: "/shop?category=jewelry" },
+          { label: "Watches", href: "/shop?category=men&sub=Watches" },
         ],
       },
       {
@@ -133,6 +165,7 @@ export const megaNav: NavItem[] = [
         heading: "Accessories",
         links: [
           { label: "Jewelry", href: "/shop?category=jewelry" },
+          { label: "Belts", href: "/shop?category=accessories&sub=Belts" },
           { label: "Scarves & Wraps", href: "/shop?category=women&sub=Accessories" },
           { label: "Shoes", href: "/shop?category=shoes" },
         ],
@@ -149,20 +182,22 @@ export const megaNav: NavItem[] = [
   },
   {
     label: "Designers",
-    href: "/designers",
+    href: "/shop?collection=marketplace",
     columns: [
       {
-        heading: "Houses",
+        heading: "Designer Marketplace",
         links: [
+          { label: "All Designers", href: "/designers" },
+          { label: "Shop Marketplace", href: "/shop?collection=marketplace" },
           { label: "Maison Vérane", href: "/designers/maison-verane" },
           { label: "Atelier Nordé", href: "/designers/atelier-norde" },
-          { label: "SÀNSO", href: "/designers/sanso" },
-          { label: "Okoro", href: "/designers/okoro" },
         ],
       },
       {
         heading: "More Houses",
         links: [
+          { label: "SÀNSO", href: "/designers/sanso" },
+          { label: "Okoro", href: "/designers/okoro" },
           { label: "Hana Mori", href: "/designers/hana-mori" },
           { label: "Belrose", href: "/designers/belrose" },
           { label: "Kestrel & Co.", href: "/designers/kestrel" },
@@ -174,8 +209,8 @@ export const megaNav: NavItem[] = [
       {
         title: "Designer Storefronts",
         image: "nav-designers-1",
-        href: "/designers",
-        caption: "Explore each house's world",
+        href: "/shop?collection=marketplace",
+        caption: "Authentic designer pieces — original branding intact",
       },
     ],
   },
@@ -234,6 +269,9 @@ export const megaNav: NavItem[] = [
 
 /** Secondary destinations — shown under Explore in the header */
 export const exploreNav: { label: string; href: string }[] = [
+  { label: "Bosiano Collection", href: "/shop?collection=house&brand=bosiano" },
+  { label: "Designer Marketplace", href: "/shop?collection=marketplace" },
+  { label: "Italian Heritage", href: "/brand" },
   { label: "Live Shopping", href: "/live" },
   { label: "Community", href: "/community" },
   { label: "Stores", href: "/stores" },

@@ -1,0 +1,12 @@
+﻿{
+  "cognac": [
+    "/products/bosiano-crest-zip-wallet/cognac-01-hero.png",
+    "/products/bosiano-crest-zip-wallet/cognac-02-interior.png",
+    "/products/bosiano-crest-zip-wallet/cognac-03-crest.png"
+  ],
+  "black": [
+    "/products/bosiano-crest-zip-wallet/black-01-hero.png",
+    "/products/bosiano-crest-zip-wallet/black-02-interior.png",
+    "/products/bosiano-crest-zip-wallet/black-03-crest.png"
+  ]
+}

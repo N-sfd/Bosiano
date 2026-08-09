@@ -36,7 +36,7 @@ export function SizeGuide({
 
   return (
     <div className="fixed inset-0 z-[140] flex items-end justify-center sm:items-center" role="dialog" aria-label="Size guide">
-      <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={onClose} aria-hidden />
+      <div className="absolute inset-0 bg-void/50 backdrop-blur-sm" onClick={onClose} aria-hidden />
       <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-canvas-raised p-6 sm:rounded-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -57,7 +57,7 @@ export function SizeGuide({
               onClick={() => setUnit(u)}
               className={cn(
                 "rounded-full px-3 py-1.5 text-xs uppercase tracking-luxe",
-                unit === u ? "bg-ink text-canvas" : "border border-line"
+                unit === u ? "bg-void text-canvas" : "border border-line"
               )}
             >
               {u}

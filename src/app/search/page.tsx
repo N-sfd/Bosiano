@@ -4,7 +4,7 @@ import { SearchResults } from "@/components/search/SearchResults";
 
 export const metadata: Metadata = {
   title: "Search",
-  description: "Search Bosianos with natural language — describe what you want and let our AI find it.",
+  description: "Search Bosiano with natural language — describe what you want and let our AI find it.",
 };
 
 export default function SearchPage() {

@@ -51,7 +51,7 @@ export default function StoresPage() {
               onClick={() => setCity(c)}
               className={cn(
                 "rounded-full border px-3 py-2 text-xs uppercase tracking-luxe",
-                city === c ? "border-ink bg-ink text-canvas" : "border-line"
+                city === c ? "border-ink bg-void text-canvas" : "border-line"
               )}
             >
               {c}

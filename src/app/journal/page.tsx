@@ -33,7 +33,7 @@ export default function JournalPage() {
             onClick={() => setCategory(c)}
             className={cn(
               "rounded-full border px-3 py-1.5 text-xs uppercase tracking-luxe",
-              category === c ? "border-ink bg-ink text-canvas" : "border-line text-ink-soft"
+              category === c ? "border-ink bg-void text-canvas" : "border-line text-ink-soft"
             )}
           >
             {c}

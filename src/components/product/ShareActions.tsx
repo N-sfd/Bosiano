@@ -124,7 +124,7 @@ export function ShareActions({ product }: { product: Product }) {
       )}
 
       {cardOpen && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-ink/40 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-void/60 p-4 backdrop-blur-sm">
           <div className="w-full max-w-sm rounded-2xl border border-line bg-canvas-raised p-5 shadow-xl">
             <p className="text-[0.65rem] uppercase tracking-luxe text-ink-muted">Shareable product card</p>
             <div className="mt-3 overflow-hidden rounded-xl border border-line">

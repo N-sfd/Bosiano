@@ -35,7 +35,7 @@ export function StylistChat({ initialLookSlug }: { initialLookSlug?: string }) {
       role: "assistant",
       text: initialLookSlug
         ? `I've loaded context from your look. Ask me to restyle it, find cheaper swaps, or build something new for ${defaultStyleProfile.location}.`
-        : "I'm your Bosianos stylist. Ask me to build outfits from your sizes, designers, colors, wishlist, browsing, and purchases.",
+        : "I'm your Bosiano stylist. Ask me to build outfits from your sizes, designers, colors, wishlist, browsing, and purchases.",
     },
   ]);
 
@@ -165,7 +165,7 @@ export function StylistChat({ initialLookSlug }: { initialLookSlug?: string }) {
                 <span
                   className={cn(
                     "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
-                    m.role === "assistant" ? "bg-gold/20 text-gold-deep" : "bg-ink text-canvas"
+                    m.role === "assistant" ? "bg-gold/20 text-gold-deep" : "bg-void text-canvas"
                   )}
                 >
                   {m.role === "assistant" ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
@@ -174,7 +174,7 @@ export function StylistChat({ initialLookSlug }: { initialLookSlug?: string }) {
                   <p
                     className={cn(
                       "inline-block rounded-2xl px-4 py-3 text-sm leading-relaxed",
-                      m.role === "assistant" ? "bg-canvas-sunk text-left" : "bg-ink text-canvas"
+                      m.role === "assistant" ? "bg-canvas-sunk text-left" : "bg-void text-canvas"
                     )}
                   >
                     {m.text}

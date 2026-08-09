@@ -11,13 +11,15 @@ import {
   Menu,
   GitCompareArrows,
   ChevronDown,
+  ScanSearch,
 } from "lucide-react";
 import { primaryNav, exploreNav } from "@/lib/nav";
 import { useUI } from "@/store/useUI";
 import { useStore, cartCount } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import { Media } from "@/components/Media";
-import { BosianosLogo } from "@/components/brand/BosianosLogo";
+import { BosianoBrand } from "@/components/brand/BosianoBrand";
+import { brand } from "@/config/brand";
 import { cn } from "@/lib/utils";
 import { SearchOverlay } from "@/components/search/SearchOverlay";
 import { CartDrawer } from "@/components/cart/CartDrawer";
@@ -54,7 +56,7 @@ export function Header() {
     <>
       <header
         className={cn(
-          "sticky top-0 z-[90] w-full border-b bg-canvas/90 backdrop-blur-md transition-all duration-500 ease-silk",
+          "sticky top-0 z-[90] w-full overflow-visible border-b border-line bg-canvas-raised/95 backdrop-blur-md transition-all duration-500 ease-silk",
           scrolled ? "border-line shadow-[0_1px_0_rgba(8,8,8,0.04)]" : "border-transparent"
         )}
         onMouseLeave={() => {
@@ -65,11 +67,11 @@ export function Header() {
         <div
           className={cn(
             "mx-auto w-full max-w-shell px-4 transition-all duration-500 sm:px-10 lg:px-14",
-            scrolled ? "py-3" : "py-4 sm:py-5"
+            scrolled ? "py-3 sm:py-3.5" : "py-3.5 sm:py-4 lg:py-4.5"
           )}
         >
           {/* Desktop / tablet top bar */}
-          <div className="flex w-full items-center justify-between gap-3 sm:gap-5">
+          <div className="flex w-full items-center justify-between gap-3 overflow-visible sm:gap-5">
             {/* Left: mobile menu + primary nav */}
             <div className="flex min-w-0 flex-1 items-center gap-5 lg:gap-7">
               <button
@@ -90,7 +92,7 @@ export function Header() {
                         active === i && "text-ink"
                       )}
                     >
-                      {item.label === "Bags & Accessories" ? "Bags" : item.label === "The Journal" ? "Journal" : item.label}
+                      {item.label}
                     </Link>
                   </div>
                 ))}
@@ -139,20 +141,25 @@ export function Header() {
               </nav>
             </div>
 
-            {/* Center logo */}
+            {/* Responsive logo — transparent PNG, no card / border / shadow */}
             <Link
               href="/"
-              className="mx-1 shrink-0 transition-transform duration-500 ease-silk sm:mx-4"
-              aria-label="Bosiano home"
+              className="bosiano-logo-link relative z-10 mx-1 flex shrink-0 items-center justify-center overflow-visible bg-transparent p-0 shadow-none sm:mx-2 lg:mx-3"
+              aria-label={`${brand.displayName} home`}
               onMouseEnter={() => { setActive(null); setExploreOpen(false); }}
             >
-              <BosianosLogo
-                variant="stacked"
-                tone="ink"
-                showTagline
-                compact={scrolled}
-                className="transition-all duration-500"
-              />
+              {/* <768px: shield-only */}
+              <span className="block bg-transparent md:hidden">
+                <BosianoBrand variant="crest-simple" size="lg" decorative priority />
+              </span>
+              {/* 768–1023px: full lockup ~66px */}
+              <span className="hidden bg-transparent md:block lg:hidden">
+                <BosianoBrand variant="crest-full" size="md" priority />
+              </span>
+              {/* ≥1024px: full lockup ~78px */}
+              <span className="hidden bg-transparent lg:block">
+                <BosianoBrand variant="crest-full" size="lg" priority />
+              </span>
             </Link>
 
             {/* Right utilities */}
@@ -167,6 +174,14 @@ export function Header() {
                 <span className="truncate text-xs text-ink-muted">Search designers, looks…</span>
               </button>
               <div className="flex items-center gap-0.5 sm:gap-1 sm:border-l sm:border-line sm:pl-3">
+                <button
+                  type="button"
+                  className="btn-ghost hidden md:inline-flex"
+                  aria-label="Visual search"
+                  onClick={() => setSearch(true)}
+                >
+                  <ScanSearch className="h-5 w-5" strokeWidth={1.5} />
+                </button>
                 <Link href="/compare" className="btn-ghost relative hidden md:inline-flex" aria-label="Compare">
                   <GitCompareArrows className="h-5 w-5" strokeWidth={1.5} />
                   {hydrated && compare.length > 0 && <Badge>{compare.length}</Badge>}
@@ -194,7 +209,7 @@ export function Header() {
           <button
             type="button"
             className="mt-3 flex w-full items-center gap-2 rounded-full border border-line bg-canvas-raised px-4 py-2.5 text-left text-ink-muted transition-colors hover:border-ink hover:text-ink lg:hidden"
-            aria-label="Search Bosianos"
+            aria-label={`Search ${brand.displayName}`}
             onClick={() => setSearch(true)}
           >
             <Search className="h-4 w-4 shrink-0" strokeWidth={1.5} />
@@ -244,7 +259,7 @@ export function Header() {
                     >
                       <Media seed={f.image} ratio="landscape" label={f.title} className="rounded-xl">
                         <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-ink/70 to-transparent p-5">
-                          <p className="font-serif text-xl text-canvas">{f.title}</p>
+                          <p className="font-serif text-xl text-ink">{f.title}</p>
                           <p className="mt-1 text-xs uppercase tracking-luxe text-canvas/80">
                             {f.caption}
                           </p>
@@ -267,7 +282,7 @@ export function Header() {
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[0.6rem] font-semibold text-canvas">
+    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[0.6rem] font-semibold text-void">
       {children}
     </span>
   );

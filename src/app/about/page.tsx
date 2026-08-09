@@ -5,7 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
   title: "Our Story",
-  description: "Bosianos is a curated luxury marketplace uniting the world's most considered designers.",
+  description: "Bosiano is a curated luxury marketplace uniting the world's most considered designers.",
 };
 
 const values = [
@@ -24,7 +24,7 @@ const stats = [
 export default function AboutPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-ink text-canvas">
+      <section className="relative overflow-hidden bg-void text-canvas">
         <Media seed="about-hero" swatches={["#141414", "#6b6156", "#c2a367"]} ratio="auto" className="absolute inset-0 h-full w-full opacity-60" monogram={false} />
         <div className="shell relative py-24 text-center lg:py-32">
           <p className="eyebrow !text-canvas/70">Our Story</p>
@@ -32,7 +32,7 @@ export default function AboutPage() {
             A new home for considered design
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-canvas/85">
-            Bosianos was founded on a simple belief: that discovering exceptional design should feel as
+            Bosiano was founded on a simple belief: that discovering exceptional design should feel as
             beautiful as the pieces themselves.
           </p>
         </div>
@@ -40,12 +40,12 @@ export default function AboutPage() {
 
       <section className="shell py-16 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          <Media seed="about-editorial" ratio="landscape" label="Bosianos" className="rounded-2xl" monogram={false} />
+          <Media seed="about-editorial" ratio="landscape" label="Bosiano" className="rounded-2xl" monogram={false} />
           <div>
             <p className="eyebrow">The idea</p>
             <h2 className="mt-3 font-serif text-4xl leading-tight">Where the world&apos;s ateliers meet</h2>
             <p className="mt-4 text-ink-soft">
-              We built Bosianos to bring together independent houses and established makers on one
+              We built Bosiano to bring together independent houses and established makers on one
               considered platform — a marketplace with the intimacy of a boutique and the reach of the
               world.
             </p>

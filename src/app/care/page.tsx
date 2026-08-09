@@ -65,7 +65,7 @@ export default function CarePage() {
               onClick={() => setPickup(s)}
               className={cn(
                 "rounded-full border px-3 py-1.5 text-xs",
-                pickup === s ? "border-ink bg-ink text-canvas" : "border-line"
+                pickup === s ? "border-ink bg-void text-canvas" : "border-line"
               )}
             >
               {s}

@@ -242,7 +242,7 @@ export function runStylist(
   const roles = [
     { role: "Blazer / layer", match: (p: Product) => /blazer|overshirt|trench|coat/i.test(p.name + p.subcategory) },
     { role: "Top", match: (p: Product) => /shirt|knit|crew|tank/i.test(p.name) },
-    { role: "Trouser", match: (p: Product) => /trouser|denim|skirt/i.test(p.name) },
+    { role: "Trousers", match: (p: Product) => /trouser|pant|denim|skirt/i.test(p.name) },
     { role: "Shoe", match: (p: Product) => p.category === "shoes" },
     { role: "Bag", match: (p: Product) => p.category === "bags" },
   ];

@@ -45,7 +45,7 @@ export function ShopTheLook() {
                 aria-label={`Shop ${p.name}`}
               >
                 <Plus className="h-4 w-4" />
-                <span className="pointer-events-none absolute left-10 z-10 hidden whitespace-nowrap rounded-full bg-ink px-3 py-1 text-[0.65rem] uppercase tracking-luxe text-canvas group-hover:block group-focus:block">
+                <span className="pointer-events-none absolute left-10 z-10 hidden whitespace-nowrap rounded-full bg-void px-3 py-1 text-[0.65rem] uppercase tracking-luxe text-canvas group-hover:block group-focus:block">
                   {p.name} · {formatPrice(p.price)}
                 </span>
               </Link>
@@ -95,7 +95,7 @@ export function ShopTheLook() {
                 onClick={() => toggleTag(t)}
                 className={cn(
                   "rounded-full border px-3 py-1.5 text-xs capitalize transition-colors",
-                  tags.includes(t) ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"
+                  tags.includes(t) ? "border-ink bg-void text-canvas" : "border-line hover:border-ink"
                 )}
               >
                 {t}
@@ -113,7 +113,7 @@ export function ShopTheLook() {
                 }}
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors",
-                  palette === p.id && !tags.length ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"
+                  palette === p.id && !tags.length ? "border-ink bg-void text-canvas" : "border-line hover:border-ink"
                 )}
               >
                 <span className="flex gap-0.5">

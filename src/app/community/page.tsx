@@ -131,7 +131,7 @@ export default function CommunityPage() {
                     onClick={() => toggleTag(p.id)}
                     className={cn(
                       "rounded-full border px-3 py-1 text-xs",
-                      tags.includes(p.id) ? "border-ink bg-ink text-canvas" : "border-line"
+                      tags.includes(p.id) ? "border-ink bg-void text-canvas" : "border-line"
                     )}
                   >
                     {p.name}
@@ -161,7 +161,7 @@ export default function CommunityPage() {
               onClick={() => setFilter(id)}
               className={cn(
                 "rounded-full border px-3 py-1.5 text-xs uppercase tracking-luxe",
-                filter === id ? "border-ink bg-ink text-canvas" : "border-line"
+                filter === id ? "border-ink bg-void text-canvas" : "border-line"
               )}
             >
               {label}

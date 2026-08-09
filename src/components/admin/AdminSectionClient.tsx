@@ -14,6 +14,7 @@ import { formatPrice } from "@/lib/utils";
 import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import type { MerchBadgeId, Order } from "@/lib/types";
+import { brand } from "@/config/brand";
 
 export function AdminSectionClient({ section }: { section: string }) {
   const hydrated = useHydrated();
@@ -42,6 +43,8 @@ export function AdminSectionClient({ section }: { section: string }) {
       return <LoyaltyAdmin />;
     case "gift-cards":
       return <GiftCardsAdmin />;
+    case "brand":
+      return <BrandIdentityAdmin />;
     case "editorial":
       return <EditorialAdmin />;
     case "lookbooks":
@@ -124,7 +127,7 @@ function Toggle({ on, onClick, label }: { on: boolean; onClick: () => void; labe
       onClick={onClick}
       aria-pressed={on}
       className={`rounded-full px-3 py-1 text-[0.65rem] uppercase tracking-luxe ${
-        on ? "bg-ink text-canvas" : "border border-line text-ink-muted"
+        on ? "bg-void text-canvas" : "border border-line text-ink-muted"
       }`}
     >
       {label}
@@ -321,7 +324,7 @@ function InventoryAdmin() {
               <span
                 className={`rounded-full px-2 py-0.5 text-[0.65rem] uppercase tracking-luxe ${
                   status === "out"
-                    ? "bg-ink text-canvas"
+                    ? "bg-void text-canvas"
                     : status === "low"
                       ? "bg-gold/25 text-ink"
                       : "text-ink-muted"
@@ -886,6 +889,56 @@ function SupportAdmin() {
           ))}
         </Table>
       )}
+    </SectionShell>
+  );
+}
+
+function BrandIdentityAdmin() {
+  const rows: { label: string; value: string }[] = [
+    { label: "Primary name", value: brand.name },
+    { label: "Subtitle", value: brand.subtitle },
+    { label: "Primary wordmark", value: brand.assets.primaryWordmark },
+    { label: "Dark wordmark", value: brand.assets.darkWordmark },
+    { label: "Light wordmark", value: brand.assets.lightWordmark },
+    { label: "Full crest", value: brand.assets.fullCrest },
+    { label: "Simplified crest", value: brand.assets.simpleCrest },
+    { label: "One-color crest", value: brand.assets.oneColorCrest },
+    { label: "Favicon", value: brand.assets.favicon },
+    { label: "Black", value: brand.colors.black },
+    { label: "Ivory", value: brand.colors.ivory },
+    { label: "Gold", value: brand.colors.gold },
+    { label: "Navy", value: brand.colors.navy },
+  ];
+  return (
+    <SectionShell
+      title="Brand identity"
+      description="Read-only brand configuration from src/config/brand.ts. Customer uploads are not enabled — assets are managed in the repository."
+    >
+      <div className="mb-6 flex flex-wrap items-end gap-8 rounded-xl border border-line bg-canvas-raised/40 p-6">
+        <div className="text-ink">
+          <p className="text-[0.65rem] uppercase tracking-luxe text-ink-muted">Header wordmark</p>
+          <p className="mt-2 font-serif text-2xl tracking-[0.28em]">{brand.name}</p>
+        </div>
+        <div className="text-ink-muted">
+          <p className="text-[0.65rem] uppercase tracking-luxe">Subtitle</p>
+          <p className="mt-2 text-xs tracking-[0.32em]">{brand.subtitle}</p>
+        </div>
+        <Link href="/brand" className="ml-auto text-xs uppercase tracking-luxe text-gold">
+          View /brand →
+        </Link>
+      </div>
+      <Table headers={["Setting", "Value"]}>
+        {rows.map((r) => (
+          <tr key={r.label}>
+            <td className="px-3 py-3 font-medium">{r.label}</td>
+            <td className="px-3 py-3 font-mono text-xs text-ink-muted">{r.value}</td>
+          </tr>
+        ))}
+      </Table>
+      <p className="mt-4 text-xs text-ink-muted">
+        TODO: Wire CMS-backed logo swaps when a dedicated asset pipeline is available. Do not expose
+        arbitrary logo uploads to storefront customers.
+      </p>
     </SectionShell>
   );
 }
