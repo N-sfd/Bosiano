@@ -42,10 +42,13 @@ const columns = [
       { label: "Stores", href: "/stores" },
       { label: "Mobile App", href: "/app" },
       { label: "Bosiano Club", href: "/rewards" },
-      { label: "Admin", href: "/admin" },
-      { label: "Vendor portal", href: "/vendor" },
     ],
   },
+];
+
+const utilityLinks = [
+  { label: "Admin", href: "/admin" },
+  { label: "Vendor portal", href: "/vendor" },
 ];
 
 export function Footer() {
@@ -81,44 +84,51 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Brand footer — same full lockup as header */}
+      {/* Brand footer — four columns; logo kept at ~220px (not enlarged further) */}
       <div className="bg-void text-canvas">
-        <div className="shell grid grid-cols-2 gap-8 py-14 md:grid-cols-4 lg:grid-cols-5">
-          <div className="col-span-2 lg:col-span-2">
+        <div className="shell grid grid-cols-2 items-start gap-x-8 gap-y-10 py-12 md:grid-cols-12 md:gap-x-8 lg:gap-x-10">
+          {/* Brand — logo slightly higher; copy + social below */}
+          <div className="col-span-2 md:col-span-3">
             <Link
               href="/"
               aria-label={`${brand.displayName} home`}
-              className="bosiano-logo-link inline-flex bg-transparent p-0 shadow-none"
+              className="footer-logo bosiano-logo-link inline-flex bg-transparent p-0 shadow-none"
             >
-              <BosianoBrand variant="crest-full" size="xl" priority />
+              <BosianoBrand variant="crest-full" size="xl" className="footer-logo" priority />
             </Link>
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-canvas/70">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-canvas/65">
               Crafted in the spirit of Italian luxury.
             </p>
-            <p className="mt-3 max-w-xs text-sm text-canvas/55">
+            <p className="mt-2.5 max-w-xs text-sm leading-relaxed text-canvas/45">
               A curated marketplace uniting the world&apos;s most considered designers, delivered with
               uncompromising service.
             </p>
-            <div className="mt-5 flex gap-4">
+            <div className="mt-4 flex gap-4">
               {[Instagram, Youtube, Twitter, Facebook].map((Icon, i) => (
                 <a
                   key={i}
                   href="#"
                   aria-label="Social link"
-                  className="text-canvas/50 transition-colors hover:text-gold"
+                  className="text-canvas/40 transition-colors hover:text-gold"
                 >
                   <Icon className="h-5 w-5" strokeWidth={1.5} />
                 </a>
               ))}
             </div>
           </div>
+
           {columns.map((col) => (
-            <div key={col.heading}>
-              <h3 className="mb-4 text-[0.68rem] font-medium uppercase tracking-luxe text-gold">{col.heading}</h3>
-              <ul className="space-y-2.5">
+            <div key={col.heading} className="md:col-span-3 md:pt-3">
+              <h3 className="mb-3.5 text-[0.68rem] font-medium uppercase tracking-luxe text-gold">
+                {col.heading}
+              </h3>
+              <ul className="space-y-2">
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    <Link href={l.href} className="text-sm text-canvas/70 transition-colors hover:text-canvas">
+                    <Link
+                      href={l.href}
+                      className="text-sm text-canvas/60 transition-colors hover:text-canvas/90"
+                    >
                       {l.label}
                     </Link>
                   </li>
@@ -129,14 +139,26 @@ export function Footer() {
         </div>
 
         <div className="border-t border-white/10">
-          <div className="shell flex flex-col items-center justify-between gap-3 py-6 text-xs text-canvas/50 sm:flex-row">
+          <div className="shell flex flex-col items-center justify-between gap-3 py-5 text-[0.7rem] text-canvas/40 sm:flex-row">
             <p>© {new Date().getFullYear()} Bosiano. All rights reserved.</p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link href="/about" className="hover:text-canvas">Privacy Policy</Link>
-              <Link href="/about" className="hover:text-canvas">Terms of Service</Link>
-              <Link href="/about" className="hover:text-canvas">Accessibility</Link>
-              <span className="hidden sm:inline">·</span>
-              <span>Shipping worldwide</span>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+              <Link href="/about" className="hover:text-canvas/70">Privacy Policy</Link>
+              <Link href="/about" className="hover:text-canvas/70">Terms of Service</Link>
+              <Link href="/about" className="hover:text-canvas/70">Accessibility</Link>
+              <span className="hidden sm:inline text-canvas/25">·</span>
+              <span className="text-canvas/35">Shipping worldwide</span>
+              <span className="hidden sm:inline text-canvas/25">·</span>
+              {utilityLinks.map((l, i) => (
+                <span key={l.href} className="inline-flex items-center gap-3">
+                  {i > 0 && <span className="text-canvas/20">·</span>}
+                  <Link
+                    href={l.href}
+                    className="text-[0.65rem] uppercase tracking-[0.12em] text-canvas/30 transition-colors hover:text-canvas/55"
+                  >
+                    {l.label}
+                  </Link>
+                </span>
+              ))}
             </div>
           </div>
         </div>

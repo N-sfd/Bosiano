@@ -25,28 +25,37 @@ export type BosianoBrandTheme = "dark" | "light" | "gold" | "monochrome";
 export type BosianoBrandSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 /**
- * Full lockup visual heights (px) — trimmed transparent PNG, no empty canvas.
- * Desktop 72–82 · Tablet 62–70 · Footer 85–100
+ * Full lockup widths (px) — size by WIDTH so BOSIANO / ITALIAN HERITAGE stay readable.
+ * Header overrides via .header-logo CSS (~108 / 135 / 160). Footer via .footer-logo (~220).
  */
+const FULL_W: Record<BosianoBrandSize, number> = {
+  xs: 90,
+  sm: 108,
+  md: 132,
+  lg: 140,
+  xl: 160,
+};
+
+/** Legacy height map kept for wordmark / CSS lockup typography scale */
 const FULL_H: Record<BosianoBrandSize, number> = {
-  xs: 48,
-  sm: 54,
-  md: 66,
-  lg: 78,
-  xl: 92,
+  xs: 56,
+  sm: 64,
+  md: 80,
+  lg: 96,
+  xl: 112,
 };
 
-/** Shield-only heights — mobile header ~50–58 */
+/** Shield-only heights */
 const CREST_PX: Record<BosianoBrandSize, number> = {
-  xs: 36,
-  sm: 44,
-  md: 50,
-  lg: 54,
-  xl: 64,
+  xs: 42,
+  sm: 50,
+  md: 58,
+  lg: 66,
+  xl: 74,
 };
 
-/** Trimmed bosiano-full-logo.png aspect ratio (w/h) */
-const LOCKUP_RATIO = 706 / 837;
+/** Trimmed transparent lockup aspect ratio (w/h) — current asset ~841×637 */
+const LOCKUP_RATIO = 841 / 637;
 
 export function BosianoBrand({
   variant = "wordmark",
@@ -117,17 +126,17 @@ export function BosianoBrand({
     );
   }
 
-  /* —— Full digital lockup (header / footer) —— */
+  /* —— Full digital lockup (header / footer) —— width-led, never stretched —— */
   if (variant === "crest-full") {
-    const h = FULL_H[size];
-    const w = Math.round(h * LOCKUP_RATIO);
+    const w = FULL_W[size];
+    const h = Math.round(w / LOCKUP_RATIO);
     return (
       <span
         className={cn(
           "brand-crest bosiano-logo relative inline-block shrink-0 overflow-visible bg-transparent p-0 shadow-none ring-0",
           className
         )}
-        style={{ width: w, height: h }}
+        style={{ width: w, height: h, background: "transparent" }}
         aria-label={a11y || undefined}
       >
         <Image
@@ -135,11 +144,12 @@ export function BosianoBrand({
           alt={a11y}
           width={w}
           height={h}
-          className="bosiano-logo-img h-full w-full bg-transparent object-contain object-center"
-          style={{ background: "transparent", border: 0, boxShadow: "none" }}
-          sizes={`(max-width: 767px) 54px, (max-width: 1023px) 66px, ${w}px`}
+          className="bosiano-logo-img h-auto w-full bg-transparent object-contain object-center"
+          style={{ width: "100%", height: "auto", background: "transparent", border: 0, boxShadow: "none" }}
+          sizes={`(max-width: 767px) 108px, (max-width: 1199px) 132px, ${w}px`}
           priority={priority}
           placeholder="empty"
+          unoptimized={false}
         />
       </span>
     );

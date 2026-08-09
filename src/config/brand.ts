@@ -185,7 +185,8 @@ export const brand = {
     darkWordmark: "/brand/bosiano-full-logo.png",
     lightWordmark: "/brand/bosiano-full-logo.png",
     fullCrest: "/brand/bosiano-full-logo.png",
-    digitalLockup: "/brand/bosiano-full-logo.png",
+    /* True transparent RGBA lockup — cream header shows through empty pixels */
+    digitalLockup: "/brand/logo-digital-lockup-clear.png",
     simpleCrest: "/brand/bosiano-crest-transparent.png",
     digitalCrest: "/brand/bosiano-crest-transparent.png",
     oneColorCrest: "/favicon.svg",

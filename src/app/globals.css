@@ -150,6 +150,142 @@
     border: 0;
     box-shadow: none;
   }
+  /*
+   * Header logo — independently centered; NOT a flex child of the nav row.
+   * Protected center zone (~190–220px) keeps SALE / EXPLORE / SEARCH clear of the crest.
+   * Asset must be a true transparent PNG (cream header shows through).
+   */
+  .header-bar {
+    --header-logo-w: 108px;
+    --header-logo-h: calc(var(--header-logo-w) * 637 / 841);
+    /*
+     * Height follows the full lockup so crown / shield / wordmark never crop.
+     * Padding is minimal (tighter than the previous tall chrome).
+     * Note: a 160px-wide lockup is ~190px tall, so the bar cannot be 125px without shrinking the mark.
+     */
+    min-height: calc(var(--header-logo-h) + 0.5rem);
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+  .header-bar.is-scrolled {
+    min-height: calc(var(--header-logo-h) + 0.35rem);
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+  }
+  .header-side {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    flex: 1 1 0%;
+    min-width: 0;
+    overflow: visible;
+    /* Reserve ~210px clear band around page center */
+    max-width: calc(50% - 105px);
+  }
+  .header-side--left {
+    justify-content: flex-start;
+    padding-right: 0.25rem;
+  }
+  .header-side--right {
+    justify-content: flex-end;
+    padding-left: 0.25rem;
+  }
+  .header-nav {
+    display: none;
+    align-items: center;
+    gap: 0.85rem;
+  }
+  .header-nav-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    max-width: 5.5rem;
+    text-align: center;
+    line-height: 1.25;
+  }
+  .header-logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0;
+    margin: 0;
+    pointer-events: auto;
+  }
+  .header-logo .header-logo-mark,
+  .header-logo .bosiano-logo,
+  .header-logo .brand-crest {
+    width: var(--header-logo-w) !important;
+    height: auto !important;
+    background: transparent !important;
+  }
+  .header-logo img,
+  .header-logo .bosiano-logo-img {
+    width: var(--header-logo-w) !important;
+    height: auto !important;
+    object-fit: contain;
+    display: block;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  /* Footer lockup — keep ~215–230px; do not enlarge further */
+  .footer-logo,
+  .footer-logo .bosiano-logo,
+  .footer-logo .brand-crest,
+  .footer-logo img,
+  .footer-logo .bosiano-logo-img {
+    width: 220px !important;
+    max-width: 100%;
+    height: auto !important;
+    background: transparent !important;
+  }
+  @media (min-width: 768px) {
+    .header-bar {
+      --header-logo-w: 128px;
+    }
+  }
+  /* Tablet / small desktop: slightly smaller mark; nav consolidates in JSX */
+  @media (min-width: 1024px) {
+    .header-bar {
+      --header-logo-w: 135px;
+    }
+    .header-side {
+      max-width: calc(50% - 100px); /* ~200px center zone */
+    }
+    .header-nav {
+      display: flex;
+    }
+  }
+  @media (min-width: 1200px) {
+    .header-bar {
+      --header-logo-w: 160px; /* desktop 155–165 — do not enlarge further */
+    }
+    .header-side {
+      max-width: calc(50% - 110px); /* ~220px protected center */
+    }
+    .header-nav {
+      gap: 0.95rem;
+    }
+  }
+  @media (min-width: 1440px) {
+    .header-nav {
+      gap: 1.1rem;
+    }
+    .header-nav-item {
+      max-width: none;
+    }
+  }
   .brand-gold {
     color: var(--bosiano-gold);
   }

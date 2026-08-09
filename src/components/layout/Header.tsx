@@ -52,6 +52,13 @@ export function Header() {
 
   const count = hydrated ? cartCount(cart) : 0;
 
+  /** Collapse lower-priority labels before they can enter the protected logo zone */
+  const navVisibility = (label: string) => {
+    if (label === "Bags & Accessories") return "hidden min-[1200px]:inline-flex";
+    if (label === "Designers" || label === "The Journal") return "hidden min-[1440px]:inline-flex";
+    return "inline-flex";
+  };
+
   return (
     <>
       <header
@@ -66,46 +73,57 @@ export function Header() {
       >
         <div
           className={cn(
-            "mx-auto w-full max-w-shell px-4 transition-all duration-500 sm:px-10 lg:px-14",
-            scrolled ? "py-3 sm:py-3.5" : "py-3.5 sm:py-4 lg:py-4.5"
+            "header-bar relative mx-auto w-full max-w-shell px-4 transition-all duration-500 sm:px-8 lg:px-10 min-[1200px]:px-12",
+            scrolled && "is-scrolled"
           )}
         >
-          {/* Desktop / tablet top bar */}
-          <div className="flex w-full items-center justify-between gap-3 overflow-visible sm:gap-5">
-            {/* Left: mobile menu + primary nav */}
-            <div className="flex min-w-0 flex-1 items-center gap-5 lg:gap-7">
+          {/* Logo is an absolute center layer — nav sides never include it */}
+          <div className="relative flex h-full min-h-[inherit] w-full items-center overflow-visible">
+            {/* Left: hamburger (mobile) + primary nav (desktop) */}
+            <div className="header-side header-side--left gap-3">
               <button
-                className="btn-ghost -ml-1 lg:hidden"
+                className="btn-ghost -ml-1 shrink-0 lg:hidden"
                 aria-label="Open menu"
                 onClick={() => setMenu(true)}
               >
                 <Menu className="h-5 w-5" strokeWidth={1.5} />
               </button>
-              <nav className="hidden items-center gap-4 xl:gap-5 lg:flex" aria-label="Primary">
+              <nav className="header-nav" aria-label="Primary">
                 {primaryNav.map((item, i) => (
-                  <div key={item.label} onMouseEnter={() => { setActive(i); setExploreOpen(false); }}>
+                  <div
+                    key={item.label}
+                    className={navVisibility(item.label)}
+                    onMouseEnter={() => { setActive(i); setExploreOpen(false); }}
+                  >
                     <Link
                       href={item.href}
                       className={cn(
-                        "link-underline py-2 text-[0.65rem] font-normal uppercase tracking-[0.16em] text-ink-soft transition-colors hover:text-ink",
+                        "header-nav-item link-underline text-[0.62rem] font-normal uppercase tracking-[0.14em] text-ink-soft transition-colors hover:text-ink min-[1440px]:text-[0.65rem] min-[1440px]:tracking-[0.16em]",
                         item.label === "Sale" && "text-gold-deep hover:text-gold-deep",
                         active === i && "text-ink"
                       )}
                     >
-                      {item.label}
+                      {item.label === "Bags & Accessories" ? (
+                        <span className="flex flex-col items-center leading-tight">
+                          <span>Bags &amp;</span>
+                          <span>Accessories</span>
+                        </span>
+                      ) : (
+                        item.label
+                      )}
                     </Link>
                   </div>
                 ))}
 
                 <div
                   ref={exploreRef}
-                  className="relative"
+                  className="relative inline-flex"
                   onMouseEnter={() => { setExploreOpen(true); setActive(null); }}
                 >
                   <button
                     type="button"
                     className={cn(
-                      "inline-flex items-center gap-1 py-2 text-[0.65rem] font-normal uppercase tracking-[0.16em] text-ink-soft transition-colors hover:text-ink",
+                      "header-nav-item gap-0.5 text-[0.62rem] font-normal uppercase tracking-[0.14em] text-ink-soft transition-colors hover:text-ink min-[1440px]:text-[0.65rem] min-[1440px]:tracking-[0.16em]",
                       exploreOpen && "text-ink"
                     )}
                     aria-expanded={exploreOpen}
@@ -113,7 +131,7 @@ export function Header() {
                     onClick={() => setExploreOpen((o) => !o)}
                   >
                     Explore
-                    <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", exploreOpen && "rotate-180")} strokeWidth={1.5} />
+                    <ChevronDown className={cn("h-3.5 w-3.5 shrink-0 transition-transform", exploreOpen && "rotate-180")} strokeWidth={1.5} />
                   </button>
                   <AnimatePresence>
                     {exploreOpen && (
@@ -122,7 +140,7 @@ export function Header() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -6 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute left-0 top-full z-20 mt-2 min-w-[200px] rounded-xl border border-line bg-canvas-raised py-2 shadow-lg"
+                        className="absolute left-0 top-full z-30 mt-2 min-w-[200px] rounded-xl border border-line bg-canvas-raised py-2 shadow-lg"
                       >
                         {exploreNav.map((l) => (
                           <Link
@@ -141,39 +159,31 @@ export function Header() {
               </nav>
             </div>
 
-            {/* Responsive logo — transparent PNG, no card / border / shadow */}
+            {/*
+              Independently centered full lockup — absolute layer, page center.
+              Transparent PNG only (no card / fill / checkerboard).
+            */}
             <Link
               href="/"
-              className="bosiano-logo-link relative z-10 mx-1 flex shrink-0 items-center justify-center overflow-visible bg-transparent p-0 shadow-none sm:mx-2 lg:mx-3"
+              className="header-logo bosiano-logo-link"
               aria-label={`${brand.displayName} home`}
               onMouseEnter={() => { setActive(null); setExploreOpen(false); }}
             >
-              {/* <768px: shield-only */}
-              <span className="block bg-transparent md:hidden">
-                <BosianoBrand variant="crest-simple" size="lg" decorative priority />
-              </span>
-              {/* 768–1023px: full lockup ~66px */}
-              <span className="hidden bg-transparent md:block lg:hidden">
-                <BosianoBrand variant="crest-full" size="md" priority />
-              </span>
-              {/* ≥1024px: full lockup ~78px */}
-              <span className="hidden bg-transparent lg:block">
-                <BosianoBrand variant="crest-full" size="lg" priority />
-              </span>
+              <BosianoBrand variant="crest-full" size="xl" className="header-logo-mark" priority />
             </Link>
 
-            {/* Right utilities */}
-            <div className="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-3">
+            {/* Right: search + actions — balanced against left, clear of logo zone */}
+            <div className="header-side header-side--right gap-1 sm:gap-2">
               <button
-                className="mr-1 hidden max-w-[200px] items-center gap-2 truncate rounded-full border border-line bg-canvas-raised px-3.5 py-2 text-left transition-colors hover:border-ink lg:mr-3 lg:inline-flex xl:max-w-[240px]"
+                className="mr-0.5 hidden max-w-[160px] items-center gap-2 truncate rounded-full border border-line bg-canvas-raised px-3 py-1.5 text-left transition-colors hover:border-ink lg:inline-flex min-[1200px]:max-w-[200px] min-[1200px]:px-3.5 min-[1440px]:max-w-[220px]"
                 aria-label="Search Bosiano"
                 onClick={() => setSearch(true)}
                 onMouseEnter={() => { setActive(null); setExploreOpen(false); }}
               >
                 <Search className="h-4 w-4 shrink-0 text-ink-muted" strokeWidth={1.5} />
-                <span className="truncate text-xs text-ink-muted">Search designers, looks…</span>
+                <span className="truncate text-xs text-ink-muted">Search…</span>
               </button>
-              <div className="flex items-center gap-0.5 sm:gap-1 sm:border-l sm:border-line sm:pl-3">
+              <div className="flex items-center gap-0.5 sm:gap-1 sm:border-l sm:border-line sm:pl-2.5">
                 <button
                   type="button"
                   className="btn-ghost hidden md:inline-flex"
@@ -205,10 +215,10 @@ export function Header() {
             </div>
           </div>
 
-          {/* Mobile / tablet search row — below logo */}
+          {/* Mobile / tablet search — below the centered logo row */}
           <button
             type="button"
-            className="mt-3 flex w-full items-center gap-2 rounded-full border border-line bg-canvas-raised px-4 py-2.5 text-left text-ink-muted transition-colors hover:border-ink hover:text-ink lg:hidden"
+            className="mt-2 flex w-full items-center gap-2 rounded-full border border-line bg-canvas-raised px-4 py-2 text-left text-ink-muted transition-colors hover:border-ink hover:text-ink lg:hidden"
             aria-label={`Search ${brand.displayName}`}
             onClick={() => setSearch(true)}
           >
