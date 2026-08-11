@@ -26,7 +26,7 @@ export type BosianoBrandSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 /**
  * Full lockup widths (px) — size by WIDTH so BOSIANO / ITALIAN HERITAGE stay readable.
- * Header overrides via .header-logo CSS (~108 / 135 / 160). Footer via .footer-logo (~220).
+ * Header overrides via .header-logo CSS (~108 / 135 / 160). Footer via .footer-logo (~190).
  */
 const FULL_W: Record<BosianoBrandSize, number> = {
   xs: 90,

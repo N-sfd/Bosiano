@@ -631,6 +631,7 @@ export const productStyleIdBySlug: Record<string, string> = {
   "field-utility-overshirt": "field-utility-overshirt-01",
   "poplin-tiered-maxi-dress": "poplin-tiered-maxi-dress-01",
   "double-breasted-wool-coat": "double-breasted-wool-coat-01",
+  "ribbed-tank-bodysuit": "ribbed-tank-bodysuit-01",
 };
 
 /** Physical design id — all colour galleries of one SKU share this */

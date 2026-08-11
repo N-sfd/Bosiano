@@ -84,7 +84,7 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Brand footer — four columns; logo kept at ~220px (not enlarged further) */}
+      {/* Brand footer — four columns; logo ~190px */}
       <div className="bg-void text-canvas">
         <div className="shell grid grid-cols-2 items-start gap-x-8 gap-y-10 py-12 md:grid-cols-12 md:gap-x-8 lg:gap-x-10">
           {/* Brand — logo slightly higher; copy + social below */}

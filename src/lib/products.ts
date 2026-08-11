@@ -745,7 +745,7 @@ const seeds: Seed[] = [
     subcategory: "Tops",
     gender: "women",
     price: 120,
-    colors: [["Black", "#161616"], ["White", "#f1eee7"], ["Mocha", "#5a4636"]],
+    colors: [["Black", "#171717"], ["White", "#F5F2EA"], ["Mocha", "#8B624A"]],
     sizes: ["XS", "S", "M", "L", "XL"],
     description:
       "A second-skin ribbed bodysuit in a modal blend that layers seamlessly under tailoring.",

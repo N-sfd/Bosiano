@@ -1,20 +1,81 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { MessageCircle, X, Send, Bot } from "lucide-react";
-import { aiReply } from "@/lib/concierge";
+import {
+  aiReply,
+  selectConciergeProduct,
+  type ConciergeContext,
+  type ConciergeProductCard,
+} from "@/lib/concierge";
 import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import { tierForPoints } from "@/lib/club";
 import { cn } from "@/lib/utils";
 
+type Msg = {
+  role: "user" | "ai";
+  text: string;
+  products?: ConciergeProductCard[];
+  shopHref?: string;
+};
+
+function ProductCards({
+  products,
+  onSelect,
+}: {
+  products: ConciergeProductCard[];
+  onSelect: (slug: string) => void;
+}) {
+  return (
+    <ul className="mt-2 space-y-2">
+      {products.map((p) => (
+        <li key={p.id}>
+          <div className="flex gap-2 rounded-lg border border-line/60 bg-canvas-raised p-2 transition-colors hover:border-gold/50">
+            <button
+              type="button"
+              onClick={() => onSelect(p.slug)}
+              className="flex min-w-0 flex-1 gap-2 text-left"
+              aria-label={`Select ${p.name}`}
+            >
+              <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md bg-canvas-sunk">
+                {p.thumbnail ? (
+                  <Image src={p.thumbnail} alt="" fill className="object-cover" sizes="48px" />
+                ) : null}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-xs font-medium text-ink">{p.name}</span>
+                <span className="block text-[0.65rem] text-ink-muted">
+                  {p.brand} · {p.priceLabel}
+                </span>
+                <span className="block text-[0.65rem] text-ink-soft">
+                  {p.availability}
+                  {p.colors.length ? ` · ${p.colors.slice(0, 3).join(", ")}` : ""}
+                </span>
+              </span>
+            </button>
+            <Link
+              href={p.href}
+              className="self-center shrink-0 text-[0.6rem] uppercase tracking-luxe text-gold hover:underline"
+            >
+              View
+            </Link>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function ConciergeWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [msgs, setMsgs] = useState<{ role: "user" | "ai"; text: string }[]>([
+  const [msgs, setMsgs] = useState<Msg[]>([
     { role: "ai", text: "Concierge AI here — or tap Support for every channel." },
   ]);
+  const ctxRef = useRef<ConciergeContext>({});
   const hydrated = useHydrated();
   const points = useStore((s) => s.loyaltyPoints);
   const isPC = hydrated && tierForPoints(points).id === "private-client";
@@ -22,8 +83,32 @@ export function ConciergeWidget() {
   const send = () => {
     if (!input.trim()) return;
     const q = input.trim();
-    setMsgs((m) => [...m, { role: "user", text: q }, { role: "ai", text: aiReply(q, !!isPC) }]);
+    const reply = aiReply(q, !!isPC, ctxRef.current);
+    ctxRef.current = reply.context;
+    setMsgs((m) => [
+      ...m,
+      { role: "user", text: q },
+      {
+        role: "ai",
+        text: reply.text,
+        products: reply.products,
+        shopHref: reply.shopHref,
+      },
+    ]);
     setInput("");
+  };
+
+  const onSelectProduct = (slug: string) => {
+    const reply = selectConciergeProduct(ctxRef.current, slug);
+    ctxRef.current = reply.context;
+    setMsgs((m) => [
+      ...m,
+      {
+        role: "ai",
+        text: reply.text,
+        products: reply.products,
+      },
+    ]);
   };
 
   return (
@@ -42,9 +127,23 @@ export function ConciergeWidget() {
             {msgs.map((m, i) => (
               <div
                 key={i}
-                className={cn("rounded-lg px-3 py-2", m.role === "user" ? "ml-6 bg-void text-canvas" : "mr-6 bg-canvas-sunk")}
+                className={cn(
+                  "rounded-lg px-3 py-2",
+                  m.role === "user" ? "ml-6 bg-void text-canvas" : "mr-6 bg-canvas-sunk"
+                )}
               >
                 {m.text}
+                {m.products && m.products.length > 0 ? (
+                  <ProductCards products={m.products} onSelect={onSelectProduct} />
+                ) : null}
+                {m.shopHref ? (
+                  <Link
+                    href={m.shopHref}
+                    className="mt-2 inline-block text-[0.65rem] uppercase tracking-luxe text-gold hover:underline"
+                  >
+                    Browse collection →
+                  </Link>
+                ) : null}
               </div>
             ))}
           </div>
@@ -60,7 +159,10 @@ export function ConciergeWidget() {
               <Send className="h-4 w-4" />
             </button>
           </div>
-          <Link href="/support" className="block border-t border-line px-4 py-2 text-center text-xs uppercase tracking-luxe hover:text-gold">
+          <Link
+            href="/support"
+            className="block border-t border-line px-4 py-2 text-center text-xs uppercase tracking-luxe hover:text-gold"
+          >
             Full support hub
           </Link>
         </div>

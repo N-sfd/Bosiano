@@ -239,13 +239,13 @@
     border: 0 !important;
     box-shadow: none !important;
   }
-  /* Footer lockup — keep ~215–230px; do not enlarge further */
+  /* Footer lockup — slightly reduced for balance with column copy */
   .footer-logo,
   .footer-logo .bosiano-logo,
   .footer-logo .brand-crest,
   .footer-logo img,
   .footer-logo .bosiano-logo-img {
-    width: 220px !important;
+    width: 190px !important;
     max-width: 100%;
     height: auto !important;
     background: transparent !important;

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   MessageCircle,
@@ -13,7 +14,13 @@ import {
   Send,
   ExternalLink,
 } from "lucide-react";
-import { conciergeChannels, aiQuickReplies, aiReply } from "@/lib/concierge";
+import {
+  conciergeChannels,
+  aiQuickReplies,
+  aiReply,
+  type ConciergeContext,
+  type ConciergeProductCard,
+} from "@/lib/concierge";
 import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
 import { tierForPoints } from "@/lib/club";
@@ -28,6 +35,13 @@ const icons = {
   ai: Bot,
 };
 
+type ChatMsg = {
+  role: "user" | "ai" | "agent";
+  text: string;
+  products?: ConciergeProductCard[];
+  shopHref?: string;
+};
+
 export default function ConciergePage() {
   const hydrated = useHydrated();
   const points = useStore((s) => s.loyaltyPoints);
@@ -38,21 +52,31 @@ export default function ConciergePage() {
 
   const [channel, setChannel] = useState<"chat" | "ai" | "video">("ai");
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{ role: "user" | "ai" | "agent"; text: string }[]>([
+  const [messages, setMessages] = useState<ChatMsg[]>([
     { role: "ai", text: "Hi — I'm the Bosiano assistant. Ask anything, or say “speak to a human”." },
   ]);
   const [videoOn, setVideoOn] = useState(false);
   const [handoff, setHandoff] = useState(false);
+  const ctxRef = useRef<ConciergeContext>({});
 
   const send = (text: string) => {
     const prompt = text.trim();
     if (!prompt) return;
     setMessages((m) => [...m, { role: "user", text: prompt }]);
     setInput("");
-    const reply = aiReply(prompt, isPC);
-    const needsHuman = /human|agent|private client/i.test(prompt) || /Connecting you/i.test(reply);
+    const reply = aiReply(prompt, isPC, ctxRef.current);
+    ctxRef.current = reply.context;
+    const needsHuman = reply.intent === "human" || /Connecting you/i.test(reply.text);
     setTimeout(() => {
-      setMessages((m) => [...m, { role: needsHuman ? "agent" : "ai", text: reply }]);
+      setMessages((m) => [
+        ...m,
+        {
+          role: needsHuman ? "agent" : "ai",
+          text: reply.text,
+          products: reply.products,
+          shopHref: reply.shopHref,
+        },
+      ]);
       if (needsHuman) {
         setHandoff(true);
         openTicket(prompt.slice(0, 60), isPC ? "private-client" : "chat", isPC);
@@ -170,6 +194,35 @@ export default function ConciergePage() {
                       )}
                     </p>
                     {m.text}
+                    {m.products && m.products.length > 0 ? (
+                      <ul className="mt-3 space-y-2">
+                        {m.products.map((p) => (
+                          <li key={p.id}>
+                            <Link
+                              href={p.href}
+                              className="flex gap-3 rounded-lg border border-line/50 bg-canvas-raised p-2 hover:border-gold/40"
+                            >
+                              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md bg-canvas-sunk">
+                                {p.thumbnail ? (
+                                  <Image src={p.thumbnail} alt="" fill className="object-cover" sizes="56px" />
+                                ) : null}
+                              </span>
+                              <span className="min-w-0">
+                                <span className="block font-medium text-ink">{p.name}</span>
+                                <span className="block text-xs text-ink-muted">
+                                  {p.brand} · {p.priceLabel} · {p.availability}
+                                </span>
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    {m.shopHref ? (
+                      <Link href={m.shopHref} className="mt-2 inline-block text-xs text-gold hover:underline">
+                        Browse collection →
+                      </Link>
+                    ) : null}
                   </div>
                 ))}
               </div>
