@@ -64,6 +64,7 @@ export function BosianoBrand({
   decorative = false,
   className,
   priority = false,
+  src,
 }: {
   variant?: BosianoBrandVariant;
   theme?: BosianoBrandTheme;
@@ -71,6 +72,8 @@ export function BosianoBrand({
   decorative?: boolean;
   className?: string;
   priority?: boolean;
+  /** Optional image override (e.g. footer gold lockup) */
+  src?: string;
 }) {
   const a11y = brandAlt(decorative);
   const goldClass =
@@ -130,6 +133,7 @@ export function BosianoBrand({
   if (variant === "crest-full") {
     const w = FULL_W[size];
     const h = Math.round(w / LOCKUP_RATIO);
+    const lockupSrc = src ?? brand.assets.digitalLockup;
     return (
       <span
         className={cn(
@@ -140,7 +144,7 @@ export function BosianoBrand({
         aria-label={a11y || undefined}
       >
         <Image
-          src={brand.assets.digitalLockup}
+          src={lockupSrc}
           alt={a11y}
           width={w}
           height={h}

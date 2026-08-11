@@ -94,7 +94,13 @@ export function Footer() {
               aria-label={`${brand.displayName} home`}
               className="footer-logo bosiano-logo-link inline-flex bg-transparent p-0 shadow-none"
             >
-              <BosianoBrand variant="crest-full" size="xl" className="footer-logo" priority />
+              <BosianoBrand
+                variant="crest-full"
+                size="xl"
+                className="footer-logo"
+                src={brand.assets.footerLockup}
+                priority
+              />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-canvas/65">
               Crafted in the spirit of Italian luxury.

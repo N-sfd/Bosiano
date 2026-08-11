@@ -187,6 +187,8 @@ export const brand = {
     fullCrest: "/brand/bosiano-full-logo.png",
     /* True transparent RGBA lockup — cream header shows through empty pixels */
     digitalLockup: "/brand/logo-digital-lockup-clear.png",
+    /* Gold lockup for black footer — separate from header mark */
+    footerLockup: "/brand/logo-footer-lockup-clear.png",
     simpleCrest: "/brand/bosiano-crest-transparent.png",
     digitalCrest: "/brand/bosiano-crest-transparent.png",
     oneColorCrest: "/favicon.svg",
