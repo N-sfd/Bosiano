@@ -54,8 +54,8 @@ const CREST_PX: Record<BosianoBrandSize, number> = {
   xl: 74,
 };
 
-/** Trimmed transparent lockup aspect ratio (w/h) — current asset ~841×637 */
-const LOCKUP_RATIO = 841 / 637;
+/** Trimmed transparent lockup aspect ratio (w/h) — current asset ~744×881 */
+const LOCKUP_RATIO = 744 / 881;
 
 export function BosianoBrand({
   variant = "wordmark",

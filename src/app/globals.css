@@ -157,7 +157,7 @@
    */
   .header-bar {
     --header-logo-w: 108px;
-    --header-logo-h: calc(var(--header-logo-w) * 637 / 841);
+    --header-logo-h: calc(var(--header-logo-w) * 881 / 744);
     /*
      * Height follows the full lockup so crown / shield / wordmark never crop.
      * Padding is minimal (tighter than the previous tall chrome).
