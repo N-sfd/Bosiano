@@ -3,7 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Home, Search, Heart, ShoppingBag, User, X, ChevronRight } from "lucide-react";
+import {
+  Home,
+  Search,
+  Heart,
+  ShoppingBag,
+  User,
+  X,
+  ChevronRight,
+  ScanSearch,
+  GitCompareArrows,
+} from "lucide-react";
 import { useUI } from "@/store/useUI";
 import { useStore, cartCount } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
@@ -11,6 +21,9 @@ import { megaNav, exploreNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import { BosianoBrand } from "@/components/brand/BosianoBrand";
 import { brand } from "@/config/brand";
+
+/** Visible below desktop (≥1200px uses full header nav). */
+const belowDesktop = "min-[1200px]:hidden";
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -29,9 +42,12 @@ export function MobileNav() {
 
   return (
     <>
-      {/* bottom nav */}
+      {/* bottom nav — phones / tablets only */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-[80] flex items-stretch border-t border-line bg-canvas-raised/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+        className={cn(
+          "fixed bottom-0 left-0 right-0 z-[80] flex items-stretch border-t border-line bg-canvas-raised/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md",
+          belowDesktop
+        )}
         aria-label="Mobile"
       >
         {items.map((item) => {
@@ -72,7 +88,7 @@ export function MobileNav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[140] lg:hidden"
+            className={cn("fixed inset-0 z-[140]", belowDesktop)}
           >
             <div className="absolute inset-0 bg-void/60 backdrop-blur-sm" onClick={() => setMenu(false)} aria-hidden />
             <motion.div
@@ -114,6 +130,44 @@ export function MobileNav() {
                     <ChevronRight className="h-4 w-4 text-ink-muted" />
                   </Link>
                 ))}
+
+                {/* Actions relocated from compact headers */}
+                <p className="eyebrow mb-2 mt-8">Account &amp; tools</p>
+                <Link
+                  href="/account"
+                  onClick={() => setMenu(false)}
+                  className="flex items-center gap-3 border-b border-line py-3.5 text-base text-ink-soft md:hidden"
+                >
+                  <User className="h-4 w-4" strokeWidth={1.5} />
+                  Account
+                </Link>
+                <Link
+                  href="/wishlist"
+                  onClick={() => setMenu(false)}
+                  className="flex items-center gap-3 border-b border-line py-3.5 text-base text-ink-soft md:hidden"
+                >
+                  <Heart className="h-4 w-4" strokeWidth={1.5} />
+                  Wishlist
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenu(false);
+                    setSearch(true);
+                  }}
+                  className="flex w-full items-center gap-3 border-b border-line py-3.5 text-left text-base text-ink-soft"
+                >
+                  <ScanSearch className="h-4 w-4" strokeWidth={1.5} />
+                  Visual search
+                </button>
+                <Link
+                  href="/compare"
+                  onClick={() => setMenu(false)}
+                  className="flex items-center gap-3 border-b border-line py-3.5 text-base text-ink-soft"
+                >
+                  <GitCompareArrows className="h-4 w-4" strokeWidth={1.5} />
+                  AI stylist / Compare
+                </Link>
               </nav>
               <div className="space-y-3 border-t border-line px-6 py-5">
                 <Link href="/rewards" onClick={() => setMenu(false)} className="btn-primary w-full">

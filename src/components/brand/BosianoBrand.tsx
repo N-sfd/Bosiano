@@ -26,7 +26,7 @@ export type BosianoBrandSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 /**
  * Full lockup widths (px) — size by WIDTH so BOSIANO / ITALIAN HERITAGE stay readable.
- * Header overrides via .header-logo CSS (~108 / 135 / 160). Footer via .footer-logo (~190).
+ * Header overrides via .header-logo CSS (~76 / 88 / 108 / 152 / 160). Footer via .footer-logo (~190).
  */
 const FULL_W: Record<BosianoBrandSize, number> = {
   xs: 90,
@@ -134,13 +134,18 @@ export function BosianoBrand({
     const w = FULL_W[size];
     const h = Math.round(w / LOCKUP_RATIO);
     const lockupSrc = src ?? brand.assets.digitalLockup;
+    const cssSized = typeof className === "string" && className.includes("header-logo-mark");
     return (
       <span
         className={cn(
           "brand-crest bosiano-logo relative inline-block shrink-0 overflow-visible bg-transparent p-0 shadow-none ring-0",
           className
         )}
-        style={{ width: w, height: h, background: "transparent" }}
+        style={
+          cssSized
+            ? { width: "var(--header-logo-w)", height: "auto", background: "transparent" }
+            : { width: w, height: h, background: "transparent" }
+        }
         aria-label={a11y || undefined}
       >
         <Image
@@ -150,7 +155,7 @@ export function BosianoBrand({
           height={h}
           className="bosiano-logo-img h-auto w-full bg-transparent object-contain object-center"
           style={{ width: "100%", height: "auto", background: "transparent", border: 0, boxShadow: "none" }}
-          sizes={`(max-width: 767px) 108px, (max-width: 1199px) 132px, ${w}px`}
+          sizes={`(max-width: 390px) 76px, (max-width: 767px) 88px, (max-width: 1199px) 108px, (max-width: 1439px) 152px, ${w}px`}
           priority={priority}
           placeholder="empty"
           unoptimized={false}
