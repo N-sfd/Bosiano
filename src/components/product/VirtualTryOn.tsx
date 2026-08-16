@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type ChangeEvent } from "react";
 import {
   X,
   Camera,
@@ -51,7 +51,7 @@ export function VirtualTryOn({
       ""
   );
   const [tab, setTab] = useState<"tryon" | "fit" | "compare" | "body">("tryon");
-  const [uploaded, setUploaded] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [rendering, setRendering] = useState(false);
   const [rendered, setRendered] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -85,6 +85,16 @@ export function VirtualTryOn({
     }, 1400);
   };
 
+  const handlePhotoSelected = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+    setRendered(false);
+  };
+
   return (
     <div className="fixed inset-0 z-[130] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-void/60 backdrop-blur-sm" onClick={onClose} aria-hidden />
@@ -98,6 +108,28 @@ export function VirtualTryOn({
         </button>
 
         <div className="relative bg-void">
+          {photoPreview ? (
+            <div className="relative aspect-[3/4] w-full overflow-hidden">
+              <img src={photoPreview} alt="Your uploaded photo" className="h-full w-full object-cover" />
+              {rendering && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-void/50 text-ink">
+                  <RotateCw className="h-8 w-8 animate-spin" />
+                  <p className="text-xs uppercase tracking-luxe">Rendering {modality} try-on…</p>
+                </div>
+              )}
+              {rendered && (
+                <div className="absolute inset-x-4 bottom-4 rounded-xl bg-canvas-raised/95 p-3 text-xs">
+                  <p className="flex items-center gap-1.5 font-medium text-gold-deep">
+                    <Sparkles className="h-3.5 w-3.5" /> {copy.title}
+                  </p>
+                  <p className="mt-1 text-ink-soft">{copy.overlay}</p>
+                  <p className="mt-1 text-ink-soft">
+                    {sim.verdict} — {sim.detail}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
           <Media
             seed={`tryon-${modality}-${variant.id}-${body}`}
             swatches={[variant.hex, "#2f3033", "#c2a367"]}
@@ -123,6 +155,7 @@ export function VirtualTryOn({
               </div>
             )}
           </Media>
+          )}
         </div>
 
         <div className="p-6 sm:p-7">
@@ -165,10 +198,10 @@ export function VirtualTryOn({
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={() => setUploaded(true)}
+                onChange={handlePhotoSelected}
               />
               <button className="btn-outline mt-5 w-full" onClick={() => fileRef.current?.click()}>
-                <Upload className="h-4 w-4" /> {uploaded ? "Photo uploaded" : "Upload your photo"}
+                <Upload className="h-4 w-4" /> {photoPreview ? "Photo uploaded" : "Upload your photo"}
               </button>
 
               <p className="eyebrow mb-2 mt-6">Body type</p>

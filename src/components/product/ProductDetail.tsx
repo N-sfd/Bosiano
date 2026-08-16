@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   Heart,
@@ -23,6 +24,7 @@ import { getProductBreadcrumbs } from "@/lib/products";
 import { Media } from "@/components/Media";
 import { useStore } from "@/store/useStore";
 import { useHydrated } from "@/lib/hooks";
+import { addProductToAtelier } from "@/lib/atelier-storage";
 import { cn, formatPrice, classForStock } from "@/lib/utils";
 import { ProductGallery } from "./ProductGallery";
 import { SizeAdvisor } from "./SizeAdvisor";
@@ -40,6 +42,7 @@ import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { Stars } from "@/components/ui/Stars";
 
 export function ProductDetail({ product }: { product: Product }) {
+  const router = useRouter();
   const brand = getBrand(product.brandId);
   const initialVariantIndex = Math.max(
     0,
@@ -107,6 +110,22 @@ export function ProductDetail({ product }: { product: Product }) {
     addToCart({ productId: product.id, variantId: variant.id, size, quantity: qty });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
+  };
+
+  const handleVirtualAtelier = () => {
+    if (!size) return;
+    addProductToAtelier({
+      id: product.id,
+      variantId: variant.id,
+      slug: product.slug,
+      name: product.name,
+      price: product.price,
+      image: product.imagesByColor[variant.colorId]?.[0]?.src ?? product.cardImage,
+      color: variant.color,
+      size,
+      category: product.category,
+    });
+    router.push("/virtual-atelier");
   };
 
   return (
@@ -305,6 +324,9 @@ export function ProductDetail({ product }: { product: Product }) {
               </IconToggle>
               <ShareActions product={product} />
             </div>
+            <Button variant="outline" onClick={handleVirtualAtelier} disabled={!size} className="w-full">
+              <Sparkles className="h-4 w-4" /> Style this in the Virtual Atelier
+            </Button>
             <Link
               href={`/shop?sub=${encodeURIComponent(product.subcategory)}`}
               className="inline-flex items-center justify-center gap-2 text-xs uppercase tracking-luxe text-ink-muted hover:text-ink"
