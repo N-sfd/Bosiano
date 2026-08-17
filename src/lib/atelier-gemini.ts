@@ -57,22 +57,22 @@ async function loadProductImage(src: string): Promise<InlineImage | null> {
   return null;
 }
 
-function extractImage(result: {
-  candidates?: Array<{
-    content?: {
-      parts?: Array<{
-        inlineData?: { mimeType?: string; data?: string };
-        inline_data?: { mime_type?: string; data?: string };
-      }>;
-    };
-  }>;
-}): string | null {
-  const parts = result.candidates?.[0]?.content?.parts ?? [];
+function extractImage(result: unknown): string | null {
+  const payload = result as {
+    candidates?: Array<{
+      content?: {
+        parts?: Array<{
+          inlineData?: { mimeType?: string; data?: string };
+          inline_data?: { mime_type?: string; data?: string };
+        }>;
+      };
+    }>;
+  };
+  const parts = payload.candidates?.[0]?.content?.parts ?? [];
   for (const part of parts) {
-    const inline = part.inlineData ?? part.inline_data;
-    const data = inline?.data;
+    const data = part.inlineData?.data ?? part.inline_data?.data;
     if (!data) continue;
-    const mime = inline?.mimeType ?? inline?.mime_type ?? "image/png";
+    const mime = part.inlineData?.mimeType ?? part.inline_data?.mime_type ?? "image/png";
     return `data:${mime};base64,${data}`;
   }
   return null;
