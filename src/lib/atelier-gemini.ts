@@ -132,22 +132,35 @@ ${
 Output only one photograph of the same person wearing the selected look. No collage, thumbnail rail, split layout, product flat, text, or watermark.`;
 }
 
-function authModes(apiKey: string): Array<{ headers: Record<string, string>; query: boolean }> {
-  const json = { "Content-Type": "application/json" };
-  if (apiKey.startsWith("AQ.")) {
-    return [
-      { headers: { ...json, "x-goog-api-key": apiKey }, query: false },
-      { headers: { ...json, Authorization: `Bearer ${apiKey}` }, query: false },
-      { headers: json, query: true },
-    ];
+function friendlyGeminiError(status: number, raw: string) {
+  const exhausted =
+    status === 429 ||
+    /RESOURCE_EXHAUSTED|rate[- ]limit|quota/i.test(raw);
+  if (exhausted) {
+    return "Gemini is busy or over quota. Wait about a minute, then generate once — do not click repeatedly.";
   }
-  return [
-    { headers: json, query: true },
-    { headers: { ...json, "x-goog-api-key": apiKey }, query: false },
-  ];
+  if (status === 401 || status === 403) {
+    return "Gemini rejected the API key. Check GEMINI_API_KEY in Vercel.";
+  }
+  if (status === 404) {
+    return "The Gemini image model is unavailable for this key.";
+  }
+  return `Gemini could not generate the try-on (${status}).`;
 }
 
-async function callGemini(model: string, apiKey: string, parts: Array<Record<string, unknown>>) {
+function authForKey(apiKey: string) {
+  const json = { "Content-Type": "application/json" };
+  if (apiKey.startsWith("AQ.")) {
+    return { headers: { ...json, "x-goog-api-key": apiKey }, query: false };
+  }
+  return { headers: json, query: true };
+}
+
+async function callGemini(
+  model: string,
+  apiKey: string,
+  parts: Array<Record<string, unknown>>
+): Promise<{ imageUrl?: string; error?: string; fatal?: boolean }> {
   const body = JSON.stringify({
     contents: [{ role: "user", parts }],
     generationConfig: {
@@ -155,33 +168,27 @@ async function callGemini(model: string, apiKey: string, parts: Array<Record<str
     },
   });
 
-  let lastError = "Gemini did not return an image.";
+  const mode = authForKey(apiKey);
+  const url = mode.query
+    ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`
+    : `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
-  for (const mode of authModes(apiKey)) {
-    const url = mode.query
-      ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`
-      : `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const response = await fetch(url, { method: "POST", headers: mode.headers, body });
+  const raw = await response.text();
 
-    const response = await fetch(url, { method: "POST", headers: mode.headers, body });
-    const raw = await response.text();
-
-    if (!response.ok) {
-      lastError = `Gemini ${response.status}`;
-      console.error("Atelier Gemini error:", model, response.status, raw.slice(0, 1500));
-      continue;
-    }
-
-    try {
-      const parsed = JSON.parse(raw);
-      const imageUrl = extractImage(parsed);
-      if (imageUrl) return { imageUrl };
-      lastError = parsed?.error?.message || "Gemini returned text but no image.";
-    } catch {
-      lastError = "Gemini returned an unexpected response.";
-    }
+  if (!response.ok) {
+    console.error("Atelier Gemini error:", model, response.status, raw.slice(0, 1500));
+    return { error: friendlyGeminiError(response.status, raw), fatal: response.status === 429 || response.status === 401 || response.status === 403 };
   }
 
-  return { error: lastError };
+  try {
+    const parsed = JSON.parse(raw);
+    const imageUrl = extractImage(parsed);
+    if (imageUrl) return { imageUrl };
+    return { error: parsed?.error?.message || "Gemini returned text but no image." };
+  } catch {
+    return { error: "Gemini returned an unexpected response." };
+  }
 }
 
 export async function generateGeminiTryOn({
@@ -226,6 +233,7 @@ export async function generateGeminiTryOn({
     const result = await callGemini(model, apiKey, parts);
     if (result.imageUrl) return { imageUrl: result.imageUrl };
     if (result.error) lastError = result.error;
+    if (result.fatal) break;
   }
 
   return { imageUrl: null, error: lastError };
