@@ -14,7 +14,7 @@ import {
   getAtelierLook,
   removeProductFromAtelier,
 } from "@/lib/atelier-storage";
-import { composeAtelierLookboard, compressAtelierPhoto } from "@/lib/atelier-preview";
+import { compressAtelierPhoto } from "@/lib/atelier-preview";
 import type { AtelierProduct } from "@/types/atelier";
 
 export function VirtualAtelierClient({ aiEnabled }: { aiEnabled: boolean }) {
@@ -81,10 +81,6 @@ export function VirtualAtelierClient({ aiEnabled }: { aiEnabled: boolean }) {
     setError(null);
 
     try {
-      let aiImage: string | null = null;
-      let nextMode: "ai" | "lite" = "lite";
-
-    try {
       const compressed = await compressAtelierPhoto(photo);
       const formData = new FormData();
       formData.append("userPhoto", compressed);
@@ -103,19 +99,16 @@ export function VirtualAtelierClient({ aiEnabled }: { aiEnabled: boolean }) {
         data = {};
       }
 
-      if (data.mode === "ai" && typeof data.imageUrl === "string" && data.imageUrl) {
-        aiImage = data.imageUrl;
-        nextMode = "ai";
+      if (typeof data.imageUrl === "string" && data.imageUrl && data.mode === "ai") {
+        setGeneratedImage(data.imageUrl);
+        setMode("ai");
+        return;
       }
-    } catch (requestError) {
-      console.error("Atelier generate request failed:", requestError);
-    }
 
-      const imageUrl =
-        aiImage ??
-        (await composeAtelierLookboard(photoPreview, products).catch(() => photoPreview));
-      setGeneratedImage(imageUrl);
-      setMode(nextMode);
+      setError(
+        data.error ||
+          "AI try-on could not place the selected pieces on your photo. Please try again."
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to generate your outfit preview.");
     } finally {

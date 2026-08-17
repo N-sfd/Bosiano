@@ -2,7 +2,11 @@ import { readFile } from "fs/promises";
 import path from "path";
 import type { AtelierProduct } from "@/types/atelier";
 
-const GEMINI_MODEL = process.env.ATELIER_GEMINI_MODEL || "gemini-2.5-flash-image";
+const GEMINI_MODELS = [
+  process.env.ATELIER_GEMINI_MODEL,
+  "gemini-2.5-flash-image",
+  "gemini-3.1-flash-image-preview",
+].filter((model, index, list): model is string => Boolean(model) && list.indexOf(model) === index);
 
 export function getGeminiApiKey() {
   return (
@@ -18,12 +22,22 @@ type InlineImage = {
   data: string;
 };
 
+export type GeminiTryOnResult = {
+  imageUrl: string | null;
+  error?: string;
+};
+
 function mimeFromName(name: string) {
   const ext = name.split(".").pop()?.toLowerCase();
   if (ext === "png") return "image/png";
   if (ext === "webp") return "image/webp";
   if (ext === "gif") return "image/gif";
   return "image/jpeg";
+}
+
+function isAccessory(product: AtelierProduct) {
+  const haystack = `${product.category ?? ""} ${product.name}`.toLowerCase();
+  return /bag|earring|jewel|ring|necklace|bracelet|sunglass|hat|scarf|belt|watch|shoe|heel|boot/.test(haystack);
 }
 
 async function blobToInline(image: Blob): Promise<InlineImage> {
@@ -34,25 +48,42 @@ async function blobToInline(image: Blob): Promise<InlineImage> {
   };
 }
 
-async function loadProductImage(src: string): Promise<InlineImage | null> {
+async function loadFromDisk(src: string): Promise<InlineImage | null> {
+  const relative = src.replace(/^\/+/, "");
+  if (!relative || relative.includes("..")) return null;
   try {
-    if (src.startsWith("/") && !src.startsWith("//")) {
-      const relative = src.replace(/^\/+/, "");
-      if (relative.includes("..")) return null;
-      const filePath = path.join(process.cwd(), "public", relative);
-      const buffer = await readFile(filePath);
-      return { mimeType: mimeFromName(relative), data: buffer.toString("base64") };
-    }
+    const filePath = path.join(process.cwd(), "public", relative);
+    const buffer = await readFile(filePath);
+    return { mimeType: mimeFromName(relative), data: buffer.toString("base64") };
+  } catch {
+    return null;
+  }
+}
 
-    if (src.startsWith("http://") || src.startsWith("https://")) {
-      const response = await fetch(src);
-      if (!response.ok) return null;
-      const buffer = Buffer.from(await response.arrayBuffer());
-      const mimeType = response.headers.get("content-type")?.split(";")[0] || mimeFromName(src);
-      return { mimeType, data: buffer.toString("base64") };
-    }
+async function loadFromUrl(url: string): Promise<InlineImage | null> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    const buffer = Buffer.from(await response.arrayBuffer());
+    const mimeType = response.headers.get("content-type")?.split(";")[0] || mimeFromName(url);
+    return { mimeType, data: buffer.toString("base64") };
   } catch (error) {
-    console.error("Failed to load atelier garment image:", src, error);
+    console.error("Failed to fetch atelier garment image:", url, error);
+    return null;
+  }
+}
+
+async function loadProductImage(src: string, origin?: string): Promise<InlineImage | null> {
+  if (src.startsWith("http://") || src.startsWith("https://")) {
+    return loadFromUrl(src);
+  }
+  if (!src.startsWith("/")) return null;
+
+  const fromDisk = await loadFromDisk(src);
+  if (fromDisk) return fromDisk;
+
+  if (origin) {
+    return loadFromUrl(new URL(src, origin).toString());
   }
   return null;
 }
@@ -67,6 +98,7 @@ function extractImage(result: unknown): string | null {
         }>;
       };
     }>;
+    error?: { message?: string };
   };
   const parts = payload.candidates?.[0]?.content?.parts ?? [];
   for (const part of parts) {
@@ -82,82 +114,119 @@ function buildPrompt(products: AtelierProduct[]) {
   const list = products
     .map((product, i) => `${i + 1}. ${product.name}${product.color ? ` in ${product.color}` : ""}`)
     .join("\n");
+  const accessoriesOnly = products.every(isAccessory);
 
-  return `Create a single photorealistic virtual try-on photograph for the BOSIANO luxury boutique.
+  return `Create a single photorealistic virtual try-on photograph for BOSIANO.
 
-IMAGE 1 is the customer. Preserve their identity, face, hair, skin, body shape, pose, hands, and background exactly.
+IMAGE 1 is the customer. Keep their identity, face, hair, skin, body, pose, and background.
 
-The following product photos are the garments they selected. Dress the customer in these exact BOSIANO pieces, replacing their current clothes. Match color, fabric, cut, collar, sleeves, and details. Natural drape, fit, and lighting.
-
-Selected look:
+Selected pieces:
 ${list}
 
-Hard rules:
-- Output one photograph of the same person wearing the selected look
-- Do not create a collage, mood board, split layout, thumbnail rail, or product flat
-- Do not keep their original outfit if it conflicts with the selected pieces
-- No text, logos, watermarks, or extra people`;
+${
+  accessoriesOnly
+    ? "These are accessories only. Keep the customer's current clothing. Place the bag naturally on the shoulder or in hand. Place earrings on the ears. Match metal, colour, and scale."
+    : "Dress the customer in these exact BOSIANO pieces. Replace conflicting clothing. Keep identity and pose."
+}
+
+Output only one photograph of the same person wearing the selected look. No collage, thumbnail rail, split layout, product flat, text, or watermark.`;
+}
+
+function authModes(apiKey: string): Array<{ headers: Record<string, string>; query: boolean }> {
+  const json = { "Content-Type": "application/json" };
+  if (apiKey.startsWith("AQ.")) {
+    return [
+      { headers: { ...json, "x-goog-api-key": apiKey }, query: false },
+      { headers: { ...json, Authorization: `Bearer ${apiKey}` }, query: false },
+      { headers: json, query: true },
+    ];
+  }
+  return [
+    { headers: json, query: true },
+    { headers: { ...json, "x-goog-api-key": apiKey }, query: false },
+  ];
+}
+
+async function callGemini(model: string, apiKey: string, parts: Array<Record<string, unknown>>) {
+  const body = JSON.stringify({
+    contents: [{ role: "user", parts }],
+    generationConfig: {
+      responseModalities: ["TEXT", "IMAGE"],
+    },
+  });
+
+  let lastError = "Gemini did not return an image.";
+
+  for (const mode of authModes(apiKey)) {
+    const url = mode.query
+      ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`
+      : `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+
+    const response = await fetch(url, { method: "POST", headers: mode.headers, body });
+    const raw = await response.text();
+
+    if (!response.ok) {
+      lastError = `Gemini ${response.status}`;
+      console.error("Atelier Gemini error:", model, response.status, raw.slice(0, 1500));
+      continue;
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      const imageUrl = extractImage(parsed);
+      if (imageUrl) return { imageUrl };
+      lastError = parsed?.error?.message || "Gemini returned text but no image.";
+    } catch {
+      lastError = "Gemini returned an unexpected response.";
+    }
+  }
+
+  return { error: lastError };
 }
 
 export async function generateGeminiTryOn({
   userImage,
   products,
+  origin,
 }: {
   userImage: Blob;
   products: AtelierProduct[];
-}): Promise<string | null> {
+  origin?: string;
+}): Promise<GeminiTryOnResult> {
   const apiKey = getGeminiApiKey();
-  if (!apiKey) return null;
+  if (!apiKey) return { imageUrl: null, error: "Gemini API key is not configured." };
 
   const person = await blobToInline(userImage);
   const garments = (
-    await Promise.all(products.slice(0, 4).map((product) => loadProductImage(product.image)))
+    await Promise.all(products.slice(0, 4).map((product) => loadProductImage(product.image, origin)))
   ).filter((image): image is InlineImage => Boolean(image));
 
   if (garments.length === 0) {
-    console.error("Atelier Gemini: no garment images could be loaded.");
-    return null;
+    console.error("Atelier Gemini: no garment images could be loaded.", products.map((p) => p.image));
+    return { imageUrl: null, error: "Could not load the selected product images for try-on." };
   }
 
   const parts: Array<Record<string, unknown>> = [
     { inlineData: { mimeType: person.mimeType, data: person.data } },
-    { text: "IMAGE 1: the customer to dress." },
+    { text: "IMAGE 1: the customer to style." },
   ];
 
   garments.forEach((garment, index) => {
     const product = products[index];
     parts.push({ inlineData: { mimeType: garment.mimeType, data: garment.data } });
     parts.push({
-      text: `Garment ${index + 1}: ${product?.name ?? "selected piece"}${product?.color ? `, ${product.color}` : ""}.`,
+      text: `Piece ${index + 1}: ${product?.name ?? "selected piece"}${product?.color ? `, ${product.color}` : ""}.`,
     });
   });
 
   parts.push({ text: buildPrompt(products) });
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts }],
-        generationConfig: {
-          responseModalities: ["IMAGE", "TEXT"],
-        },
-      }),
-    }
-  );
-
-  const raw = await response.text();
-  if (!response.ok) {
-    console.error("Atelier Gemini error:", response.status, raw.slice(0, 2000));
-    return null;
+  let lastError = "Gemini did not return an image.";
+  for (const model of GEMINI_MODELS) {
+    const result = await callGemini(model, apiKey, parts);
+    if (result.imageUrl) return { imageUrl: result.imageUrl };
+    if (result.error) lastError = result.error;
   }
 
-  try {
-    return extractImage(JSON.parse(raw));
-  } catch (error) {
-    console.error("Atelier Gemini returned non-JSON:", error, raw.slice(0, 500));
-    return null;
-  }
+  return { imageUrl: null, error: lastError };
 }

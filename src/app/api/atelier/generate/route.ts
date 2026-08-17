@@ -6,18 +6,20 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
-function isImagePart(value: FormDataEntryValue | null): value is File {
-  return typeof File !== "undefined" && value instanceof File && value.size > 0;
+function getImageBlob(value: FormDataEntryValue | null): Blob | null {
+  if (!value || typeof value === "string") return null;
+  if (value.size <= 0) return null;
+  return value;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
-    const userPhoto = formData.get("userPhoto");
+    const userPhoto = getImageBlob(formData.get("userPhoto"));
     const productsRaw = formData.get("selectedProducts");
 
-    if (!isImagePart(userPhoto)) {
+    if (!userPhoto) {
       return NextResponse.json({ success: false, error: "Photo is required." }, { status: 400 });
     }
 
@@ -39,14 +41,25 @@ export async function POST(request: NextRequest) {
     const result = await generateAtelierPreview({
       userImage: userPhoto,
       products: products as AtelierProduct[],
+      origin: request.nextUrl.origin,
     });
 
-    return NextResponse.json({ success: true, imageUrl: result.imageUrl, mode: result.mode });
+    return NextResponse.json({
+      success: Boolean(result.imageUrl) || result.mode === "lite",
+      imageUrl: result.imageUrl,
+      mode: result.mode,
+      error: result.error,
+    });
   } catch (error) {
     console.error("Virtual Atelier error:", error);
     return NextResponse.json(
-      { success: true, imageUrl: null, mode: "lite" },
-      { status: 200 }
+      {
+        success: false,
+        imageUrl: null,
+        mode: "lite",
+        error: "Unable to generate your outfit preview.",
+      },
+      { status: 500 }
     );
   }
 }
