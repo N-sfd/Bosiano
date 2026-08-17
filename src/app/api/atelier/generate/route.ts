@@ -1,43 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateVirtualTryOn } from "@/lib/tryon-provider";
+import { generateAtelierPreview } from "@/lib/atelier-ai-provider";
+import type { AtelierProduct } from "@/types/atelier";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
+export const dynamic = "force-dynamic";
+
+function isImagePart(value: FormDataEntryValue | null): value is File | Blob {
+  return value instanceof Blob && value.size > 0;
+}
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
-    const personImage = formData.get("personImage");
-    const productsRaw = formData.get("products");
+    const userPhoto = formData.get("userPhoto");
+    const productsRaw = formData.get("selectedProducts");
 
-    if (!(personImage instanceof File)) {
-      return NextResponse.json({ error: "Photo is required." }, { status: 400 });
+    if (!isImagePart(userPhoto)) {
+      return NextResponse.json({ success: false, error: "Photo is required." }, { status: 400 });
     }
 
     if (typeof productsRaw !== "string") {
-      return NextResponse.json({ error: "Selected products are required." }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Selected products are required." }, { status: 400 });
     }
 
     let products: unknown;
     try {
       products = JSON.parse(productsRaw);
     } catch {
-      return NextResponse.json({ error: "Selected products are invalid." }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Selected products are invalid." }, { status: 400 });
     }
 
     if (!Array.isArray(products) || products.length === 0) {
-      return NextResponse.json({ error: "Select at least one product." }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Select at least one product." }, { status: 400 });
     }
 
-    const productImages = products
-      .map((product) => (product && typeof product === "object" ? (product as { image?: unknown }).image : undefined))
-      .filter((image): image is string => typeof image === "string" && image.length > 0);
+    const result = await generateAtelierPreview({
+      userImage: userPhoto,
+      products: products as AtelierProduct[],
+    });
 
-    const result = await generateVirtualTryOn({ personImage, productImages });
-
-    return NextResponse.json(result);
+    return NextResponse.json({ success: true, imageUrl: result.imageUrl, mode: result.mode });
   } catch (error) {
     console.error("Virtual Atelier error:", error);
-    return NextResponse.json({ error: "Unable to generate your outfit preview." }, { status: 500 });
+    return NextResponse.json(
+      { success: true, imageUrl: null, mode: "lite" },
+      { status: 200 }
+    );
   }
 }

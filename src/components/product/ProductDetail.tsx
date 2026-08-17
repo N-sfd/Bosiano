@@ -9,7 +9,6 @@ import {
   Truck,
   RotateCcw,
   ShieldCheck,
-  Ruler,
   Sparkles,
   Check,
   Leaf,
@@ -29,7 +28,6 @@ import { cn, formatPrice, classForStock } from "@/lib/utils";
 import { ProductGallery } from "./ProductGallery";
 import { SizeAdvisor } from "./SizeAdvisor";
 import { SizeGuide } from "./SizeGuide";
-import { VirtualTryOn } from "./VirtualTryOn";
 import { ShareActions } from "./ShareActions";
 import { StoreAvailability } from "./StoreAvailability";
 import { Badge } from "@/components/ui/Badge";
@@ -53,7 +51,6 @@ export function ProductDetail({ product }: { product: Product }) {
   const [size, setSize] = useState<string | null>(isOneSize ? product.sizes[0] : null);
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
-  const [tryOnOpen, setTryOnOpen] = useState(false);
   const [added, setAdded] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>("details");
   const [qty, setQty] = useState(1);
@@ -301,16 +298,11 @@ export function ProductDetail({ product }: { product: Product }) {
               </Button>
             )}
             <div className="flex gap-3">
-              {!isOneSize && (
-                <Button variant="outline" onClick={() => setTryOnOpen(true)} className="flex-1">
-                  <Ruler className="h-4 w-4" /> Virtual try-on
-                </Button>
-              )}
               <IconToggle
                 active={!!wished}
                 onClick={() => toggleWishlist(product.id)}
                 label="Add to wishlist"
-                className={cn("h-[52px]", isOneSize ? "flex-1" : "w-[52px]")}
+                className="h-[52px] flex-1"
               >
                 <Heart className={cn("h-4 w-4", wished && "fill-current")} />
               </IconToggle>
@@ -325,7 +317,7 @@ export function ProductDetail({ product }: { product: Product }) {
               <ShareActions product={product} />
             </div>
             <Button variant="outline" onClick={handleVirtualAtelier} disabled={!size} className="w-full">
-              <Sparkles className="h-4 w-4" /> Style this in the Virtual Atelier
+              <Sparkles className="h-4 w-4" /> Virtual Atelier
             </Button>
             <Link
               href={`/shop?sub=${encodeURIComponent(product.subcategory)}`}
@@ -432,7 +424,6 @@ export function ProductDetail({ product }: { product: Product }) {
 
       <SizeAdvisor product={product} open={advisorOpen} onClose={() => setAdvisorOpen(false)} onPick={(s) => setSize(s)} />
       <SizeGuide product={product} open={guideOpen} onClose={() => setGuideOpen(false)} />
-      <VirtualTryOn product={product} variant={variant} open={tryOnOpen} onClose={() => setTryOnOpen(false)} />
     </div>
   );
 }

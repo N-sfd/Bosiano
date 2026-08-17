@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, DragEvent, useRef, useState } from "react";
 import { Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -15,10 +15,9 @@ type Props = {
 
 export function AtelierPhotoUpload({ previewUrl, onChange, onRemove }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
 
-  function handleFile(event: ChangeEvent<HTMLInputElement>) {
-    const selected = event.target.files?.[0];
-    event.target.value = "";
+  function acceptFile(selected: File | undefined) {
     if (!selected) return;
 
     if (!ALLOWED_TYPES.includes(selected.type)) {
@@ -32,6 +31,18 @@ export function AtelierPhotoUpload({ previewUrl, onChange, onRemove }: Props) {
     }
 
     onChange(selected, URL.createObjectURL(selected));
+  }
+
+  function handleFile(event: ChangeEvent<HTMLInputElement>) {
+    const selected = event.target.files?.[0];
+    event.target.value = "";
+    acceptFile(selected);
+  }
+
+  function handleDrop(event: DragEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    setDragging(false);
+    acceptFile(event.dataTransfer.files?.[0]);
   }
 
   return (
@@ -54,19 +65,45 @@ export function AtelierPhotoUpload({ previewUrl, onChange, onRemove }: Props) {
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-line bg-canvas-raised px-6 py-16 text-center transition-colors hover:border-ink"
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+          className={`flex w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed px-6 py-16 text-center transition-colors ${
+            dragging ? "border-ink bg-canvas-sunk" : "border-line bg-canvas-raised hover:border-ink"
+          }`}
         >
           <Upload className="h-6 w-6 text-gold" />
-          <span className="text-sm font-medium">Select a photo of yourself</span>
+          <span className="text-sm font-medium uppercase tracking-luxe">Upload Your Photo</span>
+          <span className="text-xs text-ink-muted">Drag and drop or browse</span>
+          <ul className="mt-2 space-y-1 text-xs text-ink-muted">
+            <li>For best results:</li>
+            <li>• Use a full-body photo</li>
+            <li>• Face the camera</li>
+            <li>• Use even lighting</li>
+            <li>• Keep your outfit visible</li>
+            <li>• Avoid heavily cropped photos</li>
+          </ul>
           <span className="text-xs text-ink-muted">JPG, PNG or WebP · up to 10MB</span>
         </button>
       )}
 
       {previewUrl && (
-        <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()} className="mt-3">
-          Choose a different photo
-        </Button>
+        <div className="mt-3 flex flex-wrap gap-3">
+          <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()}>
+            Replace Photo
+          </Button>
+          <Button type="button" variant="outline" size="sm" onClick={onRemove}>
+            Remove Photo
+          </Button>
+        </div>
       )}
+
+      <p className="mt-3 text-xs leading-5 text-ink-muted">
+        Your photo is used only to create your styling preview. Do not upload sensitive or private images.
+      </p>
     </div>
   );
 }

@@ -38,6 +38,7 @@ const columns = [
       { label: brand.journalName, href: "/journal" },
       { label: "Italian Heritage", href: "/brand" },
       { label: "AI Personal Stylist", href: "/stylist" },
+      { label: "Virtual Atelier", href: "/virtual-atelier" },
       { label: "Book a Stylist", href: "/account/appointments" },
       { label: "Stores", href: "/stores" },
       { label: "Mobile App", href: "/app" },

@@ -3,13 +3,13 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type AtelierStep = "select" | "upload" | "generate" | "bag";
+export type AtelierStep = "select" | "upload" | "preview" | "shop";
 
-const STEPS: { id: AtelierStep; label: string }[] = [
-  { id: "select", label: "Selected Pieces" },
-  { id: "upload", label: "Upload Photo" },
-  { id: "generate", label: "AI Preview" },
-  { id: "bag", label: "Add to Bag" },
+const STEPS: { id: AtelierStep; number: string; label: string }[] = [
+  { id: "select", number: "01", label: "Select Pieces" },
+  { id: "upload", number: "02", label: "Upload Photo" },
+  { id: "preview", number: "03", label: "Preview Look" },
+  { id: "shop", number: "04", label: "Shop Look" },
 ];
 
 export function AtelierStepper({ current }: { current: AtelierStep }) {
@@ -28,7 +28,7 @@ export function AtelierStepper({ current }: { current: AtelierStep }) {
                 done ? "bg-void text-canvas" : active ? "border border-ink text-ink" : "border border-line text-ink-muted"
               )}
             >
-              {done ? <Check className="h-3.5 w-3.5" /> : i + 1}
+              {done ? <Check className="h-3.5 w-3.5" /> : step.number}
             </span>
             <span className={cn("text-xs uppercase tracking-luxe", active ? "text-ink" : "text-ink-muted")}>
               {step.label}

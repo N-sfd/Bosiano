@@ -35,6 +35,5 @@ next-env.d.ts
 # local build backups / scratch
 .next-build/
 .next.bak-*/
-CatVTON/
 .tmp-*
 build-log.txt

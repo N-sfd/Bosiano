@@ -277,6 +277,7 @@ export const exploreNav: { label: string; href: string }[] = [
   { label: "Stores", href: "/stores" },
   { label: "Lookbook", href: "/lookbook" },
   { label: "AI Stylist", href: "/stylist" },
+  { label: "Virtual Atelier", href: "/virtual-atelier" },
   { label: "Outfit Boards", href: "/boards" },
 ];
 

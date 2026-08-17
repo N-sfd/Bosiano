@@ -15,5 +15,8 @@ export interface AtelierLook {
 }
 
 export interface AtelierPreviewResult {
-  imageUrl: string;
+  success: boolean;
+  imageUrl: string | null;
+  mode: "ai" | "lite";
+  error?: string;
 }
