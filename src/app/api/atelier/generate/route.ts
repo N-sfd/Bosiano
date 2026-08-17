@@ -6,8 +6,8 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
-function isImagePart(value: FormDataEntryValue | null): value is File | Blob {
-  return value instanceof Blob && value.size > 0;
+function isImagePart(value: FormDataEntryValue | null): value is File {
+  return typeof File !== "undefined" && value instanceof File && value.size > 0;
 }
 
 export async function POST(request: NextRequest) {
